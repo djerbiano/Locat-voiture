@@ -10,7 +10,7 @@ const AppContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 5px;
 `;
 
 function App() {
