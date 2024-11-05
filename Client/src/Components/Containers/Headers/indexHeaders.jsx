@@ -9,7 +9,7 @@ const HeaderContainer = styled.div`
    align-items: center;
  
 `;
-function indexHeaders() {
+function IndexHeaders() {
   return (
     <HeaderContainer>
 
@@ -25,4 +25,4 @@ function indexHeaders() {
   )
 }
 
-export default indexHeaders
+export default IndexHeaders

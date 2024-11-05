@@ -5,10 +5,10 @@ const FooterContainer = styled.div`
  height: 10vh;
 `;
 
-function indexFooter() {
+function IndexFooter() {
   return (
     <FooterContainer>indexFooter</FooterContainer>
   )
 }
 
-export default indexFooter
+export default IndexFooter
