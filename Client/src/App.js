@@ -1,6 +1,6 @@
-import IndexHeaders from "./Components/Containers/Headers/indexHeaders.jsx";
-import IndexMain from "./Components/Containers/Main/indexMain.jsx";
-import IndexFooter from "./Components/Containers/Footer/indexFooter.jsx";
+import IndexHeaders from "./Components/Containers/Headers/IndexHeaders.jsx";
+import IndexMain from "./Components/Containers/Main/IndexMain.jsx";
+import IndexFooter from "./Components/Containers/Footer/IndexFooter.jsx";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";

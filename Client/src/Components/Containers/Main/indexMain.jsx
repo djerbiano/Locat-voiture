@@ -1,7 +1,12 @@
-import styled, { keyframes, css } from "styled-components";
+import styled from "styled-components";
 import Pic from "../../../Assets/4.jpg";
-import Pic2 from "../../../Assets/1.png";
-import { useState } from "react";
+import NewVoiture2024 from "./NewVoiture2024";
+
+import JusteClose from "../../Modal/JusteClose";
+import { useEffect, useState } from "react";
+import Assistance from "./Assistance";
+import SansFraisCachés from "./SansFraisCachés";
+import VoituresNeuves from "./VoituresNeuves";
 
 const MainContainer = styled.div`
   width: 100%;
@@ -39,7 +44,6 @@ const Container = styled.div`
     font-size: 2.5em;
     font-weight: bold;
     color: #c8152c;
-    font-family: "comic sans ms";
     text-align: center;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
@@ -85,7 +89,6 @@ const ButtonRecherche = styled.button`
 
 const SecondGlobalContainer = styled.div`
   width: 100%;
-  min-height: 50vh;
 `;
 
 const Container2 = styled.div`
@@ -101,7 +104,6 @@ const Container2 = styled.div`
     margin: 20px 0px;
     font-weight: bold;
     color: #c8152c;
-    font-family: "comic sans ms";
     text-align: center;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
@@ -126,95 +128,67 @@ const Content2 = styled.div`
   }
 `;
 
-const Vl = styled.div`
-  height: 300px;
-  width: 400px;
-  margin: 20px;
-  border-radius: 50px 0px 50px 0px;
-  box-shadow: 0px 0px 10px white;
-
-  @media (max-width: 750px) {
-    width: 70vw;
-    transition: all 0.2s ease;
-  }
-`;
-
-const ImageContainer = styled.div`
-  height: 100%;
+const ThirdGlobalContainer = styled.div`
   width: 100%;
-  background-image: url(${Pic2});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  position: relative;
+  min-height: 50vh;
 `;
 
-const DetailsContainer = styled.div`
-  color: black;
-  padding: 10px;
+const Container3 = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  background-color: white;
-  font-weight: bold;
-  border-radius: 20px;
-`;
-
-const New2024 = styled.div`
-  position: absolute;
-  top: 20%;
-  left: 0px;
-  text-transform: uppercase;
-  background-color: white;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   color: black;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 0px 50px 50px 0px;
-`;
-
-const Name = styled.div``;
-const Prix = styled.div``;
-const transition = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-const Reserver = styled.div`
-  position: absolute;
-  top: 50%;
-  right: 50%;
-  transform: translateX(50%);
-  text-transform: uppercase;
-  background-color: white;
-  color: black;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 50px;
-  cursor: pointer;
-  opacity: ${(props) => (props.reserver ? "1" : "0")};
-  animation: ${(props) =>
-    props.reserver
-      ? css`
-          ${transition} 0.5s ease
-        `
-      : "none"};
   transition: all 0.2s ease;
 
-  &:hover {
-    background-color: #a5a2a2;
+  h1 {
+    margin: 20px;
+    font-weight: bold;
+    color: #c8152c;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
     transition: all 0.2s ease;
+
+    @media (max-width: 750px) {
+      font-size: 5vw;
+    }
   }
 `;
+
+const Content3 = styled.div`
+  width: 100%;
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-around;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+
+  @media (max-width: 750px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
 function IndexMain() {
-  const [reserver, setReserver] = useState(false);
+  const [modalJustClose, setModalJustClose] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+
+  useEffect(() => {
+    if (modalJustClose) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [modalJustClose]);
+
   return (
     <MainContainer>
       <FirstGlobalContainer>
@@ -270,40 +244,27 @@ function IndexMain() {
           <h1>Nos promotions de location</h1>
 
           <Content2>
-            <Vl
-              onMouseEnter={() => setReserver(true)}
-              onMouseLeave={() => setReserver(false)}
-            >
-              <ImageContainer>
-                <New2024>New 2024</New2024>
-                <Reserver reserver={reserver}>Réserver</Reserver>
-                <DetailsContainer>
-                  <Name>Mercedes-AMG GT</Name>
-                  <Prix>250 € / jour</Prix>
-                </DetailsContainer>
-              </ImageContainer>
-            </Vl>
-            <Vl>
-              <ImageContainer>
-                <New2024>New 2024</New2024>
-                <DetailsContainer>
-                  <div className="name">Mercedes-AMG GT</div>
-                  <div className="prix">250 € / jour</div>
-                </DetailsContainer>
-              </ImageContainer>
-            </Vl>
-            <Vl>
-              <ImageContainer>
-                <New2024>New 2024</New2024>
-                <DetailsContainer>
-                  <div className="name">Mercedes-AMG GT</div>
-                  <div className="prix">250 € / jour</div>
-                </DetailsContainer>
-              </ImageContainer>
-            </Vl>
+            <NewVoiture2024 />
+            <NewVoiture2024 />
+            <NewVoiture2024 />
           </Content2>
         </Container2>
       </SecondGlobalContainer>
+
+      <ThirdGlobalContainer>
+        <Container3>
+          <h1>Pourquoi nous choisir?</h1>
+          <Content3>
+            <Assistance setModalContent={setModalContent} setModalJustClose={setModalJustClose} />
+            <SansFraisCachés setModalContent={setModalContent} setModalJustClose={setModalJustClose} />
+            <VoituresNeuves setModalContent={setModalContent} setModalJustClose={setModalJustClose} />
+          </Content3>
+        </Container3>
+      </ThirdGlobalContainer>
+
+      {modalJustClose && (
+        <JusteClose setModalJustClose={setModalJustClose} content={modalContent} />
+      )}
     </MainContainer>
   );
 }
