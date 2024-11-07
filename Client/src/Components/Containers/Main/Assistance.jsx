@@ -13,7 +13,6 @@ const Assitance = styled.div`
   justify-content: center;
   color: white;
   transition: all 0.2s ease;
-
   &:hover {
     transform: scale(1.05);
     cursor: pointer;
@@ -34,8 +33,6 @@ const Assitance = styled.div`
     text-transform: uppercase;
     transition: all 0.2s ease;
   }
-
- 
 `;
 function Assistance({ setModalContent, setModalJustClose }) {
   const modalContent = "Assistance 24 h / 24 h";
@@ -49,6 +46,7 @@ function Assistance({ setModalContent, setModalJustClose }) {
       <div className="icon">
         <BsTelephoneInboundFill />
       </div>
+
       <p>Assistance 24 h / 24 h</p>
     </Assitance>
   );

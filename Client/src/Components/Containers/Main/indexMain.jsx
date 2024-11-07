@@ -48,6 +48,10 @@ const Container = styled.div`
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
     transition: all 0.2s ease;
+
+    @media (max-width: 750px) {
+      display: none;
+    }
   }
 `;
 

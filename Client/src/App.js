@@ -4,6 +4,16 @@ import IndexFooter from "./Components/Containers/Footer/IndexFooter.jsx";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
+import NotFound404 from "./Components/others/NotFound404.jsx";
+import Voitures from "./Components/Containers/Headers/Voitures.jsx";
+import Tarifs from "./Components/Containers/Headers/Tarifs.jsx";
+import Contact from "./Components/Containers/Headers/Contact.jsx";
+import MaReservation from "./Components/Containers/Headers/MaReservation.jsx";
+import MentionsLegales from "./Components/Containers/Footer/MentionsLegales.jsx";
+import PolitiqueDeConfidentialite from "./Components/Containers/Footer/PolitiqueDeConfidentialite.jsx";
+import PolitiqueDeCookies from "./Components/Containers/Footer/PolitiqueDeCookies.jsx";
+import ConditionsGeneralesDutilisation from "./Components/Containers/Footer/ConditionsGeneralesDutilisation.jsx";
+import ConditionsGeneralesDeLocation from "./Components/Containers/Footer/ConditionsGeneralesDeLocation.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -20,6 +30,17 @@ function App() {
         <IndexHeaders />
         <Routes>
           <Route path="/" element={<IndexMain />} />
+          <Route path="/Voitures" element={<Voitures />} />
+          <Route path="/Tarifs" element={<Tarifs />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/MaReservation" element={<MaReservation />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route path="/politique-de-confidentialite" element={<PolitiqueDeConfidentialite />} />
+          <Route path="/politique-de-cookies" element={<PolitiqueDeCookies />} />
+          <Route path="/conditions-generales-d-utilisation" element={<ConditionsGeneralesDutilisation />} />
+          <Route path="/conditions-generales-de-location" element={<ConditionsGeneralesDeLocation />} />
+
+          <Route path="*" element={<NotFound404 />} />
         </Routes>
         <IndexFooter />
       </BrowserRouter>
