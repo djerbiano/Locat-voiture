@@ -18,7 +18,7 @@ input:not([type="checkbox"]) {
   border: 1px solid #fff;
   padding: 5px;
   margin: 5px;
-
+  cursor: pointer;
   margin-bottom: 20px;
 }
 
@@ -29,5 +29,13 @@ select {
   border: 1px solid #fff;
   padding: 5px;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
+label {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+}

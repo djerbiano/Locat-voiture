@@ -66,6 +66,7 @@ const Content = styled.div`
   scrollbar-width: none;
   display: flex;
   flex-direction: column;
+  transition: all 0.2s ease;
 `;
 const AutreAgence = styled.div`
   margin-bottom: 20px;
@@ -180,6 +181,7 @@ const Content3 = styled.div`
 function IndexMain() {
   const [modalJustClose, setModalJustClose] = useState(false);
   const [modalContent, setModalContent] = useState("");
+  const [otherAgency, setOtherAgency] = useState(false);
 
   useEffect(() => {
     if (modalJustClose) {
@@ -214,11 +216,33 @@ function IndexMain() {
                 name="autreAgence"
                 id="autreAgence"
                 style={{ marginRight: "10px" }}
+                onChange={() => setOtherAgency(!otherAgency)}
               />
               <label htmlFor="autreAgence">
                 Sélectionnez une autre agence de retour
               </label>
             </AutreAgence>
+
+            {otherAgency && (
+              <div
+                style={{
+                  border: "1px solid red",
+                  padding: "5px",
+                  borderRadius: "5px",
+                }}
+              >
+                <label htmlFor="agenceReturn">Agence de retour</label>
+                <select name="agenceReturn" id="agenceReturn">
+                  <option value="Agence de paris">Agence de paris</option>
+                  <option value="Agence de nantes">Agence de nantes</option>
+                  <option value="Agence de lyon">Agence de lyon</option>
+                  <option value="Agence de marseille">
+                    Agence de marseille
+                  </option>
+                  <option value="Agence de bordeaux">Agence de bordeaux</option>
+                </select>
+              </div>
+            )}
 
             <label htmlFor="date">Date de depart</label>
             <input type="date" name="date" id="date" />
@@ -259,15 +283,27 @@ function IndexMain() {
         <Container3>
           <h1>Pourquoi nous choisir?</h1>
           <Content3>
-            <Assistance setModalContent={setModalContent} setModalJustClose={setModalJustClose} />
-            <SansFraisCachés setModalContent={setModalContent} setModalJustClose={setModalJustClose} />
-            <VoituresNeuves setModalContent={setModalContent} setModalJustClose={setModalJustClose} />
+            <Assistance
+              setModalContent={setModalContent}
+              setModalJustClose={setModalJustClose}
+            />
+            <SansFraisCachés
+              setModalContent={setModalContent}
+              setModalJustClose={setModalJustClose}
+            />
+            <VoituresNeuves
+              setModalContent={setModalContent}
+              setModalJustClose={setModalJustClose}
+            />
           </Content3>
         </Container3>
       </ThirdGlobalContainer>
 
       {modalJustClose && (
-        <JusteClose setModalJustClose={setModalJustClose} content={modalContent} />
+        <JusteClose
+          setModalJustClose={setModalJustClose}
+          content={modalContent}
+        />
       )}
     </MainContainer>
   );

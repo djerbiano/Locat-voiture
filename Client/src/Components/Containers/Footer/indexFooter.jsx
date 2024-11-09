@@ -13,19 +13,33 @@ const FooterContainer = styled.footer`
 `;
 
 const LinkContainer = styled.div`
-  width: 100%;
+  width: 90%;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  gap: 20px;
+  font-size: 1.3rem;
+
+  @media (max-width: 750px) {
+    flex-direction: column;
+    font-size: 1.3rem;
+  }
 `;
 
 const LinkItem = styled(Link)`
   text-decoration: none;
   color: white;
   transition: all 0.2s ease;
+  text-align: center;
   &:hover {
     color: #c8152c;
   }
+`;
+
+const Copyright = styled.div`
+  margin: 40px;
+  text-transform: uppercase;
+  text-align: center;
 `;
 
 function IndexFooter() {
@@ -44,11 +58,9 @@ function IndexFooter() {
           Conditions générales de location
         </LinkItem>
       </LinkContainer>
-      <div style={{ margin: "40px", fontSize: "15px" }}>
-        <p style={{ textTransform: "uppercase" }}>
-          © {new Date().getFullYear()} tous droits réservés
-        </p>
-      </div>
+      <Copyright>
+        <p>© {new Date().getFullYear()} tous droits réservés</p>
+      </Copyright>
     </FooterContainer>
   );
 }
