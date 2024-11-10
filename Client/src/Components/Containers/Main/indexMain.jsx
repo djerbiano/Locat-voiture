@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import Pic from "../../../Assets/4.jpg";
 import NewVoiture2024 from "./NewVoiture2024";
-
 import JusteClose from "../../Modal/JusteClose";
 import { useEffect, useState } from "react";
 import Assistance from "./Assistance";

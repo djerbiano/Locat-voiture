@@ -87,7 +87,7 @@ const HamburgerMenu = styled.div`
 
   .openMenu {
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
     min-height: 70vh;
     padding: 20px;
     width: 100vw;
