@@ -54,7 +54,8 @@ const Container = styled.div`
   }
 `;
 
-const Content = styled.div`
+const Content = styled.div``;
+const Form = styled.form`
   color: black;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.5);
@@ -84,7 +85,7 @@ const ButtonRecherche = styled.button`
   color: black;
   cursor: pointer;
   align-self: center;
-
+  font-size: 1rem;
   &:hover {
     background-color: #ddd;
     transition: all 0.2s ease;
@@ -181,6 +182,15 @@ function IndexMain() {
   const [modalJustClose, setModalJustClose] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [otherAgency, setOtherAgency] = useState(false);
+  const [formData, setFormData] = useState({
+    agenceDepart: "",
+    autreAgence: false,
+    agenceRetour: "",
+    dateDepart: "",
+    dateRetour: "",
+    places: 1,
+    promotion: false,
+  });
 
   useEffect(() => {
     if (modalJustClose) {
@@ -193,7 +203,19 @@ function IndexMain() {
       document.body.style.overflow = "auto";
     };
   }, [modalJustClose]);
+  
+  const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Formulaire soumis:", formData);
+  };
   return (
     <MainContainer>
       <FirstGlobalContainer>
@@ -201,67 +223,113 @@ function IndexMain() {
           <h1>Loca-voiture</h1>
 
           <Content>
-            <label htmlFor="agence">Agence de départ</label>
-            <select name="agence" id="agence">
-              <option value="Agence de paris">Agence de paris</option>
-              <option value="Agence de nantes">Agence de nantes</option>
-              <option value="Agence de lyon">Agence de lyon</option>
-              <option value="Agence de marseille">Agence de marseille</option>
-              <option value="Agence de bordeaux">Agence de bordeaux</option>
-            </select>
-            <AutreAgence>
-              <input
-                type="checkbox"
-                name="autreAgence"
-                id="autreAgence"
-                style={{ marginRight: "10px" }}
-                onChange={() => setOtherAgency(!otherAgency)}
-              />
-              <label htmlFor="autreAgence">
-                Sélectionnez une autre agence de retour
-              </label>
-            </AutreAgence>
-
-            {otherAgency && (
-              <div
-                style={{
-                  border: "1px solid red",
-                  padding: "5px",
-                  borderRadius: "5px",
-                }}
+            <Form onSubmit={handleSubmit}>
+              <label htmlFor="agenceDepart">Agence de départ</label>
+              <select
+                name="agenceDepart"
+                id="agenceDepart"
+                onChange={handleChange}
+                value={formData.agenceDepart}
+                required
               >
-                <label htmlFor="agenceReturn">Agence de retour</label>
-                <select name="agenceReturn" id="agenceReturn">
-                  <option value="Agence de paris">Agence de paris</option>
-                  <option value="Agence de nantes">Agence de nantes</option>
-                  <option value="Agence de lyon">Agence de lyon</option>
-                  <option value="Agence de marseille">
-                    Agence de marseille
-                  </option>
-                  <option value="Agence de bordeaux">Agence de bordeaux</option>
-                </select>
-              </div>
-            )}
+                <option value="">Sélectionnez une agence</option>
+                <option value="Agence de paris">Agence de paris</option>
+                <option value="Agence de nantes">Agence de nantes</option>
+                <option value="Agence de lyon">Agence de lyon</option>
+                <option value="Agence de marseille">Agence de marseille</option>
+                <option value="Agence de bordeaux">Agence de bordeaux</option>
+              </select>
+              <AutreAgence>
+                <input
+                  type="checkbox"
+                  name="autreAgence"
+                  id="autreAgence"
+                  checked={formData.autreAgence}
+                  style={{ marginRight: "10px" }}
+                  onChange={(e) => {
+                    setOtherAgency(!otherAgency);
+                    handleChange(e);
+                  }}
+                />
+                <label htmlFor="autreAgence">
+                  Sélectionnez une autre agence de retour
+                </label>
+              </AutreAgence>
 
-            <label htmlFor="date">Date de depart</label>
-            <input type="date" name="date" id="date" />
+              {otherAgency && (
+                <div
+                  style={{
+                    border: "1px solid red",
+                    padding: "5px",
+                    borderRadius: "5px",
+                  }}
+                >
+                  <label htmlFor="agenceRetour">Agence de retour</label>
+                  <select
+                    name="agenceRetour"
+                    id="agenceRetour"
+                    onChange={handleChange}
+                    value={formData.agenceRetour}
+                    required={otherAgency}
+                  >
+                    <option value="">Sélectionnez une agence</option>
+                    <option value="Agence de paris">Agence de paris</option>
+                    <option value="Agence de nantes">Agence de nantes</option>
+                    <option value="Agence de lyon">Agence de lyon</option>
+                    <option value="Agence de marseille">
+                      Agence de marseille
+                    </option>
+                    <option value="Agence de bordeaux">
+                      Agence de bordeaux
+                    </option>
+                  </select>
+                </div>
+              )}
 
-            <label htmlFor="date">Date de retour</label>
-            <input type="date" name="date" id="date" />
-
-            <label htmlFor="places">Nombre de places</label>
-            <input type="number" name="places" id="places" min="1" max="7" />
-            <Promotion>
+              <label htmlFor="dateDepart">Date de depart</label>
               <input
-                type="checkbox"
-                name="promotion"
-                id="promotion"
-                style={{ marginRight: "10px" }}
+                type="date"
+                name="dateDepart"
+                id="dateDepart"
+                onChange={handleChange}
+                value={formData.dateDepart}
+                required
               />
-              <label htmlFor="promotion">J’ai un code de réduction</label>
-            </Promotion>
 
-            <ButtonRecherche type="submit">Rechercher</ButtonRecherche>
+              <label htmlFor="dateRetour">Date de retour</label>
+              <input
+                type="date"
+                name="dateRetour"
+                id="dateRetour"
+                onChange={handleChange}
+                value={formData.dateRetour}
+                required
+              />
+
+              <label htmlFor="places">Nombre de places</label>
+              <input
+                type="number"
+                name="places"
+                id="places"
+                min="1"
+                max="7"
+                onChange={handleChange}
+                value={formData.places}
+              />
+              <Promotion>
+                <input
+                  type="checkbox"
+                  name="promotion"
+                  id="promotion"
+                  style={{ marginRight: "10px" }}
+                  onChange={handleChange}
+                  checked={formData.promotion}
+                />
+                <label htmlFor="promotion">J’ai un code de réduction</label>
+              </Promotion>
+
+              <ButtonRecherche type="submit">Rechercher</ButtonRecherche>
+            </Form>
           </Content>
         </Container>
       </FirstGlobalContainer>

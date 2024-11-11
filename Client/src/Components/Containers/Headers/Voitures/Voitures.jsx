@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
 import SingleVoiture from "./SingleVoiture.jsx";
-
 import { useState } from "react";
 const Container = styled.div`
   padding: 10px;
@@ -64,7 +63,9 @@ const Content = styled.div`
     flex-wrap: wrap;
   }
 `;
-const ReservationContainer = styled.div`
+const ReservationContainer = styled.div``;
+
+const Form = styled.form`
   width: 100%;
   height: 100%;
   display: flex;
@@ -72,7 +73,6 @@ const ReservationContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px 0px;
-
   .item {
     width: 90%;
     display: flex;
@@ -186,13 +186,13 @@ const VoituresContainer = styled.div`
     @media (max-width: 1349px) {
       width: calc(100% / 3.4);
     }
-    @media (max-width: 1049px) {
+    @media (max-width: 1050px) {
       width: calc(100% / 3.42);
     }
     @media (max-width: 1007px) {
       width: calc(100% / 3.5);
     }
-    @media (max-width: 869px) {
+    @media (max-width: 870px) {
       width: calc(100% / 2.3);
     }
 
@@ -207,6 +207,26 @@ const VoituresContainer = styled.div`
 
 function Voitures() {
   const [closeReservation, setCloseReservation] = useState(false);
+  const [formData, setFormData] = useState({
+    agenceDepart: "",
+    agenceRetour: "",
+    dateDepart: "",
+    dateRetour: "",
+    places: 1,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Formulaire soumis:", formData);
+  };
   return (
     <Container>
       <CloseButton
@@ -221,68 +241,83 @@ function Voitures() {
       </CloseButton>
       <Content $closeReservation={closeReservation}>
         <ReservationContainer>
-          <div className="item">
-            <label htmlFor="agence">Lieu de prise en charge</label>
-            <select name="agence" id="agence">
-              <option value="Agence de paris">Agence de paris</option>
-              <option value="Agence de nantes">Agence de nantes</option>
-              <option value="Agence de lyon">Agence de lyon</option>
-              <option value="Agence de marseille">Agence de marseille</option>
-              <option value="Agence de bordeaux">Agence de bordeaux</option>
-            </select>
-          </div>
-          <div className="item">
-            <label htmlFor="agenceReturn">Lieu de restitution</label>
-            <select name="agence" id="agenceReturn">
-              <option value="Agence de paris">Agence de paris</option>
-              <option value="Agence de nantes">Agence de nantes</option>
-              <option value="Agence de lyon">Agence de lyon</option>
-              <option value="Agence de marseille">Agence de marseille</option>
-              <option value="Agence de bordeaux">Agence de bordeaux</option>
-            </select>
-          </div>
-          <div className="item">
-            <label htmlFor="date">Date et heure de prise</label>
-            <input type="datetime-local" id="date" name="date" />
-          </div>
-          <div className="item">
-            <label htmlFor="dateReturn">Date et heure de retour</label>
-            <input type="datetime-local" id="dateReturn" name="date" />
-          </div>
-          <div className="item">
-            <label htmlFor="places">Places</label>
-            <input type="number" id="places" name="places" min="1" max="7" />
-          </div>
-          <div className="item">
-            <button>Rechercher</button>
-          </div>
+          <Form onSubmit={handleSubmit}>
+            <div className="item">
+              <label htmlFor="agenceDepart">Lieu de prise en charge</label>
+              <select
+                name="agenceDepart"
+                id="agenceDepart"
+                onChange={handleChange}
+                value={formData.agenceDepart}
+                required
+              >
+                <option value="">Sélectionnez une agence</option>
+                <option value="Agence de paris">Agence de paris</option>
+                <option value="Agence de nantes">Agence de nantes</option>
+                <option value="Agence de lyon">Agence de lyon</option>
+                <option value="Agence de marseille">Agence de marseille</option>
+                <option value="Agence de bordeaux">Agence de bordeaux</option>
+              </select>
+            </div>
+            <div className="item">
+              <label htmlFor="agenceRetour">Lieu de restitution</label>
+              <select
+                name="agenceRetour"
+                id="agenceRetour"
+                onChange={handleChange}
+                value={formData.agenceRetour}
+                required
+              >
+                <option value="">Sélectionnez une agence</option>
+                <option value="Agence de paris">Agence de paris</option>
+                <option value="Agence de nantes">Agence de nantes</option>
+                <option value="Agence de lyon">Agence de lyon</option>
+                <option value="Agence de marseille">Agence de marseille</option>
+                <option value="Agence de bordeaux">Agence de bordeaux</option>
+              </select>
+            </div>
+            <div className="item">
+              <label htmlFor="dateDepart">Date et heure de prise</label>
+              <input
+                type="datetime-local"
+                id="dateDepart"
+                name="dateDepart"
+                onChange={handleChange}
+                value={formData.dateDepart}
+                required
+              />
+            </div>
+            <div className="item">
+              <label htmlFor="dateRetour">Date et heure de retour</label>
+              <input
+                type="datetime-local"
+                id="dateRetour"
+                name="dateRetour"
+                onChange={handleChange}
+                value={formData.dateRetour}
+                required
+              />
+            </div>
+            <div className="item">
+              <label htmlFor="places">Places</label>
+              <input
+                type="number"
+                id="places"
+                name="places"
+                min="1"
+                max="7"
+                onChange={handleChange}
+                value={formData.places}
+                required
+              />
+            </div>
+            <div className="item">
+              <button type="submit">Rechercher</button>
+            </div>
+          </Form>
         </ReservationContainer>
       </Content>
       <VoituresContainer>
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
         <SingleVoiture />
         <SingleVoiture />
       </VoituresContainer>

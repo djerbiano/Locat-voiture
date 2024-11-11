@@ -6,13 +6,6 @@ const Vl = styled.div`
   height: 300px;
   width: 250px;
   margin: 20px;
-  border-radius: 50px 0px 50px 0px;
-  box-shadow: 0px 0px 10px white;
-
-  @media (max-width: 750px) {
-    width: 70vw;
-    transition: all 0.2s ease;
-  }
 `;
 
 const ImageContainer = styled.div`
@@ -59,13 +52,13 @@ const DetailsContainer = styled.div`
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 100%;
   background-color: white;
   font-weight: bold;
   border-radius: 20px;
 `;
 
-function SingleVoiture() {
+function VoituresTarifs() {
   const [reserver, setReserver] = useState(false);
   return (
     <Vl
@@ -83,4 +76,4 @@ function SingleVoiture() {
   );
 }
 
-export default SingleVoiture;
+export default VoituresTarifs;

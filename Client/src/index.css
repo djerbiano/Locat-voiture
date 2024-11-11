@@ -20,16 +20,18 @@ input:not([type="checkbox"]) {
   margin: 5px;
   cursor: pointer;
   margin-bottom: 20px;
+  font-size: 1rem;
 }
 
 select {
   width: 100%;
-  height: 30px;
+  min-height: 30px;
   border-radius: 5px;
   border: 1px solid #fff;
   padding: 5px;
   margin-bottom: 20px;
   cursor: pointer;
+  font-size: 1rem;
 }
 
 label {
