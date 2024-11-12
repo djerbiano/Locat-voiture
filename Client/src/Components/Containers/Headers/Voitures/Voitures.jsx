@@ -111,11 +111,13 @@ const Form = styled.form`
       border: 1px solid #ccc;
       margin-bottom: 10px;
       font-size: 1rem;
-      color: black;
+      background-color: #c8152c;
+      color: white;
       cursor: pointer;
-      transition: all 0.2s ease;
       &:hover {
         background-color: #ddd;
+        color: black;
+
       }
 
       @media (max-width: 850px) {

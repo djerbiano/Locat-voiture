@@ -8,12 +8,13 @@ import NotFound404 from "./Components/others/NotFound404.jsx";
 import Voitures from "./Components/Containers/Headers//Voitures/Voitures.jsx";
 import Tarifs from "./Components/Containers/Headers/Tarifs/Tarifs.jsx";
 import Contact from "./Components/Containers/Headers/Contact/Contact.jsx";
-import MaReservation from "./Components/Containers/Headers/MaReservation/MaReservation.jsx";
+import MesReservation from "./Components/Containers/Headers/MaReservation/MesReservations.jsx";
 import MentionsLegales from "./Components/Containers/Footer/MentionsLegales.jsx";
 import PolitiqueDeConfidentialite from "./Components/Containers/Footer/PolitiqueDeConfidentialite.jsx";
 import PolitiqueDeCookies from "./Components/Containers/Footer/PolitiqueDeCookies.jsx";
 import ConditionsGeneralesDutilisation from "./Components/Containers/Footer/ConditionsGeneralesDutilisation.jsx";
 import ConditionsGeneralesDeLocation from "./Components/Containers/Footer/ConditionsGeneralesDeLocation.jsx";
+import SingleReservation from "./Components/Containers/Headers/MaReservation/components/SingleReservation.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -33,7 +34,8 @@ function App() {
           <Route path="/Voitures" element={<Voitures />} />
           <Route path="/Tarifs" element={<Tarifs />} />
           <Route path="/Contact" element={<Contact />} />
-          <Route path="/MaReservation" element={<MaReservation />} />
+          <Route path="/MesReservation" element={<MesReservation />} />
+          <Route path="/MesReservation/Reservation" element={<SingleReservation />} />
           <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/politique-de-confidentialite" element={<PolitiqueDeConfidentialite />} />
           <Route path="/politique-de-cookies" element={<PolitiqueDeCookies />} />

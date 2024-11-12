@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
 import Logo from "../../../Assets/logo23.PNG";
@@ -143,9 +143,39 @@ function IndexHeaders() {
   const navigate = useNavigate();
   const [menuHamburgerView, setMenuHamburgerView] = useState(false);
   const [animationBurgerMenu, setAnimationBurgerMenu] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const handleMenuToggle = () => {
     setMenuHamburgerView(!menuHamburgerView);
     setAnimationBurgerMenu(!animationBurgerMenu);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleClick = (to) => {
+    navigate(to);
+    scrollToTop();
+    setMenuHamburgerView(false);
   };
 
   return (
@@ -155,7 +185,7 @@ function IndexHeaders() {
         <LinkItem to="Voitures">Voitures</LinkItem>
         <LinkItem to="Tarifs">Tarifs</LinkItem>
         <LinkItem to="Contact">Contact</LinkItem>
-        <LinkItem to="MaReservation">Ma réservation</LinkItem>
+        <LinkItem to="MesReservation">Mes réservation</LinkItem>
       </HeaderContainer>
 
       <HamburgerMenu $menuHamburgerView={menuHamburgerView}>
@@ -164,7 +194,7 @@ function IndexHeaders() {
             <img src={Logo} alt="logo" />
           </div>
 
-          {menuHamburgerView ? (
+          {menuHamburgerView || isScrolled ? (
             <IoMdCloseCircle
               onClick={() => {
                 handleMenuToggle();
@@ -182,20 +212,50 @@ function IndexHeaders() {
         </div>
 
         <div className={`${animationBurgerMenu ? "openMenu" : "closeMenu"}`}>
-          <MenuItems to="/" onClick={() => handleMenuToggle()}>
+          <MenuItems
+            to="/"
+            onClick={() => {
+              handleClick("/");
+              setAnimationBurgerMenu(!animationBurgerMenu);
+            }}
+          >
             Acceuil
           </MenuItems>
-          <MenuItems to="Voitures" onClick={() => handleMenuToggle()}>
+          <MenuItems
+            to="Voitures"
+            onClick={() => {
+              handleClick("Voitures");
+              setAnimationBurgerMenu(!animationBurgerMenu);
+            }}
+          >
             Voitures
           </MenuItems>
-          <MenuItems to="Tarifs" onClick={() => handleMenuToggle()}>
+          <MenuItems
+            to="Tarifs"
+            onClick={() => {
+              handleClick("Tarifs");
+              setAnimationBurgerMenu(!animationBurgerMenu);
+            }}
+          >
             Tarifs
           </MenuItems>
-          <MenuItems to="Contact" onClick={() => handleMenuToggle()}>
+          <MenuItems
+            to="Contact"
+            onClick={() => {
+              handleClick("Contact");
+              setAnimationBurgerMenu(!animationBurgerMenu);
+            }}
+          >
             Contact
           </MenuItems>
-          <MenuItems to="MaReservation" onClick={() => handleMenuToggle()}>
-            Ma réservation
+          <MenuItems
+            to="MesReservation"
+            onClick={() => {
+              handleClick("MesReservation");
+              setAnimationBurgerMenu(!animationBurgerMenu);
+            }}
+          >
+            Mes réservation
           </MenuItems>
         </div>
       </HamburgerMenu>

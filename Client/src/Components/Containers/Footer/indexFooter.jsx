@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FooterContainer = styled.footer`
   width: 100%;
@@ -43,18 +43,51 @@ const Copyright = styled.div`
 `;
 
 function IndexFooter() {
+  const navigate = useNavigate();
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleClick = (to) => {
+    navigate(to);
+    scrollToTop();
+  };
+
   return (
     <FooterContainer>
       <LinkContainer>
-        <LinkItem to="/mentions-legales">Mentions légales</LinkItem>
-        <LinkItem to="/politique-de-confidentialite">
+        <LinkItem
+          to="/mentions-legales"
+          onClick={() => handleClick("/mentions-legales")}
+        >
+          Mentions légales
+        </LinkItem>
+        <LinkItem
+          to="/politique-de-confidentialite"
+          onClick={() => handleClick("/politique-de-confidentialite")}
+        >
           Politique de confidentialité
         </LinkItem>
-        <LinkItem to="/politique-de-cookies">Politique de cookies</LinkItem>
-        <LinkItem to="/conditions-generales-d-utilisation">
+        <LinkItem
+          to="/politique-de-cookies"
+          onClick={() => handleClick("/politique-de-cookies")}
+        >
+          Politique de cookies
+        </LinkItem>
+        <LinkItem
+          to="/conditions-generales-d-utilisation"
+          onClick={() => handleClick("/conditions-generales-d-utilisation")}
+        >
           Conditions générales d'utilisation
         </LinkItem>
-        <LinkItem to="/conditions-generales-de-location">
+        <LinkItem
+          to="/conditions-generales-de-location"
+          onClick={() => handleClick("/conditions-generales-de-location")}
+        >
           Conditions générales de location
         </LinkItem>
       </LinkContainer>

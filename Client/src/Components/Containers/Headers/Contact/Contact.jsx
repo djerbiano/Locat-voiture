@@ -53,13 +53,13 @@ const Button = styled.button`
   border: none;
   border-radius: 5px;
   background-color: #c8152c;
-  color: black;
+  color: white;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
   align-self: center;
   &:hover {
     background-color: #ddd;
+    color: black;
   }
 `;
 function Contact() {

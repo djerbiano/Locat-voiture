@@ -82,13 +82,13 @@ const ButtonRecherche = styled.button`
   border: none;
   padding: 5px;
   background-color: #c8152c;
-  color: black;
+  color: white;
   cursor: pointer;
   align-self: center;
   font-size: 1rem;
   &:hover {
     background-color: #ddd;
-    transition: all 0.2s ease;
+    color: black;
   }
 `;
 
