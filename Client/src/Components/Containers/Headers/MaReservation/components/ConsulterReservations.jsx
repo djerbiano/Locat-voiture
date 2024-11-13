@@ -44,6 +44,12 @@ const ReservationDetails = styled.div`
   .date {
     display: flex;
 
+    @media (max-width:410px){
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
     svg {
       margin: 0 10px;
     }
@@ -97,6 +103,16 @@ const SingleReservationPassees = styled.div`
     svg {
       margin: 0 10px;
     }
+
+    @media (max-width: 1000px) {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        margin: 10px 0;
+      }
+    }
   }
 
   .date {
@@ -105,12 +121,18 @@ const SingleReservationPassees = styled.div`
     svg {
       margin: 0 10px;
     }
+    @media (max-width: 1000px) {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        margin: 10px 0;
+      }
+    }
   }
 
   .consulterReservation {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     button {
       padding: 10px 20px;
       background-color: #c8152c;
@@ -123,6 +145,18 @@ const SingleReservationPassees = styled.div`
         background-color: #ddd;
         color: #333;
       }
+    }
+  }
+
+  @media (max-width: 750px) {
+    width: 100%;
+    min-height: 300px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    div {
+      margin-bottom: 20px;
     }
   }
 `;
@@ -168,7 +202,6 @@ function ConsulterReservations() {
             </button>
           </div>
         </SingleReservationPassees>
-
         <SingleReservationPassees>
         <div className="lieux">
           <p>Agence de paris</p>
@@ -187,7 +220,6 @@ function ConsulterReservations() {
           </button>
         </div>
       </SingleReservationPassees>
-
       <SingleReservationPassees>
       <div className="lieux">
         <p>Agence de paris</p>
@@ -207,6 +239,7 @@ function ConsulterReservations() {
       </div>
     </SingleReservationPassees>
       </SectionReservationPassees>
+      
     </Content>
   );
 }

@@ -38,7 +38,11 @@ const VoituressNeuves = styled.div`
   }
 `;
 function VoituresNeuves({ setModalContent, setModalJustClose }) {
-  const modalContent = "Des voitures de location neuves";
+  const modalContent =
+    "Roulez avec style et confort grâce à notre flotte de voitures neuves. " +
+    "Tous nos véhicules sont récents, bien entretenus et équipés des dernières technologies pour garantir votre sécurité. " +
+    "Profitez d'une conduite agréable avec des modèles modernes offrant confort et performance. " +
+    "Parce que votre satisfaction est notre priorité, nous renouvelons régulièrement notre parc automobile.";
   return (
     <VoituressNeuves
       onClick={() => {

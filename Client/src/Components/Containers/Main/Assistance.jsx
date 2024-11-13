@@ -35,7 +35,11 @@ const Assitance = styled.div`
   }
 `;
 function Assistance({ setModalContent, setModalJustClose }) {
-  const modalContent = "Assistance 24 h / 24 h";
+  const modalContent =
+    "Profitez d'une assistance 24h/24 et 7j/7 pour une tranquillité d'esprit maximale lors de vos trajets. " +
+    "Que ce soit pour des pannes, des questions ou tout autre problème, notre équipe dédiée est là pour vous aider. " +
+    "Nous mettons à votre disposition une ligne d'assistance rapide et efficace, pour que vous puissiez voyager sereinement. " +
+    "Votre satisfaction et votre sécurité sont notre priorité absolue.";
   return (
     <Assitance
       onClick={() => {

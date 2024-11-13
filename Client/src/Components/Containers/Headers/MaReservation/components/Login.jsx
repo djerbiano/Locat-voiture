@@ -28,7 +28,20 @@ const Container = styled.div`
   }
 `;
 
+const ForgotPassword = styled.p`
+  margin-top: 20px;
+  font-size: 1rem;
+
+  &:hover {
+    text-decoration: underline;
+    transition: all 0.2s ease;
+    color: red;
+    cursor: pointer;
+  }
+`;
+
 function Login() {
+  const [forgotPassword, setForgotPassword] = useState(true);
   const [formData, setFormData] = useState({
     numeroReservation: "",
     email: "",
@@ -49,43 +62,82 @@ function Login() {
   };
   return (
     <Container>
-      <p style={{ fontSize: "2rem", marginBottom: "20px" }}>Réservation:</p>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="numeroReservation">Numéro de réservation:</label>
-        <input
-          type="text"
-          id="numeroReservation"
-          name="numeroReservation"
-          placeholder="Numero de reservation"
-          value={formData.numeroReservation}
-          onChange={handleChange}
-          required
-        />
+      {forgotPassword ? (
+        <>
+          <p style={{ fontSize: "2rem", marginBottom: "20px" }}>Réservation:</p>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="numeroReservation">Numéro de réservation:</label>
 
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+            <input
+              type="text"
+              id="numeroReservation"
+              name="numeroReservation"
+              placeholder="Numero de reservation"
+              value={formData.numeroReservation}
+              onChange={handleChange}
+              required
+            />
 
-        <label htmlFor="password">Mot de passe:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Mot de passe"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
 
-        <input type="submit" value="Connexion" />
-      </form>
+            <label htmlFor="password">Mot de passe:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Mot de passe"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+
+            <input type="submit" value="Connexion" />
+          </form>
+          <ForgotPassword onClick={() => setForgotPassword(false)}>
+            Vous avez oublié votre mot de passe ?
+          </ForgotPassword>
+        </>
+      ) : (
+        <>
+          <p style={{ fontSize: "2rem", marginBottom: "20px" }}>
+            Récupérer vos données:
+          </p>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="numeroReservation">Numéro de réservation:</label>
+            <input
+              type="text"
+              id="numeroReservation"
+              name="numeroReservation"
+              placeholder="Numero de reservation"
+              value={formData.numeroReservation}
+              onChange={handleChange}
+              required
+            />
+
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+
+            <input type="submit" value="Envoyer" />
+          </form>
+        </>
+      )}
     </Container>
   );
 }

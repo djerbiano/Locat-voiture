@@ -37,7 +37,11 @@ const Frais = styled.div`
   }
 `;
 function SansFraisCachés({ setModalContent, setModalJustClose }) {
-  const modalContent = "Sans frais cachés";
+  const modalContent =
+    "Louez en toute confiance avec notre politique de transparence totale : aucun frais caché ne viendra alourdir votre facture. " +
+    "Nos tarifs incluent toutes les taxes et assurances pour une clarté maximale. " +
+    "Vous payez exactement le montant indiqué lors de votre réservation, sans mauvaises surprises. " +
+    "Notre engagement : des prix clairs et des services honnêtes pour un voyage sans stress.";
   return (
     <Frais
       onClick={() => {
