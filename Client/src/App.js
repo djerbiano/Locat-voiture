@@ -15,6 +15,7 @@ import PolitiqueDeCookies from "./Components/Containers/Footer/PolitiqueDeCookie
 import ConditionsGeneralesDutilisation from "./Components/Containers/Footer/ConditionsGeneralesDutilisation.jsx";
 import ConditionsGeneralesDeLocation from "./Components/Containers/Footer/ConditionsGeneralesDeLocation.jsx";
 import SingleReservation from "./Components/Containers/Headers/MaReservation/components/SingleReservation.jsx";
+import Reserver from "./Components/Containers/Paiement/Reserver.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -36,6 +37,7 @@ function App() {
           <Route path="/Contact" element={<Contact />} />
           <Route path="/MesReservation" element={<MesReservation />} />
           <Route path="/MesReservation/Reservation" element={<SingleReservation />} />
+          <Route path="/Reserver" element={<Reserver />} />
           <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/politique-de-confidentialite" element={<PolitiqueDeConfidentialite />} />
           <Route path="/politique-de-cookies" element={<PolitiqueDeCookies />} />

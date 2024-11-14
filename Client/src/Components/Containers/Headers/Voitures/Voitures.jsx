@@ -281,7 +281,7 @@ function Voitures() {
             <div className="item">
               <label htmlFor="dateDepart">Date et heure de prise</label>
               <input
-                type="datetime-local"
+                type="date"
                 id="dateDepart"
                 name="dateDepart"
                 onChange={handleChange}
@@ -292,7 +292,7 @@ function Voitures() {
             <div className="item">
               <label htmlFor="dateRetour">Date et heure de retour</label>
               <input
-                type="datetime-local"
+                type="date"
                 id="dateRetour"
                 name="dateRetour"
                 onChange={handleChange}
