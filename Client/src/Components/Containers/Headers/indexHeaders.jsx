@@ -97,7 +97,7 @@ const HamburgerMenu = styled.div`
     justify-content: space-between;
     align-items: center;
     transform: translateY(0px);
-    transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in;
     opacity: 1;
   }
 
@@ -114,7 +114,7 @@ const HamburgerMenu = styled.div`
     align-items: center;
     transform: translateY(-600px);
     transition: all 0.5s ease-in-out;
-    opacity: 0;
+    cursor: pointer;
   }
 `;
 
