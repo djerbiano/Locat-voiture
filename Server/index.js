@@ -7,6 +7,7 @@ const errMiddleware = require("./middlewares/errMiddleware");
 const connectToDb = require("./config/db");
 
 const authRoute = require("./routes/authRoute");
+const { object } = require("joi");
 
 const server = express();
 server.use(cors());
@@ -25,7 +26,11 @@ server.use(logger);
 // Routes
 server.get("/", async (req, res) => {
   try {
-    return res.status(200).json({ message: "No access API" });
+
+    
+    
+    return res.status(200).json({ message: "API ok" });
+    //return res.status(200).json({ message: "No access API" });
   } catch (error) {
     return res.status(404).json({ message: error });
   }

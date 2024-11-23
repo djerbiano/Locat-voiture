@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Pic2 from "../../../../Assets/1.png";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Vl = styled.div`
   height: 300px;
@@ -40,12 +41,16 @@ const Reserver = styled.div`
   padding: 10px;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.5s ease;
   opacity: ${(props) => (props.$reserver ? "1" : "0")};
 
   &:hover {
     background-color: #a5a2a2;
-    transition: all 0.2s ease;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
   }
 `;
 
@@ -73,7 +78,9 @@ function SingleVoiture() {
       onMouseLeave={() => setReserver(false)}
     >
       <ImageContainer>
-        <Reserver $reserver={reserver}>Réserver</Reserver>
+        <Reserver $reserver={reserver}>
+          <Link to="/Reserver">Réserver </Link>
+        </Reserver>
         <DetailsContainer>
           <Name>Mercedes-AMG GT</Name>
           <Prix>250 € / jour</Prix>

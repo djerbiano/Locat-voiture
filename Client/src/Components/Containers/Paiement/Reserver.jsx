@@ -14,9 +14,8 @@ const Container = styled.div`
   position: relative;
 
   .openSearch {
-
-    @media(min-width: 741px){
-      display: none
+    @media (min-width: 741px) {
+      display: none;
     }
     z-index: 3;
     position: absolute;
@@ -44,10 +43,11 @@ const Container = styled.div`
   }
 `;
 const FormContainer = styled.div`
-  transform: ${(props) =>
-    props.$displaySearch ? "translateX(0px)" : "translateX(110%)"};
   transition: all 1s ease;
   @media (max-width: 740px) {
+    transform: ${(props) =>
+      props.$displaySearch ? "translate(0px)" : " translateY(-140%)"};
+    opacity: ${(props) => (props.$displaySearch ? 1 : 0)};
     border-radius: 10px 0px 0px 10px;
     width: 60%;
     min-height: 50px;
@@ -232,8 +232,8 @@ const FilterVoituresTrouvees = styled.div`
     display: flex;
     flex-direction: column;
     padding: 10px;
-    transition: all 0.1s ease;
-    transform: translateX(0px);
+    transition: all 1s ease;
+    transform: translateY(0px);
     opacity: 1;
     width: 200px;
     position: absolute;
@@ -249,10 +249,10 @@ const FilterVoituresTrouvees = styled.div`
     display: flex;
     flex-direction: column;
     padding: 10px;
-    transform: translateX(-40vw);
+    transform: translateY(-250%);
     transition: all 1s ease-in-out;
     opacity: 0;
-    width: 0px;
+    width: 200px;
     position: absolute;
     top: 50px;
     left: 0;
@@ -509,7 +509,10 @@ function Reserver() {
           </div>
         </FilterVoituresTrouvees>
         <div className={displayFilter ? "openFilterMenu" : "closeFilterMenu"}>
-          <MdOutlineMenuOpen style={{ cursor: "pointer" }} onClick={() => setDisplayFilter(!displayFilter)} />
+          <MdOutlineMenuOpen
+            style={{ cursor: "pointer" }}
+            onClick={() => setDisplayFilter(!displayFilter)}
+          />
         </div>
         <ResultatVoituresTrouvees>
           <SingleVoiture />

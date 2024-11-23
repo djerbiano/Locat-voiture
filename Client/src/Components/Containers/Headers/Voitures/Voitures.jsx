@@ -12,24 +12,24 @@ const Container = styled.div`
   position: relative;
 `;
 const CloseButton = styled.div`
-  position: fixed;
-  top: 13vh;
+  position: absolute;
+  top:  0px;
   left: 0px;
   cursor: pointer;
   z-index: 2;
   background-color: white;
   border-radius: 10px;
-  animation: spin 2s ease infinite;
+  animation: move 2s ease infinite;
 
-  @keyframes spin {
+  @keyframes move {
     0% {
-      transform: translateY(-10%);
+      transform: translateY(-5%);
     }
     50% {
-      transform: translateY(10%);
+      transform: translateY(5%);
     }
     100% {
-      transform: translateY(-10%);
+      transform: translateY(-5%);
     }
   }
 
@@ -52,7 +52,7 @@ const Content = styled.div`
   color: #000000;
   border-radius: 10px;
   transform: ${(props) =>
-    props.$closeReservation ? "translateX(-100%)" : "translateX(0%)"};
+    props.$closeReservation ? "translateX(-200%)" : "translateX(0%)"};
   opacity: ${(props) => (props.$closeReservation ? "0" : "1")};
   transition: all 0.5s ease;
 
@@ -170,6 +170,7 @@ const VoituresContainer = styled.div`
   height: 100%;
   display: flex;
   flex-wrap: wrap;
+  
   @media (max-width: 645px) {
     justify-content: center;
     align-items: center;
@@ -320,6 +321,9 @@ function Voitures() {
         </ReservationContainer>
       </Content>
       <VoituresContainer>
+        <SingleVoiture />
+        <SingleVoiture />
+        <SingleVoiture />
         <SingleVoiture />
         <SingleVoiture />
       </VoituresContainer>

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Pic2 from "../../../Assets/1.png";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Vl = styled.div`
   height: 300px;
@@ -47,6 +48,11 @@ const Reserver = styled.div`
     background-color: #a5a2a2;
     transition: all 0.2s ease;
   }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
 `;
 
 const DetailsContainer = styled.div`
@@ -85,7 +91,7 @@ function NewVoiture2024() {
     >
       <ImageContainer>
         <New2024>New 2024</New2024>
-        <Reserver $reserver={reserver}>Réserver</Reserver>
+        <Reserver $reserver={reserver}> <Link to="/Reserver"> Réserver </Link></Reserver>
         <DetailsContainer>
           <Name>Mercedes-AMG GT</Name>
           <Prix>250 € / jour</Prix>
