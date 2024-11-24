@@ -12,5 +12,7 @@ route.post("/login", controller.loginUser);
 // Update user
 route.patch("/update/:email", virifyToken, controller.updateUser);
 
+// Delete user
+route.delete("/delete/:email", virifyToken, controller.deleteUser);
 
 module.exports = route;

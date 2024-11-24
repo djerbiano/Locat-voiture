@@ -9,6 +9,7 @@ const {
 } = require("../models/Users");
 const sendMailCreateCompte = require("../mails/register");
 const sendMailUpdateUser = require("../mails/updateUser");
+const sendMailDeleteCompte = require("../mails/deleteCompte");
 const { deleteImage, handleErrors } = require("../utils/helpers");
 const { object } = require("joi");
 
@@ -168,17 +169,25 @@ const controller = {
       }
       // modification mail avec validation
       if (req.body.email) {
-        const { error: emailError } = validateNewMail({
-          email: req.body.email,
-        });
-
-        if (emailError) {
+        // Vérifier si le nouvel email existe déjà
+        const emailExists = await User.findOne({ email: req.body.email });
+        if (emailExists) {
           return handleErrors(res, 400, {
-            message: emailError.details[0].message,
+            message: "Veuillez saisir une autre adresse email",
           });
-        }
+        } else {
+          const { error: emailError } = validateNewMail({
+            email: req.body.email,
+          });
 
-        updateFields.email = req.body.email;
+          if (emailError) {
+            return handleErrors(res, 400, {
+              message: emailError.details[0].message,
+            });
+          }
+
+          updateFields.email = req.body.email;
+        }
       }
 
       // modification des autres informations sans validation
@@ -196,15 +205,74 @@ const controller = {
         });
       }
 
-      let fields = Object.keys(updateFields).join("-");
-
       // envoyer le mail de modification de compte
+      let fields = Object.keys(updateFields).join("-");
       sendMailUpdateUser(user.email, fields);
 
       await User.updateOne({ email: req.params.email }, updateFields);
 
       return handleErrors(res, 200, {
         message: "Le profil a bien été mis à jour",
+      });
+    } catch (error) {
+      return handleErrors(res, 400, {
+        message: error.message,
+      });
+    }
+  },
+
+  // DeleteUser
+  deleteUser: async (req, res) => {
+    try {
+      let compteExiste = await User.findOne({ _id: req.user.id });
+
+      // Vérification du token
+      if (compteExiste == null) {
+        return handleErrors(res, 403, {
+          message: "Vous devez être connecté pour supprimer votre compte",
+        });
+      }
+
+      // suppression par admin
+      if (compteExiste.isAdmin) {
+        await User.deleteOne({ email: req.params.email });
+
+        sendMailDeleteCompte(
+          req.user.email,
+          "Nous avons supprimé votre compte"
+        );
+
+        return handleErrors(res, 200, {
+          message: "Le compte a bien été supprimé par un administrateur",
+        });
+      }
+
+      let user = await User.findOne({ email: req.params.email });
+
+      // Vérifier si l'utilisateur est autorisé à supprimer son compte
+      if (!user || req.params.email !== req.user.email) {
+        return handleErrors(res, 404, {
+          message: "Profile non trouvé ou non autorisé",
+        });
+      }
+
+      //supprimer le compte
+      await User.deleteOne({ email: req.params.email });
+
+      // envoyer le mail de suppression de compte
+      sendMailDeleteCompte(user.email, "Le compte a bien été supprimé");
+
+      /*supprimer les réservations
+       ***********************
+       *
+       *
+       *
+       *
+       * *********************
+       */
+
+      return handleErrors(res, 200, {
+        message: "Le compte a bien été supprimé",
       });
     } catch (error) {
       return handleErrors(res, 400, {

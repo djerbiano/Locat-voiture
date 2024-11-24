@@ -1,11 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   padding: 20px;
   width: 300px;
   min-width: 30%;
-  min-height: 300px;
+  min-height: 200px;
   background-color: #ffffff7a;
   border-radius: 10px;
   color: black;
@@ -40,10 +41,22 @@ const ForgotPassword = styled.p`
   }
 `;
 
+const RegisterCompte = styled(Link)`
+  font-size: 1rem;
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    text-decoration: underline;
+    transition: all 0.2s ease;
+    color: red;
+    cursor: pointer;
+  }
+`;
+
 function Login() {
   const [forgotPassword, setForgotPassword] = useState(true);
   const [formData, setFormData] = useState({
-    numeroReservation: "",
     email: "",
     password: "",
   });
@@ -64,20 +77,8 @@ function Login() {
     <Container>
       {forgotPassword ? (
         <>
-          <p style={{ fontSize: "2rem", marginBottom: "20px" }}>Réservation:</p>
+          <p style={{ fontSize: "2rem", marginBottom: "20px" }}>Connexion:</p>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="numeroReservation">Numéro de réservation:</label>
-
-            <input
-              type="text"
-              id="numeroReservation"
-              name="numeroReservation"
-              placeholder="Numero de reservation"
-              value={formData.numeroReservation}
-              onChange={handleChange}
-              required
-            />
-
             <label htmlFor="email">Email:</label>
             <input
               type="email"
@@ -105,6 +106,8 @@ function Login() {
           <ForgotPassword onClick={() => setForgotPassword(false)}>
             Vous avez oublié votre mot de passe ?
           </ForgotPassword>
+
+          <RegisterCompte to="/Creation-de-compte" >Créer un compte ?</RegisterCompte>
         </>
       ) : (
         <>
@@ -112,17 +115,6 @@ function Login() {
             Récupérer vos données:
           </p>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="numeroReservation">Numéro de réservation:</label>
-            <input
-              type="text"
-              id="numeroReservation"
-              name="numeroReservation"
-              placeholder="Numero de reservation"
-              value={formData.numeroReservation}
-              onChange={handleChange}
-              required
-            />
-
             <label htmlFor="email">Email:</label>
             <input
               type="email"

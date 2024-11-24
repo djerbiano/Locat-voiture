@@ -1,21 +1,20 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const port = process.env.PORT || 3002;
 const logger = require("./middlewares/logger");
 const errMiddleware = require("./middlewares/errMiddleware");
 const connectToDb = require("./config/db");
-
 const authRoute = require("./routes/authRoute");
-const { object } = require("joi");
 
+const port = process.env.PORT || 3002;
 const server = express();
 server.use(cors());
 server.use(express.json());
-server.use("/images", express.static("images"));
 
 // Middleware pour analyser les données URL encodées des formulaires
 server.use(express.urlencoded({ extended: true }));
+
+server.use("/images", express.static("images"));
 
 // Connect to the database
 connectToDb();
@@ -26,9 +25,6 @@ server.use(logger);
 // Routes
 server.get("/", async (req, res) => {
   try {
-
-    
-    
     return res.status(200).json({ message: "API ok" });
     //return res.status(200).json({ message: "No access API" });
   } catch (error) {

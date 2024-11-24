@@ -16,6 +16,7 @@ import ConditionsGeneralesDutilisation from "./Components/Containers/Footer/Cond
 import ConditionsGeneralesDeLocation from "./Components/Containers/Footer/ConditionsGeneralesDeLocation.jsx";
 import SingleReservation from "./Components/Containers/Headers/MaReservation/components/SingleReservation.jsx";
 import Reserver from "./Components/Containers/Paiement/Reserver.jsx";
+import RegisterNewUser from "./Components/Containers/Headers/MaReservation/components/RegisterNewUser.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ function App() {
           <Route path="/Voitures" element={<Voitures />} />
           <Route path="/Tarifs" element={<Tarifs />} />
           <Route path="/Contact" element={<Contact />} />
+          <Route path="/Creation-de-compte" element={<RegisterNewUser />} />
           <Route path="/MesReservation" element={<MesReservation />} />
           <Route path="/MesReservation/Reservation" element={<SingleReservation />} />
           <Route path="/Reserver" element={<Reserver />} />

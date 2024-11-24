@@ -1,0 +1,8 @@
+
+A faire:
+
+- 
+
+A vérif:
+
+- voir pour la modification de l'email (doit rester unique)
