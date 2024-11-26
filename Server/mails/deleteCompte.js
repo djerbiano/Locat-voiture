@@ -23,7 +23,7 @@ const sendMailDeleteCompte = function (Mail, message) {
     const info = await transporter.sendMail({
       from: '"Loca-voiture 👻" <admin@loca-voiture.com>',
       to: userMail,
-      subject: "Loca-voiture ✔",
+      subject: "Compte supprimé",
       text: "Compte supprimé",
       html: likeMail,
     });

@@ -6,7 +6,6 @@ const dotenv = require("dotenv").config();
 function virifyToken(req, res, next) {
   // Récupérer le token des en-têtes de la requête
   const token = req.headers.token;
-console.log(token);
   if (!token || token === "null") {
     return res
       .status(401)

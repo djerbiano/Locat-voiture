@@ -15,4 +15,10 @@ route.patch("/update/:email", virifyToken, controller.updateUser);
 // Delete user
 route.delete("/delete/:email", virifyToken, controller.deleteUser);
 
+// Renistialize password link for user
+route.post("/reset-password-send-link/:email", controller.resetPasswordSendLink);
+
+// Reset password validate
+route.post("/reset-password-validate/:token", virifyToken, controller.resetPasswordValidate);
+
 module.exports = route;

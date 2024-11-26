@@ -1,14 +1,15 @@
 const nodemailer = require("nodemailer");
 
-const updateUser = function (Mail, coordonnées) {
+const resetPasswordSendLink = function (Mail, resetLink) {
   const likeMail = ` 
-  <h2>Bienvenue chez Loca-voiture</h2>
+  <p>Bonjour ${Mail},</p>
   <br/>
-  <p>Cher(e) ${Mail},</p>
+  <p>Suite à votre demande, vous pouvez changer votre mot de passe en cliquant sur le lien suivant :</p>
+  <p>Vous avez 10 minutes pour effectuer le changement</p>
   <br/>
-  <p>Vos informations ont bien été mise à jour</p>
+  <a href="${resetLink}">Modifier votre mot de passe</a>
   <br/>
-  <p>Les modifications concernent : ${coordonnées}</p>
+  <p>Si vous n'ête pas à l'origine de cette demande, veuillez ignorer ce mail</p>
   <br/>
   <br/>
   <h3>L'équipe Loca-voiture</h3>
@@ -26,8 +27,8 @@ const updateUser = function (Mail, coordonnées) {
     const info = await transporter.sendMail({
       from: '"Loca-voiture 👻" <admin@loca-voiture.com>',
       to: userMail,
-      subject: "Compte mis à jour",
-      text: "Compte mis à jour",
+      subject: "Changement de mot de passe",
+      text: "Changement de mot de passe",
       html: likeMail,
     });
     console.log("Message sent: %s", info.messageId);
@@ -36,4 +37,4 @@ const updateUser = function (Mail, coordonnées) {
   main().catch(console.error);
 };
 
-module.exports = updateUser;
+module.exports = resetPasswordSendLink;

@@ -111,8 +111,8 @@ function Login() {
         </>
       ) : (
         <>
-          <p style={{ fontSize: "2rem", marginBottom: "20px" }}>
-            Récupérer vos données:
+          <p style={{ fontSize: "1.5rem", marginBottom: "20px" }}>
+            Rénitialisation de mot de passe:
           </p>
           <form onSubmit={handleSubmit}>
             <label htmlFor="email">Email:</label>

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const joi = require("joi");
-
-// Booking = require("../models/booking");
+const Booking = require("./Bookings");
 
 const UsersSchema = mongoose.Schema(
   {
@@ -49,6 +48,11 @@ const UsersSchema = mongoose.Schema(
         ref: "Booking",
       },
     ],
+    tokenRestPassword: {
+      type: String,
+      enum: ["validate", "unvalidate"],
+      default: "unvalidate",
+    },
   },
   { timestamps: true }
 );

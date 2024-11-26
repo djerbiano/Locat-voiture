@@ -27,7 +27,7 @@ const sendMailCreateCompte = function (Mail) {
     const info = await transporter.sendMail({
       from: '"Loca-voiture 👻" <admin@loca-voiture.com>',
       to: userMail,
-      subject: "Loca-voiture ✔",
+      subject: "Compte creé",
       text: "Compte creé",
       html: likeMail,
     });

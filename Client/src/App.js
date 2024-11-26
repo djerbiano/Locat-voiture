@@ -17,6 +17,7 @@ import ConditionsGeneralesDeLocation from "./Components/Containers/Footer/Condit
 import SingleReservation from "./Components/Containers/Headers/MaReservation/components/SingleReservation.jsx";
 import Reserver from "./Components/Containers/Paiement/Reserver.jsx";
 import RegisterNewUser from "./Components/Containers/Headers/MaReservation/components/RegisterNewUser.jsx";
+import ModificationMotDePasse from "./Components/Containers/Headers/MaReservation/components/ModificationMotDePasse.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -37,6 +38,7 @@ function App() {
           <Route path="/Tarifs" element={<Tarifs />} />
           <Route path="/Contact" element={<Contact />} />
           <Route path="/Creation-de-compte" element={<RegisterNewUser />} />
+          <Route path="/changement-mot-de-passe/:token" element={<ModificationMotDePasse />} />
           <Route path="/MesReservation" element={<MesReservation />} />
           <Route path="/MesReservation/Reservation" element={<SingleReservation />} />
           <Route path="/Reserver" element={<Reserver />} />

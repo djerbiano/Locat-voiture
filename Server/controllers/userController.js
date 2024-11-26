@@ -10,8 +10,9 @@ const {
 const sendMailCreateCompte = require("../mails/register");
 const sendMailUpdateUser = require("../mails/updateUser");
 const sendMailDeleteCompte = require("../mails/deleteCompte");
-const { deleteImage, handleErrors } = require("../utils/helpers");
-const { object } = require("joi");
+const resetPasswordSendLink = require("../mails/resetPasswordSendLink");
+const validationNewPassword = require("../mails/validationNewPassword");
+const { handleErrors } = require("../utils/helpers");
 
 const controller = {
   // registerUser
@@ -101,6 +102,14 @@ const controller = {
             }
           );
           const { password, updatedAt, __v, ...other } = user._doc;
+
+          // protection contre la réutilisation du lien concernant le changement de mot de passe (ca repasse a unvalidate si le lien est utilisé ou le user se connecte)
+          if (user.tokenRestPassword === "validate") {
+            await User.updateOne(
+              { _id: user._id },
+              { $set: { tokenRestPassword: "unvalidate" } }
+            );
+          }
           return res
             .status(200)
             .json([
@@ -273,6 +282,104 @@ const controller = {
 
       return handleErrors(res, 200, {
         message: "Le compte a bien été supprimé",
+      });
+    } catch (error) {
+      return handleErrors(res, 400, {
+        message: error.message,
+      });
+    }
+  },
+
+  // Renistialize password link for user
+  resetPasswordSendLink: async (req, res) => {
+    try {
+      const user = await User.findOne({ email: req.params.email });
+
+      if (!user) {
+        return handleErrors(res, 404, {
+          message:
+            "Si votre adresse e-mail est enregistrée dans notre base de données, vous recevrez dans quelque minutes un e-mail contenant un lien pour réinitialiser votre mot de passe. Veuillez vérifier votre boîte de réception, y compris les courriers indésirable.",
+        });
+      }
+
+      // protection contre la réutilisation du lien concernant le changement de mot de passe (ca repasse a unvalidate si le lien est utilisé ou le user se connecte)
+      await User.updateOne(
+        { _id: user._id },
+        { $set: { tokenRestPassword: "validate" } }
+      );
+      // generer un token si le process est valaide
+      const token = jwt.sign(
+        {
+          id: user._id,
+          email: user.email,
+        },
+        process.env.JWT_SECRET_KEY,
+        {
+          expiresIn: "10m",
+        }
+      );
+
+      const resetLink = `${process.env.FRONTEND_URL}/changement-mot-de-passe/${token}`;
+
+      // envoyer le mail de modification de compte
+      resetPasswordSendLink(user.email, resetLink);
+
+      res.status(200).json({
+        message:
+          "Vous recevrez dans quelque minutes un e-mail contenant un lien pour réinitialiser votre mot de passe. Veuillez vérifier votre boîte de réception, y compris les courriers indésirable",
+      });
+    } catch (error) {
+      return handleErrors(res, 400, {
+        message: error.message,
+      });
+    }
+  },
+
+  // Reset password validate
+  resetPasswordValidate: async (req, res) => {
+    try {
+      const { error } = validateNewPassword(req.body);
+
+      if (error) {
+        return handleErrors(res, 400, {
+          message: error.details[0].message,
+        });
+      }
+      let user = await User.findOne({ _id: req.user.id });
+
+      // vérifier si le user existe
+      if (!user) {
+        return handleErrors(res, 404, {
+          message: "Veuillez vous connecter",
+        });
+      }
+
+      if (user.tokenRestPassword === "unvalidate") {
+        return handleErrors(res, 403, {
+          message: "Le lien n'est plus valide",
+        });
+      }
+
+      // hacher le nouveau mot de passe avant de l'enregistrer
+      const salt = await bcrypt.genSalt(10);
+      const newPassword = (req.body.password = await bcrypt.hash(
+        req.body.password.trim(),
+        salt
+      ));
+
+      // modifier le mot de passe et désactiver la possibilité de réutilisation du lien
+      await User.updateOne(
+        { _id: user._id },
+        {
+          $set: { password: newPassword, tokenRestPassword: "unvalidate" },
+        }
+      );
+
+      // envoyer le mail de modification de compte
+      validationNewPassword(user.email);
+
+      res.status(200).json({
+        message: "Votre mot de passe a bien été modifié",
       });
     } catch (error) {
       return handleErrors(res, 400, {

@@ -1,14 +1,10 @@
 const nodemailer = require("nodemailer");
 
-const updateUser = function (Mail, coordonnées) {
+const validationNewPassword = function (Mail) {
   const likeMail = ` 
-  <h2>Bienvenue chez Loca-voiture</h2>
+  <p>Bonjour ${Mail},</p>
   <br/>
-  <p>Cher(e) ${Mail},</p>
-  <br/>
-  <p>Vos informations ont bien été mise à jour</p>
-  <br/>
-  <p>Les modifications concernent : ${coordonnées}</p>
+  <p>Votre mot de passe a bien été mis à jour</p>
   <br/>
   <br/>
   <h3>L'équipe Loca-voiture</h3>
@@ -36,4 +32,4 @@ const updateUser = function (Mail, coordonnées) {
   main().catch(console.error);
 };
 
-module.exports = updateUser;
+module.exports = validationNewPassword;
