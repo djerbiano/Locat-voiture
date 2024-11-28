@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const joi = require("joi");
-const Booking = require("./Bookings");
+const Bookings = require("./Bookings");
 
 const UsersSchema = mongoose.Schema(
   {
@@ -45,7 +45,7 @@ const UsersSchema = mongoose.Schema(
     booking: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Booking",
+        ref: "Bookings",
       },
     ],
     tokenRestPassword: {
