@@ -6,6 +6,7 @@ const errMiddleware = require("./middlewares/errMiddleware");
 const connectToDb = require("./config/db");
 const authRoute = require("./routes/authRoute");
 const carsRoute = require("./routes/carsRoute");
+const carsBookings = require("./routes/bookings");
 
 const port = process.env.PORT || 3002;
 const server = express();
@@ -34,11 +35,11 @@ server.get("/", async (req, res) => {
 });
 server.use("/api/auth", authRoute);
 server.use("/cars", carsRoute);
+server.use("/bookings", carsBookings);
 
 server.all("*", (req, res) => {
   res.status(404).send("<h1>Endpoint inexistant</h1>");
 });
-
 
 // Middleware pour gérer les erreurs
 server.use(errMiddleware);

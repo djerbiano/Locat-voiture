@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const joi = require("joi");
-const Bookings = require("./Bookings");
+const {Booking} = require("./Bookings");
 
 const CarsSchema = mongoose.Schema({
   marque: {
@@ -83,7 +83,7 @@ const CarsSchema = mongoose.Schema({
   bookings: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Bookings",
+      ref: "Booking",
     },
   ],
 });

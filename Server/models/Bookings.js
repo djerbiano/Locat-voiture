@@ -18,6 +18,7 @@ const BookingsSchema = mongoose.Schema(
     startDate: {
       type: Date,
       required: true,
+      
     },
     endDate: {
       type: Date,
@@ -52,7 +53,7 @@ const BookingsSchema = mongoose.Schema(
         },
       },
     ],
-    updateWithUser: {
+    deleteWithUser: {
       type: Boolean,
       default: true,
     },
@@ -69,10 +70,15 @@ function validateBooking(obj) {
   const schema = joi.object({
     user: joi.string().required(),
     voiture: joi.string().required(),
-    startDate: joi.date().required().greater('now'),
-    endDate: joi.date().greater(joi.ref("startDate")).greater('now').required(),
+    endDate: joi.date().required().greater("now"),
+    startDate: joi.date().required().greater("now").less(joi.ref("endDate")),
     price: joi.number().positive().required().min(1).max(15500), // max 31day (500max per day)
-    status: joi.string().valid("En-attente", "acceptée", "refusée", "annulée").required(),
+    status: joi
+      .string()
+      .valid("En-attente", "acceptée", "refusée", "annulée")
+      .required(),
+      dateOfReservation: joi.date().default(() => new Date()),
+    deleteWithUser: joi.boolean().default(true),
   });
 
   return schema.validate(obj);
@@ -83,10 +89,10 @@ function validateBookingComments(obj) {
   const schema = joi.object({
     user: joi.string().required(),
     content: joi.string().required().min(2).max(150),
-    dateOfComment: joi.date().default('now'),
+    dateOfComment: joi.date().default("now"),
   });
 
   return schema.validate(obj);
 }
 
-module.exports = { Booking, validateBooking , validateBookingComments};
+module.exports = { Booking, validateBooking, validateBookingComments };

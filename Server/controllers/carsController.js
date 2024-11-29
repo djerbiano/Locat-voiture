@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Car, validateCar, updateCar } = require("../models/Cars");
 const { User } = require("../models/Users");
+const {Booking} = require("../models/Bookings");
 const { handleErrors } = require("../utils/helpers");
 
 const controller = {
@@ -131,7 +132,7 @@ const controller = {
   // getAllCars for admin with bookings
   getAllCarsForAdmin: async (req, res) => {
     try {
-      const cars = await Car.find({});
+      const cars = await Car.find({}).populate({path: "bookings" });
 
       if (cars.length < 1) {
         return res.status(200).json({
@@ -179,6 +180,37 @@ const controller = {
       });
     }
   },
+
+  // getCarById for admin with bookings
+  getCarByIdForAdmin: async (req, res) => {
+    try {
+      // vérifier si l'ID de la voiture est valide
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return handleErrors(res, 400, {
+          message: "ID de voiture invalide",
+        });
+      }
+
+      // Vérifier si la voiture existe
+      const car = await Car.findById(req.params.id).populate({path: "bookings" });
+
+      if (!car) {
+        return handleErrors(res, 404, {
+          message: "Voiture non trouvée",
+        });
+      }
+
+      return res.status(200).json({
+        car,
+      });
+    } catch (error) {
+      return handleErrors(res, 400, {
+        message: error.message,
+      });
+    }
+  },
+
+ 
 };
 
 module.exports = controller;
