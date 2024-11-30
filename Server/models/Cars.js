@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const joi = require("joi");
-const {Booking} = require("./Bookings");
+const { Booking } = require("./Bookings");
 
 const CarsSchema = mongoose.Schema({
   marque: {

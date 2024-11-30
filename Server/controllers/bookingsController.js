@@ -30,19 +30,36 @@ const controller = {
 
       // version final après test
 
-      const car = await Car.findOne({ _id: req.body.voiture });
+      const car = await Car.findOne({ _id: req.body.voiture }).populate({
+        path: "bookings",
+      });
       if (!car) {
         return handleErrors(res, 404, {
           message: "Cette voiture n'existe pas",
         });
       }
 
-      // a faire : vérifier si la voiture est disponible ( X ) le stockofCar
-      /*
-      
-      
-      
-      */
+      //  vérifier si la voiture est disponible ( X ) le stockofCar
+
+      const { startDate: newBookingStart, endDate: newBookingEnd } = req.body;
+      let activeBookings = 0;
+
+      if (car.bookings.length > 0) {
+        for (let booking of car.bookings) {
+          if (
+            ["En-attente", "acceptée"].includes(booking.status) &&
+            new Date(newBookingStart) <= new Date(booking.endDate) &&
+            new Date(newBookingEnd) >= new Date(booking.startDate)
+          ) {
+            activeBookings++;
+            if (activeBookings >= car.stockOfCar) {
+              return handleErrors(res, 406, {
+                message: "Cette voiture est déjà réservée pour cette période.",
+              });
+            }
+          }
+        }
+      }
 
       const booking = new Booking(req.body);
       await booking.save();
@@ -50,6 +67,7 @@ const controller = {
       // ajout de la reservation dans l'agenda de la voiture
       car.bookings.push(booking._id);
       await car.save();
+
       return res.status(200).json({
         message:
           "Votre réservation est enregistrée. Vous recevrez un e-mail dès qu'elle sera acceptée.",

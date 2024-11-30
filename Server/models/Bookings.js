@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 const joi = require("joi");
-const Users = require("./Users");
-const Cars = require("./Cars");
+const {User} = require("./Users");
+const {Car} = require("./Cars");
 
 const BookingsSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       required: true,
     },
     voiture: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Cars",
+      ref: "Car",
       required: true,
     },
     startDate: {
