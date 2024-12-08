@@ -6,7 +6,8 @@ const errMiddleware = require("./middlewares/errMiddleware");
 const connectToDb = require("./config/db");
 const authRoute = require("./routes/authRoute");
 const carsRoute = require("./routes/carsRoute");
-const carsBookings = require("./routes/bookings");
+const bookingsRoute = require("./routes/bookings");
+const bookingAdminRoute = require("./routes/bookingAdmin");
 
 const port = process.env.PORT || 3002;
 const server = express();
@@ -18,7 +19,7 @@ server.use(express.urlencoded({ extended: true }));
 
 server.use("/images", express.static("images"));
 
-// Connect to the database
+// Connexion à la database et exécuter la mise à jour des statuts des réservations immédiate au démarrage du serveur (voir dossier jobs et services)
 connectToDb();
 
 // Middleware pour enregistrer les informations de la requête
@@ -35,7 +36,8 @@ server.get("/", async (req, res) => {
 });
 server.use("/api/auth", authRoute);
 server.use("/cars", carsRoute);
-server.use("/bookings", carsBookings);
+server.use("/bookings", bookingsRoute);
+server.use("/admin/bookings", bookingAdminRoute);
 
 server.all("*", (req, res) => {
   res.status(404).send("<h1>Endpoint inexistant</h1>");

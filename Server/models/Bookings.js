@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const joi = require("joi");
-const {User} = require("./Users");
-const {Car} = require("./Cars");
+const { User } = require("./Users");
+const { Car } = require("./Cars");
 
 const BookingsSchema = mongoose.Schema(
   {
@@ -18,7 +18,6 @@ const BookingsSchema = mongoose.Schema(
     startDate: {
       type: Date,
       required: true,
-      
     },
     endDate: {
       type: Date,
@@ -30,7 +29,7 @@ const BookingsSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["En-attente", "acceptée", "refusée", "annulée"],
+      enum: ["En-attente", "acceptée", "refusée", "annulée", "terminée"],
       default: "En-attente",
     },
 
@@ -77,7 +76,7 @@ function validateBooking(obj) {
       .string()
       .valid("En-attente", "acceptée", "refusée", "annulée")
       .required(),
-      dateOfReservation: joi.date().default(() => new Date()),
+    dateOfReservation: joi.date().default(() => new Date()),
     deleteWithUser: joi.boolean().default(true),
   });
 
@@ -95,4 +94,21 @@ function validateBookingComments(obj) {
   return schema.validate(obj);
 }
 
-module.exports = { Booking, validateBooking, validateBookingComments };
+//updateBookingWithAdmin
+function updateBookingWithAdmin(obj) {
+  const schema = joi.object({
+    status: joi
+      .string()
+      .valid("En-attente", "acceptée", "refusée", "annulée", "terminée"),
+    deleteWithUser: joi.boolean().default(true),
+  });
+
+  return schema.validate(obj);
+}
+
+module.exports = {
+  Booking,
+  validateBooking,
+  validateBookingComments,
+  updateBookingWithAdmin,
+};

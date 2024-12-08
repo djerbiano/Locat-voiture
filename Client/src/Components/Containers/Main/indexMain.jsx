@@ -212,6 +212,13 @@ function IndexMain() {
     }));
   };
 
+
+
+
+
+
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Formulaire soumis:", formData);
