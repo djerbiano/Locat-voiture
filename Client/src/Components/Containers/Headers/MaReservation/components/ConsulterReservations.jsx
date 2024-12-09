@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { GrLogout } from "react-icons/gr";
+
+
 
 const Content = styled.div`
   width: 100%;
@@ -10,11 +13,38 @@ const Content = styled.div`
   align-items: center;
   color: black;
   font-size: 1.2rem;
+  position: relative;
+
+  // button deconnexion
+  > :nth-child(1) {
+    padding: 0px 10px; ;
+    background-color: #c8152c;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    font-size: 2rem;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+
+    &:hover {
+      background-color: #ddd;
+      color: #333;
+    }
+
+    @media ((max-width: 360px) and (min-width: 240px)) {
+      top:40px;
+    
+    }
+   
+  }
 `;
 
 const TitleReservation = styled.h2`
   color: #333;
   margin-bottom: 20px;
+
 `;
 const SectionReservation = styled.div`
   width: 70%;
@@ -44,7 +74,7 @@ const ReservationDetails = styled.div`
   .date {
     display: flex;
 
-    @media (max-width:410px){
+    @media (max-width: 410px) {
       flex-direction: column;
       align-items: center;
       gap: 10px;
@@ -73,6 +103,8 @@ const ReservationDetails = styled.div`
 const TitleReservationPassees = styled.h2`
   color: #333;
   margin: 20px;
+
+
 `;
 const SectionReservationPassees = styled.div`
   width: 100%;
@@ -161,10 +193,17 @@ const SingleReservationPassees = styled.div`
   }
 `;
 
+const handleStorageChange = () => {
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.href = "/";
+};
+
 function ConsulterReservations() {
   const navigate = useNavigate();
   return (
     <Content>
+      <div title="Déconnexion" onClick={handleStorageChange}><GrLogout /></div>
       <TitleReservation>Ma réservation</TitleReservation>
       <SectionReservation>
         <ReservationDetails>
@@ -203,43 +242,42 @@ function ConsulterReservations() {
           </div>
         </SingleReservationPassees>
         <SingleReservationPassees>
-        <div className="lieux">
-          <p>Agence de paris</p>
-          <FaArrowRightArrowLeft />
-          <p>Agence de nantes</p>
-        </div>
-        <div className="date">
-          <p>01/01/2024</p>
-          <FaArrowRightArrowLeft />
-          <p>05/01/2024</p>
-        </div>
+          <div className="lieux">
+            <p>Agence de paris</p>
+            <FaArrowRightArrowLeft />
+            <p>Agence de nantes</p>
+          </div>
+          <div className="date">
+            <p>01/01/2024</p>
+            <FaArrowRightArrowLeft />
+            <p>05/01/2024</p>
+          </div>
 
-        <div className="consulterReservation">
-          <button onClick={() => navigate("/MesReservation/Reservation")}>
-            Consulter la réservation
-          </button>
-        </div>
-      </SingleReservationPassees>
-      <SingleReservationPassees>
-      <div className="lieux">
-        <p>Agence de paris</p>
-        <FaArrowRightArrowLeft />
-        <p>Agence de nantes</p>
-      </div>
-      <div className="date">
-        <p>01/01/2024</p>
-        <FaArrowRightArrowLeft />
-        <p>05/01/2024</p>
-      </div>
+          <div className="consulterReservation">
+            <button onClick={() => navigate("/MesReservation/Reservation")}>
+              Consulter la réservation
+            </button>
+          </div>
+        </SingleReservationPassees>
+        <SingleReservationPassees>
+          <div className="lieux">
+            <p>Agence de paris</p>
+            <FaArrowRightArrowLeft />
+            <p>Agence de nantes</p>
+          </div>
+          <div className="date">
+            <p>01/01/2024</p>
+            <FaArrowRightArrowLeft />
+            <p>05/01/2024</p>
+          </div>
 
-      <div className="consulterReservation">
-        <button onClick={() => navigate("/MesReservation/Reservation")}>
-          Consulter la réservation
-        </button>
-      </div>
-    </SingleReservationPassees>
+          <div className="consulterReservation">
+            <button onClick={() => navigate("/MesReservation/Reservation")}>
+              Consulter la réservation
+            </button>
+          </div>
+        </SingleReservationPassees>
       </SectionReservationPassees>
-      
     </Content>
   );
 }

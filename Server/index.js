@@ -4,6 +4,7 @@ const cors = require("cors");
 const logger = require("./middlewares/logger");
 const errMiddleware = require("./middlewares/errMiddleware");
 const connectToDb = require("./config/db");
+const verifSessionStorage = require("./routes/privateRoute");
 const authRoute = require("./routes/authRoute");
 const carsRoute = require("./routes/carsRoute");
 const bookingsRoute = require("./routes/bookings");
@@ -35,6 +36,7 @@ server.get("/", async (req, res) => {
   }
 });
 server.use("/api/auth", authRoute);
+server.use("/api", verifSessionStorage);
 server.use("/cars", carsRoute);
 server.use("/bookings", bookingsRoute);
 server.use("/admin/bookings", bookingAdminRoute);

@@ -2,7 +2,9 @@ import IndexHeaders from "./Components/Containers/Headers/IndexHeaders.jsx";
 import IndexMain from "./Components/Containers/Main/IndexMain.jsx";
 import IndexFooter from "./Components/Containers/Footer/IndexFooter.jsx";
 import "./App.css";
+import { useEffect , useState} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./Context/AuthContext";
 import styled from "styled-components";
 import NotFound404 from "./Components/others/NotFound404.jsx";
 import Voitures from "./Components/Containers/Headers//Voitures/Voitures.jsx";
@@ -18,7 +20,7 @@ import SingleReservation from "./Components/Containers/Headers/MaReservation/com
 import Reserver from "./Components/Containers/Paiement/Reserver.jsx";
 import RegisterNewUser from "./Components/Containers/Headers/MaReservation/components/RegisterNewUser.jsx";
 import ModificationMotDePasse from "./Components/Containers/Headers/MaReservation/components/ModificationMotDePasse.jsx";
-
+import Loader from "./Components/others/Loader.jsx";
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,21 +30,52 @@ const AppContainer = styled.div`
 `;
 
 function App() {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (loading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [loading]);
+  const handleStorageChange = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "/";
+  };
+
+  // gestion de la fermeture de l'authentification
+  useEffect(() => {
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <AppContainer>
+      {loading && <Loader />}
       <BrowserRouter>
+      <AuthProvider> 
         <IndexHeaders />
         <Routes>
-          <Route path="/" element={<IndexMain />} />
-          <Route path="/Voitures" element={<Voitures />} />
-          <Route path="/Tarifs" element={<Tarifs />} />
-          <Route path="/Contact" element={<Contact />} />
-          <Route path="/Creation-de-compte" element={<RegisterNewUser />} />
-          <Route path="/changement-mot-de-passe/:token" element={<ModificationMotDePasse />} />
-          <Route path="/MesReservation" element={<MesReservation />} />
-          <Route path="/MesReservation/Reservation" element={<SingleReservation />} />
-          <Route path="/Reserver" element={<Reserver />} />
-          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route path="/" element={<IndexMain setLoading={setLoading} />} />
+          <Route path="/Voitures" element={<Voitures setLoading={setLoading} />} />
+          <Route path="/Tarifs" element={<Tarifs setLoading={setLoading} />} />
+          <Route path="/Contact" element={<Contact setLoading={setLoading} />} />
+          <Route path="/Creation-de-compte" element={<RegisterNewUser setLoading={setLoading} />} />
+          <Route path="/changement-mot-de-passe/:token" element={<ModificationMotDePasse setLoading={setLoading} />} />
+          <Route path="/MesReservation" element={<MesReservation setLoading={setLoading} />} />
+          <Route path="/MesReservation/Reservation" element={<SingleReservation setLoading={setLoading} />} />
+          <Route path="/Reserver" element={<Reserver setLoading={setLoading} />} />
+          <Route path="/mentions-legales" element={<MentionsLegales  />} />
           <Route path="/politique-de-confidentialite" element={<PolitiqueDeConfidentialite />} />
           <Route path="/politique-de-cookies" element={<PolitiqueDeCookies />} />
           <Route path="/conditions-generales-d-utilisation" element={<ConditionsGeneralesDutilisation />} />
@@ -51,6 +84,7 @@ function App() {
           <Route path="*" element={<NotFound404 />} />
         </Routes>
         <IndexFooter />
+        </AuthProvider>
       </BrowserRouter>
     </AppContainer>
   );

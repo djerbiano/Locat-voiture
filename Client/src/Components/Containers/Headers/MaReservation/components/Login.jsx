@@ -54,7 +54,7 @@ const RegisterCompte = styled(Link)`
   }
 `;
 
-function Login() {
+function Login({ setLoading }) {
   const [forgotPassword, setForgotPassword] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -68,17 +68,75 @@ function Login() {
       [name]: value,
     }));
   };
-
-  const handleSubmit = (e) => {
+  // login
+  const login = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    console.log("Formulaire soumis:", formData);
+
+    const response = await fetch(
+      `${process.env.REACT_APP_URL_SERVER}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.length >= 3) {
+      localStorage.setItem("token", data[2].token);
+      localStorage.setItem("userId", data[1]._id);
+      localStorage.setItem("email", data[1].email);
+      localStorage.setItem("name", data[1].name);
+      localStorage.setItem("lastName", data[1].lastName);
+      localStorage.setItem("phone", data[1].phone);
+      localStorage.setItem("address", data[1].address);
+
+      window.location.reload();
+    } else {
+      alert(data.message);
+      setLoading(false);
+    }
   };
+
+  // forgot password
+
+  const forgotPasswordd = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_URL_SERVER}/api/auth/reset-password-send-link/${formData.email}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+    setLoading(false);
+    window.location.reload();
+  };
+
   return (
     <Container>
       {forgotPassword ? (
         <>
           <p style={{ fontSize: "2rem", marginBottom: "20px" }}>Connexion:</p>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={login}>
             <label htmlFor="email">Email:</label>
             <input
               type="email"
@@ -107,14 +165,16 @@ function Login() {
             Vous avez oublié votre mot de passe ?
           </ForgotPassword>
 
-          <RegisterCompte to="/Creation-de-compte" >Créer un compte ?</RegisterCompte>
+          <RegisterCompte to="/Creation-de-compte">
+            Créer un compte ?
+          </RegisterCompte>
         </>
       ) : (
         <>
           <p style={{ fontSize: "1.5rem", marginBottom: "20px" }}>
             Rénitialisation de mot de passe:
           </p>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={forgotPasswordd}>
             <label htmlFor="email">Email:</label>
             <input
               type="email"

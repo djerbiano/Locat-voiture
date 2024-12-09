@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { AuthContext } from "../../../../Context/AuthContext.js";
 import Login from "./components/Login";
-import { useState } from "react";
+import { useContext } from "react";
 import ConsulterReservations from "./components/ConsulterReservations";
 
 const Container = styled.div`
@@ -14,35 +15,11 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const ButtonTest = styled.button`
-  position: absolute;
-  top: 20vh;
-  right: 10px;
-  padding: 10px;
-  background: red;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background: darkred;
-    color: white;
-  }
-`;
-function MesReservation() {
-  const [login, setLogin] = useState(true);
+function MesReservation( { setLoading }) {
+  const { isAuthenticated } = useContext(AuthContext);
   return (
     <Container>
-      {/*a supprimer */}
-      <ButtonTest
-        onClick={() => {
-          setLogin(!login);
-        }}
-      >
-        Test
-      </ButtonTest>
-      {login ? <Login /> : <ConsulterReservations />}
+      {isAuthenticated ? <ConsulterReservations setLoading={setLoading}  />  : <Login setLoading={setLoading} /> }
     </Container>
   );
 }
