@@ -15,11 +15,23 @@ const Container = styled.div`
   align-items: center;
 `;
 
-function MesReservation( { setLoading }) {
+function MesReservation({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
   return (
     <Container>
-      {isAuthenticated ? <ConsulterReservations setLoading={setLoading}  />  : <Login setLoading={setLoading} /> }
+      {isAuthenticated ? (
+        <ConsulterReservations
+          setLoading={setLoading}
+          setModalJustClose={setModalJustClose}
+          setContent={setContent}
+        />
+      ) : (
+        <Login
+          setLoading={setLoading}
+          setModalJustClose={setModalJustClose}
+          setContent={setContent}
+        />
+      )}
     </Container>
   );
 }

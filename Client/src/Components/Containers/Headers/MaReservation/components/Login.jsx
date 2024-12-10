@@ -54,7 +54,7 @@ const RegisterCompte = styled(Link)`
   }
 `;
 
-function Login({ setLoading }) {
+function Login({ setLoading, setModalJustClose, setContent }) {
   const [forgotPassword, setForgotPassword] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -100,7 +100,8 @@ function Login({ setLoading }) {
 
       window.location.reload();
     } else {
-      alert(data.message);
+      setModalJustClose(true);
+      setContent(data.message);
       setLoading(false);
     }
   };
@@ -126,9 +127,10 @@ function Login({ setLoading }) {
 
     const data = await response.json();
 
-    alert(data.message);
+    setModalJustClose(true);
+    setContent(data.message);
+    setFormData({ email: "" });
     setLoading(false);
-    window.location.reload();
   };
 
   return (
@@ -171,9 +173,12 @@ function Login({ setLoading }) {
         </>
       ) : (
         <>
+        <p style={{  marginBottom: "20px", cursor: "pointer", textDecoration: "underline" }} onClick={() => window.location.reload()}>Retour</p>
+        
           <p style={{ fontSize: "1.5rem", marginBottom: "20px" }}>
             Rénitialisation de mot de passe:
           </p>
+          
           <form onSubmit={forgotPasswordd}>
             <label htmlFor="email">Email:</label>
             <input
@@ -188,6 +193,7 @@ function Login({ setLoading }) {
 
             <input type="submit" value="Envoyer" />
           </form>
+        
         </>
       )}
     </Container>

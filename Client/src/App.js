@@ -21,6 +21,7 @@ import Reserver from "./Components/Containers/Paiement/Reserver.jsx";
 import RegisterNewUser from "./Components/Containers/Headers/MaReservation/components/RegisterNewUser.jsx";
 import ModificationMotDePasse from "./Components/Containers/Headers/MaReservation/components/ModificationMotDePasse.jsx";
 import Loader from "./Components/others/Loader.jsx";
+import JusteClose from "./Components/Modal/JusteClose.jsx";
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,9 +32,11 @@ const AppContainer = styled.div`
 
 function App() {
   const [loading, setLoading] = useState(false);
+  const [modalJustClose, setModalJustClose] = useState(false);
+  const [content, setContent] = useState("");
 
   useEffect(() => {
-    if (loading) {
+    if (loading || modalJustClose) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -42,7 +45,7 @@ function App() {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [loading]);
+  }, [loading, modalJustClose]);
   const handleStorageChange = () => {
     localStorage.clear();
     sessionStorage.clear();
@@ -51,7 +54,7 @@ function App() {
 
   // gestion de la fermeture de l'authentification
   useEffect(() => {
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("storage", handleStorageChange); 
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -62,6 +65,7 @@ function App() {
   return (
     <AppContainer>
       {loading && <Loader />}
+      {modalJustClose && <JusteClose setModalJustClose={setModalJustClose} content={content} />} 
       <BrowserRouter>
       <AuthProvider> 
         <IndexHeaders />
@@ -69,10 +73,10 @@ function App() {
           <Route path="/" element={<IndexMain setLoading={setLoading} />} />
           <Route path="/Voitures" element={<Voitures setLoading={setLoading} />} />
           <Route path="/Tarifs" element={<Tarifs setLoading={setLoading} />} />
-          <Route path="/Contact" element={<Contact setLoading={setLoading} />} />
-          <Route path="/Creation-de-compte" element={<RegisterNewUser setLoading={setLoading} />} />
-          <Route path="/changement-mot-de-passe/:token" element={<ModificationMotDePasse setLoading={setLoading} />} />
-          <Route path="/MesReservation" element={<MesReservation setLoading={setLoading} />} />
+          <Route path="/Contact" element={<Contact setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
+          <Route path="/Creation-de-compte" element={<RegisterNewUser setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
+          <Route path="/changement-mot-de-passe/:token" element={<ModificationMotDePasse setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
+          <Route path="/MesReservation" element={<MesReservation setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
           <Route path="/MesReservation/Reservation" element={<SingleReservation setLoading={setLoading} />} />
           <Route path="/Reserver" element={<Reserver setLoading={setLoading} />} />
           <Route path="/mentions-legales" element={<MentionsLegales  />} />

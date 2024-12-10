@@ -38,7 +38,7 @@ const Container = styled.div`
   }
 `;
 
-function RegisterNewUser() {
+function RegisterNewUser({ setLoading, setModalJustClose, setContent }) {
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -57,82 +57,143 @@ function RegisterNewUser() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // register new user
+  const registerNewUser = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Les mots de passe ne correspondent pas !");
+      setModalJustClose(true);
+      setContent("Les mots de passe ne correspondent pas!");
       return;
     }
-    console.log("Form data submitted:", formData);
-    setFormData({
-      name: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phone: "",
-      address: "",
-    });
+
+    setLoading(true);
+
+    const response = await fetch(
+      `${process.env.REACT_APP_URL_SERVER}/api/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          address: formData.address,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    setModalJustClose(true);
+
+    if (data.message) {
+      setContent(data.message);
+      setLoading(false);
+      return;
+    }
+
+    if (data[0].message) {
+      setContent(data[0].message);
+      setFormData({
+        name: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: "",
+        address: "",
+      });
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 2000);
+      setLoading(false);
+      return;
+    }
   };
- 
+
   return (
     <Container>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={registerNewUser}>
         <p
-          style={{ fontSize: "1.5rem", marginBottom: "20px" }}
+          style={{
+            marginBottom: "20px",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          onClick={() => window.location.replace("/MesReservation")}
         >
-          Inscription:
+          Retour
         </p>
+        <p style={{ fontSize: "1.5rem", marginBottom: "20px" }}>Inscription:</p>
+        <label htmlFor="name">Prénom</label>
         <input
           type="text"
+          id="name"
           name="name"
-          placeholder="Nom"
+          placeholder="Prénom"
           value={formData.name}
           onChange={handleChange}
           required
         />
+        <label htmlFor="lastName">Nom</label>
         <input
           type="text"
+          id="lastName"
           name="lastName"
-          placeholder="Prénom"
+          placeholder="Nom"
           value={formData.lastName}
           onChange={handleChange}
           required
         />
+        <label htmlFor="email">Email</label>
         <input
           type="email"
+          id="email"
           name="email"
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
           required
         />
+        <label htmlFor="password">Mot de passe</label>
         <input
           type="password"
+          id="password"
           name="password"
           placeholder="Mot de passe"
           value={formData.password}
           onChange={handleChange}
           required
         />
+        <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
         <input
           type="password"
+          id="confirmPassword"
           name="confirmPassword"
           placeholder="Confirmer le mot de passe"
           value={formData.confirmPassword}
           onChange={handleChange}
           required
         />
+        <label htmlFor="phone">Téléphone</label>
         <input
           type="tel"
+          id="phone"
           name="phone"
           placeholder="Téléphone"
           value={formData.phone}
           onChange={handleChange}
           required
         />
+        <label htmlFor="address">Adresse</label>
         <input
           type="text"
+          id="address"
           name="address"
           placeholder="Adresse"
           value={formData.address}

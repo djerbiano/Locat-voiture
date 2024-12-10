@@ -39,16 +39,13 @@ const Container = styled.div`
   }
 `;
 
-function ModificationMotDePasse() {
+function ModificationMotDePasse({ setLoading, setModalJustClose, setContent }) {
   const { token } = useParams();
   const [formData, setFormData] = useState({
     token,
     password: "",
     confirmPassword: "",
   });
-
-  // a transemettre dans le header pour la modification
-  console.log(token);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,23 +55,64 @@ function ModificationMotDePasse() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // validation du nouveau mot de passe
+  const validatePassword = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Les mots de passe ne correspondent pas !");
+      setModalJustClose(true);
+      setContent("Les mots de passe ne correspondent pas!");
+      setFormData({ password: "", confirmPassword: "" });
       return;
     }
-    console.log("Form data submitted:", formData);
+    setLoading(true);
+
+    const response = await fetch(
+      `${process.env.REACT_APP_URL_SERVER}/api/auth/reset-password-validate/${token}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          password: formData.password,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    setModalJustClose(true);
+    setContent(data.message);
+
     setFormData({
       token: "",
       password: "",
       confirmPassword: "",
     });
+
+    if(response.status === 200){
+      setTimeout(() => {
+        window.location.replace("/");
+      } , 2000);
+    }
+
+    setLoading(false);
   };
 
   return (
     <Container>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={validatePassword}>
+        <p
+          style={{
+            marginBottom: "20px",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          onClick={() => window.location.replace("/MesReservation")}
+        >
+          Retour
+        </p>
         <p style={{ fontSize: "1.5rem", marginBottom: "20px" }}>
           Modification du mot de passe:
         </p>

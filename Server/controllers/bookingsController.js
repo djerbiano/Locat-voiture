@@ -168,7 +168,7 @@ const controller = {
     try {
       const bookings = await Booking.find({ user: req.user.id }).populate(
         "voiture"
-      );
+      ).sort({startDate:1});
 
       if (bookings.length < 1) {
         return res.status(200).json({
