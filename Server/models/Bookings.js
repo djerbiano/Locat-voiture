@@ -15,6 +15,26 @@ const BookingsSchema = mongoose.Schema(
       ref: "Car",
       required: true,
     },
+    departAgence: {
+      type: String,
+      enum: [
+        "Agence-de-paris",
+        "Agence-de-nantes",
+        "Agence-de-lyon",
+        "Agence-de-marseille",
+        "Agence-de-bordeaux",
+      ],
+    },
+    retourAgence: {
+      type: String,
+      enum: [
+        "Agence-de-paris",
+        "Agence-de-nantes",
+        "Agence-de-lyon",
+        "Agence-de-marseille",
+        "Agence-de-bordeaux",
+      ],
+    },
     startDate: {
       type: Date,
       required: true,
@@ -69,6 +89,26 @@ function validateBooking(obj) {
   const schema = joi.object({
     user: joi.string().required(),
     voiture: joi.string().required(),
+    departAgence: joi
+      .string()
+      .valid(
+        "Agence-de-paris",
+        "Agence-de-nantes",
+        "Agence-de-lyon",
+        "Agence-de-marseille",
+        "Agence-de-bordeaux"
+      )
+      .required(),
+    retourAgence: joi
+      .string()
+      .valid(
+        "Agence-de-paris",
+        "Agence-de-nantes",
+        "Agence-de-lyon",
+        "Agence-de-marseille",
+        "Agence-de-bordeaux"
+      )
+      .required(),
     endDate: joi.date().required().greater("now"),
     startDate: joi.date().required().greater("now").less(joi.ref("endDate")),
     price: joi.number().positive().required().min(1).max(15500), // max 31day (500max per day)

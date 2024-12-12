@@ -19,7 +19,7 @@ function MesReservation({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
   return (
     <Container>
-      {isAuthenticated ? (
+      {isAuthenticated === "true" ? (
         <ConsulterReservations
           setLoading={setLoading}
           setModalJustClose={setModalJustClose}

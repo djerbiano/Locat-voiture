@@ -1,6 +1,8 @@
 import styled from "styled-components";
-import Logo from "../../../../../Assets/TESLA-Model-Y.jpg";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
+import YesOrNo from "../../../../Modal/YesOrNo";
 
 const Container = styled.div`
   width: 100%;
@@ -46,14 +48,13 @@ const VoitureContainer = styled.div`
 `;
 const ContainerPhoto = styled.div`
   width: 200px;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  background-image: url(${Logo});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  margin: 10px;
-  margin-bottom: 10px;
+
+  img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 50%;
+  }
 `;
 
 const VoitureInfos = styled.div`
@@ -135,42 +136,135 @@ const Lieux = styled.div`
     }
   }
 `;
-function SingleReservation() {
+function SingleReservation({ setLoading }) {
+  const { idBooking } = useParams();
+  const [bookingData, setBookingData] = useState({});
+  const [modalYesOrNo, setModalYesOrNo] = useState(true);
+
+  // get booking
+  useEffect(() => {
+    setLoading(true);
+    const getBooking = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_URL_SERVER}/bookings/${idBooking}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: localStorage.getItem("token"),
+            },
+          }
+        );
+        const data = await response.json();
+        setBookingData(data.booking);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    };
+
+    getBooking();
+
+    // eslint-disable-next-line
+  }, [idBooking]);
+
+  // calculate duration
+  const duration = Math.round(
+    (new Date(bookingData.endDate) - new Date(bookingData.startDate)) /
+      (1000 * 60 * 60 * 24)
+  );
+
+  // delete booking
+  const deleteBooking = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_URL_SERVER}/bookings/deleteBooking/${idBooking}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
+      const data = await response.json();
+
+      // mettre en place modal fermer a la place 
+      alert(data.message);
+
+      
+      setLoading(false);
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+    }
+  };
+
   return (
     <Container>
-      <Content>
-        <VoitureContainer>
-          <ContainerPhoto></ContainerPhoto>
+      {modalYesOrNo && (
+        <YesOrNo
+          setModalYesOrNo={setModalYesOrNo}
+          deleteBooking={deleteBooking}
+        />
+      )}
+      {bookingData && bookingData.voiture ? (
+        <Content>
+          <VoitureContainer>
+            <ContainerPhoto>
+              <img
+                src={`${process.env.REACT_APP_URL_SERVER}/images/${bookingData.voiture.pictures.pic1}`}
+                alt={bookingData.voiture.marque}
+              />
+            </ContainerPhoto>
 
-          <VoitureInfos>
-            <p>clio 3</p>
+            <VoitureInfos>
+              <p>
+                {bookingData.voiture.marque} {bookingData.voiture.modele}
+              </p>
+              <div>
+                <p>{bookingData.voiture.pricePerDay} € / jour</p>
+              </div>
+            </VoitureInfos>
+          </VoitureContainer>
+
+          <ReservationContainer>
+            <Lieux>
+              <h3>{bookingData.departAgence}</h3>
+              <FaArrowRightArrowLeft />
+              <h3>{bookingData.retourAgence}</h3>
+            </Lieux>
+            <h4>Numéro de réservation</h4>
+            <p>{bookingData._id}</p>
+            <h4>Date et heure de départ</h4>
+            <p>
+              {new Date(bookingData.startDate)
+                .toLocaleString("fr-FR")
+                .slice(0, 16)}
+            </p>
+            <h4>Date et heure de retour</h4>
+            <p>
+              {new Date(bookingData.endDate)
+                .toLocaleString("fr-FR")
+                .slice(0, 16)}
+            </p>
+            <h4>Durée de location</h4>
+            <p>{duration} jours</p>
+            <h4>Prix total</h4>
+            <p>{bookingData.price} €</p>
             <div>
-              <p>150 € / jour</p>
+              <button onClick={() => setModalYesOrNo(true)}>
+                Supprimer la réservation
+              </button>
             </div>
-          </VoitureInfos>
-        </VoitureContainer>
-
-        <ReservationContainer>
-          <Lieux>
-            <h3>Agence de paris</h3>
-            <FaArrowRightArrowLeft />
-            <h3>Agence de lyon</h3>
-          </Lieux>
-          <h4>Numéro de réservation</h4>
-          <p>12456</p>
-          <h4>Date et heure de départ</h4>
-          <p>2024-01-01 10:00</p>
-          <h4>Date et heure de retour</h4>
-          <p>2024-01-02 18:00</p>
-          <h4>Durée de location</h4>
-          <p>2 jours</p>
-          <h4>Prix total</h4>
-          <p>300 €</p>
-          <div>
-            <button>Supprimer la réservation</button>
-          </div>
-        </ReservationContainer>
-      </Content>
+          </ReservationContainer>
+        </Content>
+      ) : (
+        <p style={{ color: "white" }}>
+          Chargement des informations de réservation...
+        </p>
+      )}
     </Container>
   );
 }

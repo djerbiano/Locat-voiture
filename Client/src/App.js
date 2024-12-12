@@ -22,6 +22,7 @@ import RegisterNewUser from "./Components/Containers/Headers/MaReservation/compo
 import ModificationMotDePasse from "./Components/Containers/Headers/MaReservation/components/ModificationMotDePasse.jsx";
 import Loader from "./Components/others/Loader.jsx";
 import JusteClose from "./Components/Modal/JusteClose.jsx";
+
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -33,6 +34,7 @@ const AppContainer = styled.div`
 function App() {
   const [loading, setLoading] = useState(false);
   const [modalJustClose, setModalJustClose] = useState(false);
+  
   const [content, setContent] = useState("");
 
   useEffect(() => {
@@ -66,6 +68,7 @@ function App() {
     <AppContainer>
       {loading && <Loader />}
       {modalJustClose && <JusteClose setModalJustClose={setModalJustClose} content={content} />} 
+    
       <BrowserRouter>
       <AuthProvider> 
         <IndexHeaders />
@@ -77,7 +80,7 @@ function App() {
           <Route path="/Creation-de-compte" element={<RegisterNewUser setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
           <Route path="/changement-mot-de-passe/:token" element={<ModificationMotDePasse setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
           <Route path="/MesReservation" element={<MesReservation setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
-          <Route path="/MesReservation/Reservation" element={<SingleReservation setLoading={setLoading} />} />
+          <Route path="/MesReservation/Reservation/:idBooking" element={<SingleReservation setLoading={setLoading}   />} />
           <Route path="/Reserver" element={<Reserver setLoading={setLoading} />} />
           <Route path="/mentions-legales" element={<MentionsLegales  />} />
           <Route path="/politique-de-confidentialite" element={<PolitiqueDeConfidentialite />} />

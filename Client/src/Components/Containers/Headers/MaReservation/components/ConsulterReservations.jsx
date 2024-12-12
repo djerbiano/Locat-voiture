@@ -194,6 +194,7 @@ const handleStorageChange = () => {
 };
 
 function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
+ 
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
   // get all booking
@@ -220,7 +221,6 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
         } else {
           setBookings(data);
         }
-        console.log(data.message);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching bookings:", error);
@@ -230,6 +230,12 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
     fetchBookings();
     //eslint-disable-next-line
   }, []);
+
+  // reservation coming soon
+  const upcomingBookings =
+    bookings.length > 0 &&
+    bookings.filter((booking) => booking.status === "acceptée");
+
   return (
     <Content>
       <div title="Déconnexion" onClick={handleStorageChange}>
@@ -241,19 +247,29 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
           <p style={{ textTransform: "capitalize" }}>{` ${localStorage.getItem(
             "lastName"
           )} ${localStorage.getItem("name")}`}</p>
-          <p>{localStorage.getItem("email")}</p>
+          <p style={{ wordBreak: "break-all" }}>
+            {localStorage.getItem("email")}
+          </p>
           <p>{localStorage.getItem("phone")}</p>
 
-          {bookings.length > 0 ? (
+          <p style={{ fontWeight: "bold" }}>Réservation à venir:</p>
+
+          {upcomingBookings.length > 0 ? (
             <div className="date">
               <p>
-                {new Date(bookings[0].startDate).toLocaleDateString("fr-FR")}
+                {new Date(upcomingBookings[0].startDate).toLocaleDateString(
+                  "fr-FR"
+                )}
               </p>
               <FaArrowRightArrowLeft />
-              <p>{new Date(bookings[0].endDate).toLocaleDateString("fr-FR")}</p>
+              <p>
+                {new Date(upcomingBookings[0].endDate).toLocaleDateString(
+                  "fr-FR"
+                )}
+              </p>
             </div>
           ) : (
-            <p>{bookings.message}</p>
+            <p>Aucune</p>
           )}
 
           <button>Actualisez vos données</button>
@@ -264,60 +280,32 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
         Historique des réservations
       </TitleReservationPassees>
       <SectionReservationPassees>
-        <SingleReservationPassees>
-          <div className="lieux">
-            <p>Agence de paris</p>
-            <FaArrowRightArrowLeft />
-            <p>Agence de nantes</p>
-          </div>
-          <div className="date">
-            <p>01/01/2024</p>
-            <FaArrowRightArrowLeft />
-            <p>05/01/2024</p>
-          </div>
+        {bookings.length > 0 ? (
+          bookings.map((booking) => (
+            <SingleReservationPassees key={booking._id}>
+              <div className="lieux">
+                <p>{booking.departAgence}</p>
+                <FaArrowRightArrowLeft />
+                <p>{booking.retourAgence} </p>
+              </div>
+              <div className="date">
+                <p>{new Date(booking.startDate).toLocaleDateString("fr-FR")}</p>
+                <FaArrowRightArrowLeft />
+                <p>{new Date(booking.endDate).toLocaleDateString("fr-FR")}</p>
+              </div>
 
-          <div className="consulterReservation">
-            <button onClick={() => navigate("/MesReservation/Reservation")}>
-              Consulter la réservation
-            </button>
-          </div>
-        </SingleReservationPassees>
-        <SingleReservationPassees>
-          <div className="lieux">
-            <p>Agence de paris</p>
-            <FaArrowRightArrowLeft />
-            <p>Agence de nantes</p>
-          </div>
-          <div className="date">
-            <p>01/01/2024</p>
-            <FaArrowRightArrowLeft />
-            <p>05/01/2024</p>
-          </div>
-
-          <div className="consulterReservation">
-            <button onClick={() => navigate("/MesReservation/Reservation")}>
-              Consulter la réservation
-            </button>
-          </div>
-        </SingleReservationPassees>
-        <SingleReservationPassees>
-          <div className="lieux">
-            <p>Agence de paris</p>
-            <FaArrowRightArrowLeft />
-            <p>Agence de nantes</p>
-          </div>
-          <div className="date">
-            <p>01/01/2024</p>
-            <FaArrowRightArrowLeft />
-            <p>05/01/2024</p>
-          </div>
-
-          <div className="consulterReservation">
-            <button onClick={() => navigate("/MesReservation/Reservation")}>
-              Consulter la réservation
-            </button>
-          </div>
-        </SingleReservationPassees>
+              <div className="consulterReservation">
+                <button onClick={() => navigate(`/MesReservation/Reservation/${booking._id}`)}>
+                  Consulter la réservation
+                </button>
+              </div>
+            </SingleReservationPassees>
+          ))
+        ) : (
+          <p style={{ textAlign: "center", fontWeight: "bold", width: "100%" }}>
+            {bookings.message}
+          </p>
+        )}
       </SectionReservationPassees>
     </Content>
   );
