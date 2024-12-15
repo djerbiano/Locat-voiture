@@ -6,6 +6,9 @@ const route = express.Router();
 // Register user
 route.post("/register", controller.registerUser);
 
+// Get user
+route.get("/user/:idUser", virifyToken, controller.getUser);
+
 // Login user
 route.post("/login", controller.loginUser);
 

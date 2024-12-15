@@ -72,10 +72,6 @@ const AutreAgence = styled.div`
   margin-bottom: 20px;
 `;
 
-const Promotion = styled.div`
-  margin-bottom: 20px;
-`;
-
 const ButtonRecherche = styled.button`
   min-width: 40%;
   border-radius: 5px;
@@ -189,7 +185,6 @@ function IndexMain() {
     dateDepart: "",
     dateRetour: "",
     places: 1,
-    promotion: false,
   });
 
   useEffect(() => {
@@ -203,7 +198,7 @@ function IndexMain() {
       document.body.style.overflow = "auto";
     };
   }, [modalJustClose]);
-  
+
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
     setFormData((prevData) => ({
@@ -212,15 +207,9 @@ function IndexMain() {
     }));
   };
 
-
-
-
-
-
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
     console.log("Formulaire soumis:", formData);
   };
   return (
@@ -295,7 +284,7 @@ function IndexMain() {
 
               <label htmlFor="dateDepart">Date de depart</label>
               <input
-                type="date"
+                type="datetime-local"
                 name="dateDepart"
                 id="dateDepart"
                 onChange={handleChange}
@@ -305,7 +294,7 @@ function IndexMain() {
 
               <label htmlFor="dateRetour">Date de retour</label>
               <input
-                type="date"
+                type="datetime-local"
                 name="dateRetour"
                 id="dateRetour"
                 onChange={handleChange}
@@ -323,17 +312,6 @@ function IndexMain() {
                 onChange={handleChange}
                 value={formData.places}
               />
-              <Promotion>
-                <input
-                  type="checkbox"
-                  name="promotion"
-                  id="promotion"
-                  style={{ marginRight: "10px" }}
-                  onChange={handleChange}
-                  checked={formData.promotion}
-                />
-                <label htmlFor="promotion">J’ai un code de réduction</label>
-              </Promotion>
 
               <ButtonRecherche type="submit">Rechercher</ButtonRecherche>
             </Form>

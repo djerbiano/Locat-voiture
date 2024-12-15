@@ -110,7 +110,7 @@ const controller = {
       if (!req.user.isAdmin && req.user.id !== booking.user.toString()) {
         return handleErrors(res, 403, {
           message: "Vous devez être le propriétaire de la réservation",
-        });
+        }); 
       }
 
       // verifier si la réservation est supprimable

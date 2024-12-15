@@ -7,8 +7,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkTokenValidity = async () => {
-      const token = localStorage.getItem("token");
-      const userid = localStorage.getItem("userId");
+      const token = sessionStorage.getItem("token");
+      const userid = sessionStorage.getItem("userId");
 
       if (!token || !userid) {
         setIsAuthenticated(false);
@@ -27,15 +27,31 @@ export const AuthProvider = ({ children }) => {
       );
       const result = await response.json();
 
+      if (result.error === "jwt expired") {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = "/";
+        setIsAuthenticated(false);
+        return;
+      }
+
       setIsAuthenticated(result.message);
     };
 
     checkTokenValidity();
 
-    window.addEventListener("storage", checkTokenValidity());
+    const handleStorageChange = () => {
+      checkTokenValidity();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
 
     // eslint-disable-next-line
-  }, [isAuthenticated]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>

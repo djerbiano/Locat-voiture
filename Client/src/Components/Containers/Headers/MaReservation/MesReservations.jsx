@@ -17,6 +17,7 @@ const Container = styled.div`
 
 function MesReservation({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
+  
   return (
     <Container>
       {isAuthenticated === "true" ? (

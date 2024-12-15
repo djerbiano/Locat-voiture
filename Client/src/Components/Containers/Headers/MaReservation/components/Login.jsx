@@ -90,13 +90,13 @@ function Login({ setLoading, setModalJustClose, setContent }) {
     const data = await response.json();
 
     if (data.length >= 3) {
-      localStorage.setItem("token", data[2].token);
-      localStorage.setItem("userId", data[1]._id);
-      localStorage.setItem("email", data[1].email);
-      localStorage.setItem("name", data[1].name);
-      localStorage.setItem("lastName", data[1].lastName);
-      localStorage.setItem("phone", data[1].phone);
-      localStorage.setItem("address", data[1].address);
+      sessionStorage.setItem("token", data[2].token);
+      sessionStorage.setItem("userId", data[1]._id);
+      sessionStorage.setItem("email", data[1].email);
+      sessionStorage.setItem("name", data[1].name);
+      sessionStorage.setItem("lastName", data[1].lastName);
+      sessionStorage.setItem("phone", data[1].phone);
+      sessionStorage.setItem("address", data[1].address);
 
       window.location.reload();
     } else {

@@ -2,7 +2,7 @@ import IndexHeaders from "./Components/Containers/Headers/IndexHeaders.jsx";
 import IndexMain from "./Components/Containers/Main/IndexMain.jsx";
 import IndexFooter from "./Components/Containers/Footer/IndexFooter.jsx";
 import "./App.css";
-import { useEffect , useState} from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./Context/AuthContext";
 import styled from "styled-components";
@@ -22,6 +22,7 @@ import RegisterNewUser from "./Components/Containers/Headers/MaReservation/compo
 import ModificationMotDePasse from "./Components/Containers/Headers/MaReservation/components/ModificationMotDePasse.jsx";
 import Loader from "./Components/others/Loader.jsx";
 import JusteClose from "./Components/Modal/JusteClose.jsx";
+import Profile from "./Components/Containers/Headers/MaReservation/MyProfile/Profile.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -34,7 +35,7 @@ const AppContainer = styled.div`
 function App() {
   const [loading, setLoading] = useState(false);
   const [modalJustClose, setModalJustClose] = useState(false);
-  
+
   const [content, setContent] = useState("");
 
   useEffect(() => {
@@ -56,7 +57,7 @@ function App() {
 
   // gestion de la fermeture de l'authentification
   useEffect(() => {
-    window.addEventListener("storage", handleStorageChange); 
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -67,30 +68,108 @@ function App() {
   return (
     <AppContainer>
       {loading && <Loader />}
-      {modalJustClose && <JusteClose setModalJustClose={setModalJustClose} content={content} />} 
-    
-      <BrowserRouter>
-      <AuthProvider> 
-        <IndexHeaders />
-        <Routes>
-          <Route path="/" element={<IndexMain setLoading={setLoading} />} />
-          <Route path="/Voitures" element={<Voitures setLoading={setLoading} />} />
-          <Route path="/Tarifs" element={<Tarifs setLoading={setLoading} />} />
-          <Route path="/Contact" element={<Contact setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
-          <Route path="/Creation-de-compte" element={<RegisterNewUser setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
-          <Route path="/changement-mot-de-passe/:token" element={<ModificationMotDePasse setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
-          <Route path="/MesReservation" element={<MesReservation setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />} />
-          <Route path="/MesReservation/Reservation/:idBooking" element={<SingleReservation setLoading={setLoading}   />} />
-          <Route path="/Reserver" element={<Reserver setLoading={setLoading} />} />
-          <Route path="/mentions-legales" element={<MentionsLegales  />} />
-          <Route path="/politique-de-confidentialite" element={<PolitiqueDeConfidentialite />} />
-          <Route path="/politique-de-cookies" element={<PolitiqueDeCookies />} />
-          <Route path="/conditions-generales-d-utilisation" element={<ConditionsGeneralesDutilisation />} />
-          <Route path="/conditions-generales-de-location" element={<ConditionsGeneralesDeLocation />} />
+      {modalJustClose && (
+        <JusteClose setModalJustClose={setModalJustClose} content={content} />
+      )}
 
-          <Route path="*" element={<NotFound404 />} />
-        </Routes>
-        <IndexFooter />
+      <BrowserRouter>
+        <AuthProvider>
+          <IndexHeaders />
+          <Routes>
+            <Route path="/" element={<IndexMain setLoading={setLoading} />} />
+            <Route
+              path="/Voitures"
+              element={<Voitures setLoading={setLoading} />}
+            />
+            <Route
+              path="/Tarifs"
+              element={<Tarifs setLoading={setLoading} />}
+            />
+            <Route
+              path="/Contact"
+              element={
+                <Contact
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
+            />
+            <Route
+              path="/Creation-de-compte"
+              element={
+                <RegisterNewUser
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
+            />
+            <Route
+              path="/changement-mot-de-passe/:token"
+              element={
+                <ModificationMotDePasse
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
+            />
+            <Route
+              path="/MesReservation"
+              element={
+                <MesReservation
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
+            />
+            <Route
+              path="/MesReservation/Reservation/:idBooking"
+              element={
+                <SingleReservation
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
+            />
+            <Route
+              path="/Profile"
+              element={
+                <Profile
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
+            />
+            <Route
+              path="/Reserver"
+              element={<Reserver setLoading={setLoading} />}
+            />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route
+              path="/politique-de-confidentialite"
+              element={<PolitiqueDeConfidentialite />}
+            />
+            <Route
+              path="/politique-de-cookies"
+              element={<PolitiqueDeCookies />}
+            />
+            <Route
+              path="/conditions-generales-d-utilisation"
+              element={<ConditionsGeneralesDutilisation />}
+            />
+            <Route
+              path="/conditions-generales-de-location"
+              element={<ConditionsGeneralesDeLocation />}
+            />
+
+            <Route path="*" element={<NotFound404 />} />
+          </Routes>
+          <IndexFooter />
         </AuthProvider>
       </BrowserRouter>
     </AppContainer>

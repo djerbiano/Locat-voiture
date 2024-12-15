@@ -1,8 +1,11 @@
 import styled from "styled-components";
+import { useContext } from "react";
+import { AuthContext } from "../../../../../Context/AuthContext.js";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import YesOrNo from "../../../../Modal/YesOrNo";
+import { handleErrorInvalidToken } from "../../../../../utils/helper.js";
 
 const Container = styled.div`
   width: 100%;
@@ -66,6 +69,9 @@ const VoitureInfos = styled.div`
   p {
     margin-bottom: 10px;
     font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    min-width: 200px;
   }
 `;
 
@@ -121,9 +127,10 @@ const Lieux = styled.div`
     margin-bottom: 20px;
   }
 
-  @media (max-width: 408px) {
-    width: 100%;
-    font-size: 3.7vw;
+  @media (max-width: 430px) {
+    min-width: 70%;
+    flex-direction: column;
+    font-size: 1rem;
   }
 
   @media (max-width: 354px) {
@@ -136,10 +143,12 @@ const Lieux = styled.div`
     }
   }
 `;
-function SingleReservation({ setLoading }) {
+function SingleReservation({ setLoading, setModalJustClose, setContent }) {
+  const { isAuthenticated } = useContext(AuthContext);
   const { idBooking } = useParams();
   const [bookingData, setBookingData] = useState({});
-  const [modalYesOrNo, setModalYesOrNo] = useState(true);
+  const [modalYesOrNo, setModalYesOrNo] = useState(false);
+ 
 
   // get booking
   useEffect(() => {
@@ -152,15 +161,21 @@ function SingleReservation({ setLoading }) {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              token: localStorage.getItem("token"),
+              token: sessionStorage.getItem("token"),
             },
           }
         );
         const data = await response.json();
+        handleErrorInvalidToken(data.message);
+
         setBookingData(data.booking);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching bookings:", error);
+        setLoading(false);
+        setModalJustClose(true);
+        setContent("Erreur lors de la récupération de la réservation");
+
       }
     };
 
@@ -171,7 +186,7 @@ function SingleReservation({ setLoading }) {
 
   // calculate duration
   const duration = Math.round(
-    (new Date(bookingData.endDate) - new Date(bookingData.startDate)) /
+    (new Date(bookingData?.endDate) - new Date(bookingData?.startDate)) /
       (1000 * 60 * 60 * 24)
   );
 
@@ -185,87 +200,90 @@ function SingleReservation({ setLoading }) {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            token: localStorage.getItem("token"),
+            token: sessionStorage.getItem("token"),
           },
         }
       );
       const data = await response.json();
 
-      // mettre en place modal fermer a la place 
-      alert(data.message);
+      handleErrorInvalidToken(data.message);
 
-      
       setLoading(false);
+      setModalJustClose(true);
+      setContent(data.message);
     } catch (error) {
       console.error("Error deleting booking:", error);
+      setLoading(false);
+      setModalJustClose(true);
+      setContent("Erreur lors de la suppression de la réservation");
     }
   };
 
   return (
-    <Container>
-      {modalYesOrNo && (
-        <YesOrNo
-          setModalYesOrNo={setModalYesOrNo}
-          deleteBooking={deleteBooking}
-        />
-      )}
-      {bookingData && bookingData.voiture ? (
-        <Content>
-          <VoitureContainer>
-            <ContainerPhoto>
-              <img
-                src={`${process.env.REACT_APP_URL_SERVER}/images/${bookingData.voiture.pictures.pic1}`}
-                alt={bookingData.voiture.marque}
-              />
-            </ContainerPhoto>
+    <>
+      {isAuthenticated === "true" && (
+        <Container>
+          {modalYesOrNo && (
+            <YesOrNo
+              setModalYesOrNo={setModalYesOrNo}
+              deleteBooking={deleteBooking}
+            />
+          )}
+          {bookingData?.voiture && (
+            <Content>
+              <VoitureContainer>
+                <ContainerPhoto>
+                  <img
+                    src={`${process.env.REACT_APP_URL_SERVER}/images/${bookingData.voiture.pictures.pic1}`}
+                    alt={bookingData.voiture.marque}
+                  />
+                </ContainerPhoto>
 
-            <VoitureInfos>
-              <p>
-                {bookingData.voiture.marque} {bookingData.voiture.modele}
-              </p>
-              <div>
-                <p>{bookingData.voiture.pricePerDay} € / jour</p>
-              </div>
-            </VoitureInfos>
-          </VoitureContainer>
+                <VoitureInfos>
+                  <p>
+                    {bookingData.voiture.marque} {bookingData.voiture.modele}
+                  </p>
+                  <div>
+                    <p>{bookingData.voiture.pricePerDay} € / jour</p>
+                  </div>
+                </VoitureInfos>
+              </VoitureContainer>
 
-          <ReservationContainer>
-            <Lieux>
-              <h3>{bookingData.departAgence}</h3>
-              <FaArrowRightArrowLeft />
-              <h3>{bookingData.retourAgence}</h3>
-            </Lieux>
-            <h4>Numéro de réservation</h4>
-            <p>{bookingData._id}</p>
-            <h4>Date et heure de départ</h4>
-            <p>
-              {new Date(bookingData.startDate)
-                .toLocaleString("fr-FR")
-                .slice(0, 16)}
-            </p>
-            <h4>Date et heure de retour</h4>
-            <p>
-              {new Date(bookingData.endDate)
-                .toLocaleString("fr-FR")
-                .slice(0, 16)}
-            </p>
-            <h4>Durée de location</h4>
-            <p>{duration} jours</p>
-            <h4>Prix total</h4>
-            <p>{bookingData.price} €</p>
-            <div>
-              <button onClick={() => setModalYesOrNo(true)}>
-                Supprimer la réservation
-              </button>
-            </div>
-          </ReservationContainer>
-        </Content>
-      ) : (
-        <p style={{ color: "white" }}>
-          Chargement des informations de réservation...
-        </p>
+              <ReservationContainer>
+                <Lieux>
+                  <h3>{bookingData.departAgence}</h3>
+                  <FaArrowRightArrowLeft />
+                  <h3>{bookingData.retourAgence}</h3>
+                </Lieux>
+                <h4>Numéro de réservation</h4>
+                <p>{bookingData._id}</p>
+                <h4>Date et heure de départ</h4>
+                <p>
+                  {new Date(bookingData.startDate)
+                    .toLocaleString("fr-FR")
+                    .slice(0, 16)}
+                </p>
+                <h4>Date et heure de retour</h4>
+                <p>
+                  {new Date(bookingData.endDate)
+                    .toLocaleString("fr-FR")
+                    .slice(0, 16)}
+                </p>
+                <h4>Durée de location</h4>
+                <p>{duration} jours</p>
+                <h4>Prix total</h4>
+                <p>{bookingData.price} €</p>
+                <div>
+                  <button onClick={() => setModalYesOrNo(true)}>
+                    Supprimer la réservation
+                  </button>
+                </div>
+              </ReservationContainer>
+            </Content>
+          )}
+        </Container>
       )}
-    </Container>
+    </>
   );
 }
 

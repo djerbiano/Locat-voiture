@@ -12,7 +12,7 @@ const sendMailUpdateUser = require("../mails/updateUser");
 const sendMailDeleteCompte = require("../mails/deleteCompte");
 const resetPasswordSendLink = require("../mails/resetPasswordSendLink");
 const validationNewPassword = require("../mails/validationNewPassword");
-const { handleErrors } = require("../utils/helpers");
+const { handleErrors, verifiyIdMongoDb } = require("../utils/helpers");
 
 const controller = {
   // registerUser
@@ -65,6 +65,35 @@ const controller = {
           { ...other },
           { token },
         ]);
+    } catch (error) {
+      return handleErrors(res, 400, {
+        message: error.message,
+      });
+    }
+  },
+
+  // getUser
+  getUser: async (req, res) => {
+    try {
+      // vérifier si l'ID de la réservation est valide
+      if (!verifiyIdMongoDb(req.params.idUser)) {
+        return handleErrors(res, 400, { message: "ID invalide" });
+      }
+
+      // s'assurer que le user est le propriétaire du token
+      if (req.user.id !== req.params.idUser) {
+        return handleErrors(res, 403, {
+          message: "Vous devez avoir le droit de voir ce compte",
+        });
+      }
+
+      const user = await User.findById(req.user.id).select("-password -__v -booking -isAdmin -tokenRestPassword");
+      if (!user) {
+        return handleErrors(res, 404, {
+          message: "Utilisateur introuvable",
+        });
+      }
+      res.status(200).json(user);
     } catch (error) {
       return handleErrors(res, 400, {
         message: error.message,

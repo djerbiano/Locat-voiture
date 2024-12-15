@@ -6,6 +6,8 @@ const Container = styled.div`
   bottom: -10vh;
   width: 100vw;
   background-color: #181c1d;
+  overflow-y: scroll;
+  z-index: 1000;
 `;
 
 const Content = styled.div`
@@ -13,8 +15,6 @@ const Content = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 50vw;
-  min-height: 50vh;
   background-color: white;
   color: black;
   border-radius: 5px;
@@ -23,6 +23,12 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  overflow-y: auto;
+  max-height: 95vh;
+
+  @media (max-width: 500px) {
+    width: 80%;
+  }
 
   div {
     display: flex;
@@ -32,7 +38,6 @@ const Content = styled.div`
     h3 {
       margin: 20px 0px;
       font-weight: bold;
-      
     }
   }
 
