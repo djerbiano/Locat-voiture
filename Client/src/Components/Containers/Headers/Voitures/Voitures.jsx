@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
 import SingleVoiture from "./SingleVoiture.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const Container = styled.div`
   padding: 10px;
   width: 100%;
@@ -13,7 +13,7 @@ const Container = styled.div`
 `;
 const CloseButton = styled.div`
   position: absolute;
-  top:  0px;
+  top: 0px;
   left: 0px;
   cursor: pointer;
   z-index: 2;
@@ -117,7 +117,6 @@ const Form = styled.form`
       &:hover {
         background-color: #ddd;
         color: black;
-
       }
 
       @media (max-width: 850px) {
@@ -170,7 +169,7 @@ const VoituresContainer = styled.div`
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  
+
   @media (max-width: 645px) {
     justify-content: center;
     align-items: center;
@@ -208,15 +207,69 @@ const VoituresContainer = styled.div`
   }
 `;
 
-function Voitures() {
-  const [closeReservation, setCloseReservation] = useState(false);
+function Voitures({
+  setLoading,
+  searchCar,
+  setModalJustClose,
+  setContent,
+  searchCarData,
+}) {
+  const [car, setCar] = useState([]);
+  const [closeReservation, setCloseReservation] = useState(true);
   const [formData, setFormData] = useState({
-    agenceDepart: "",
-    agenceRetour: "",
-    dateDepart: "",
-    dateRetour: "",
-    places: 1,
+    departAgence: "",
+    retourAgence: "",
+    startDate: "",
+    endDate: "",
+    place: 1,
   });
+
+  // récupération des voiture si la recherche est effectuée sur la page d'accueil ou afficher toutes les voitures
+  useEffect(() => {
+    setLoading(true);
+    let findCar = searchCar
+      ? `${process.env.REACT_APP_URL_SERVER}/bookings/bookingAvailable`
+      : `${process.env.REACT_APP_URL_SERVER}/cars/all`;
+
+    const getCars = async () => {
+      try {
+        const response = await fetch(findCar, {
+          method: searchCar ? "POST" : "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: searchCar
+            ? JSON.stringify({
+                departAgence: searchCarData.departAgence,
+                retourAgence: searchCarData.autreAgence
+                  ? searchCarData.retourAgence
+                  : searchCarData.departAgence,
+                startDate: searchCarData.startDate,
+                endDate: searchCarData.endDate,
+                place: searchCarData.place,
+              })
+            : null,
+        });
+        const data = await response.json();
+
+        if (data.cars.length > 0) {
+          setCar(data.cars);
+        } else {
+          setCar(data);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+        setLoading(false);
+        setModalJustClose(true);
+        setContent("Erreur lors de la récupération des voitures");
+      }
+    };
+
+    getCars();
+    // eslint-disable-next-line
+  }, [searchCar, searchCarData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -226,9 +279,37 @@ function Voitures() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // soumission du formulaire
+  const handleSubmit = async (e) => {
+   
+    setLoading(true);
     e.preventDefault();
-    console.log("Formulaire soumis:", formData);
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_URL_SERVER}/bookings/bookingAvailable`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      const data = await response.json();
+      if (data.cars.length > 0) {
+        setCar(data.cars);
+      } else {
+        setCar(data);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+      setLoading(false);
+      setModalJustClose(true);
+      setContent("Erreur lors de la récupération des voitures");
+    }
   };
   return (
     <Container>
@@ -246,71 +327,71 @@ function Voitures() {
         <ReservationContainer>
           <Form onSubmit={handleSubmit}>
             <div className="item">
-              <label htmlFor="agenceDepart">Lieu de prise en charge</label>
+              <label htmlFor="departAgence">Lieu de prise en charge</label>
               <select
-                name="agenceDepart"
-                id="agenceDepart"
+                name="departAgence"
+                id="departAgence"
                 onChange={handleChange}
-                value={formData.agenceDepart}
+                value={formData.departAgence}
                 required
               >
                 <option value="">Sélectionnez une agence</option>
-                <option value="Agence de paris">Agence de paris</option>
-                <option value="Agence de nantes">Agence de nantes</option>
-                <option value="Agence de lyon">Agence de lyon</option>
-                <option value="Agence de marseille">Agence de marseille</option>
-                <option value="Agence de bordeaux">Agence de bordeaux</option>
+                <option value="Agence-de-paris">Agence-de-paris</option>
+                <option value="Agence-de-nantes">Agence-de-nantes</option>
+                <option value="Agence-de-lyon">Agence-de-lyon</option>
+                <option value="Agence-de-marseille">Agence-de-marseille</option>
+                <option value="Agence-de-bordeaux">Agence-de-bordeaux</option>
               </select>
             </div>
             <div className="item">
-              <label htmlFor="agenceRetour">Lieu de restitution</label>
+              <label htmlFor="retourAgence">Lieu de restitution</label>
               <select
-                name="agenceRetour"
-                id="agenceRetour"
+                name="retourAgence"
+                id="retourAgence"
                 onChange={handleChange}
-                value={formData.agenceRetour}
+                value={formData.retourAgence}
                 required
               >
                 <option value="">Sélectionnez une agence</option>
-                <option value="Agence de paris">Agence de paris</option>
-                <option value="Agence de nantes">Agence de nantes</option>
-                <option value="Agence de lyon">Agence de lyon</option>
-                <option value="Agence de marseille">Agence de marseille</option>
-                <option value="Agence de bordeaux">Agence de bordeaux</option>
+                <option value="Agence-de-paris">Agence-de-paris</option>
+                <option value="Agence-de-nantes">Agence-de-nantes</option>
+                <option value="Agence-de-lyon">Agence-de-lyon</option>
+                <option value="Agence-de-marseille">Agence-de-marseille</option>
+                <option value="Agence-de-bordeaux">Agence-de-bordeaux</option>
               </select>
             </div>
             <div className="item">
-              <label htmlFor="dateDepart">Date et heure de prise</label>
+              <label htmlFor="startDate">Date et heure de prise</label>
               <input
-                type="date"
-                id="dateDepart"
-                name="dateDepart"
+                type="datetime-local"
+                id="startDate"
+                name="startDate"
                 onChange={handleChange}
-                value={formData.dateDepart}
+                value={formData.startDate}
                 required
               />
             </div>
             <div className="item">
-              <label htmlFor="dateRetour">Date et heure de retour</label>
+              <label htmlFor="endDate">Date et heure de retour</label>
               <input
-                type="date"
-                id="dateRetour"
-                name="dateRetour"
+                type="datetime-local"
+                id="endDate"
+                name="endDate"
                 onChange={handleChange}
-                value={formData.dateRetour}
+                value={formData.endDate}
                 required
               />
             </div>
             <div className="item">
-              <label htmlFor="places">Places</label>
+              <label htmlFor="place">place</label>
               <input
                 type="number"
-                id="places"
-                name="places"
+                id="place"
+                name="place"
                 min="1"
                 max="7"
                 onChange={handleChange}
-                value={formData.places}
+                value={formData.place}
                 required
               />
             </div>
@@ -321,11 +402,24 @@ function Voitures() {
         </ReservationContainer>
       </Content>
       <VoituresContainer>
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
-        <SingleVoiture />
+        {car?.message ? (
+          <p
+            style={{
+              textAlign: "center",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "transparent",
+              fontSize: "2rem",
+              width: "100%",
+            }}
+          >
+            {car.message}
+          </p>
+        ) : (
+          car?.map((car) => <SingleVoiture key={car._id} car={car} />)
+        )}
       </VoituresContainer>
     </Container>
   );

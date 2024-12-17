@@ -146,9 +146,42 @@ function updateBookingWithAdmin(obj) {
   return schema.validate(obj);
 }
 
+// booking available for user
+
+function bookingAvailableForUser(obj) {
+  const schema = joi.object({
+    departAgence: joi
+      .string()
+      .valid(
+        "Agence-de-paris",
+        "Agence-de-nantes",
+        "Agence-de-lyon",
+        "Agence-de-marseille",
+        "Agence-de-bordeaux"
+      )
+      .required(),
+    retourAgence: joi
+      .string()
+      .valid(
+        "Agence-de-paris",
+        "Agence-de-nantes",
+        "Agence-de-lyon",
+        "Agence-de-marseille",
+        "Agence-de-bordeaux"
+      )
+      .required(),
+    endDate: joi.date().required().greater("now"),
+    startDate: joi.date().required().greater("now").less(joi.ref("endDate")),
+    place: joi.number().required().min(1).max(7),
+  });
+
+  return schema.validate(obj);
+}
+
 module.exports = {
   Booking,
   validateBooking,
   validateBookingComments,
   updateBookingWithAdmin,
+  bookingAvailableForUser,
 };

@@ -35,8 +35,10 @@ const AppContainer = styled.div`
 function App() {
   const [loading, setLoading] = useState(false);
   const [modalJustClose, setModalJustClose] = useState(false);
-
   const [content, setContent] = useState("");
+  // voiture chercher par le user (adapter la page voiture en fonction, si true, trouver les cars en fonction de la data saisie sinon afficher tous les cars)
+  const [searchCar, setSearcherCar] = useState(false);
+  const [searchCarData, setSearcherCarData] = useState({});
 
   useEffect(() => {
     if (loading || modalJustClose) {
@@ -74,12 +76,30 @@ function App() {
 
       <BrowserRouter>
         <AuthProvider>
-          <IndexHeaders />
+          <IndexHeaders setSearcherCar={setSearcherCar} />
           <Routes>
-            <Route path="/" element={<IndexMain setLoading={setLoading} />} />
+            <Route
+              path="/"
+              element={
+                <IndexMain
+                  setLoading={setLoading}
+                  setSearcherCar={setSearcherCar}
+                  setSearcherCarData={setSearcherCarData}
+                />
+              }
+            />
             <Route
               path="/Voitures"
-              element={<Voitures setLoading={setLoading} />}
+              element={
+                <Voitures
+                  setLoading={setLoading}
+                  searchCar={searchCar}
+                  searchCarData={searchCarData}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                  
+                />
+              }
             />
             <Route
               path="/Tarifs"
@@ -147,8 +167,14 @@ function App() {
             />
             <Route
               path="/Reserver"
-              element={<Reserver setLoading={setLoading} />}
+              element={<Reserver setLoading={setLoading} setModalJustClose={setModalJustClose}
+              setContent={setContent} />}
             />
+            <Route
+            path="/Reserver/:id"
+            element={<Reserver setLoading={setLoading} setModalJustClose={setModalJustClose}
+            setContent={setContent} />}
+          />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route
               path="/politique-de-confidentialite"

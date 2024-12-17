@@ -70,7 +70,7 @@ const DetailsContainer = styled.div`
   border-radius: 20px;
 `;
 
-function SingleVoiture() {
+function SingleVoiture({ car }) {
   const [reserver, setReserver] = useState(false);
   return (
     <Vl
@@ -79,11 +79,13 @@ function SingleVoiture() {
     >
       <ImageContainer>
         <Reserver $reserver={reserver}>
-          <Link to="/Reserver">Réserver </Link>
+          <Link to={`/Reserver/${car?._id}`}>Réserver </Link>
         </Reserver>
         <DetailsContainer>
-          <Name>Mercedes-AMG GT</Name>
-          <Prix>250 € / jour</Prix>
+          <Name>
+            {car?.marque} {car?.modele}
+          </Name>
+          <Prix>{car?.pricePerDay} € / jour</Prix>
         </DetailsContainer>
       </ImageContainer>
     </Vl>

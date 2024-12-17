@@ -4,6 +4,10 @@ const virifyToken = require("../middlewares/virifyToken");
 const isAdmin = require("../middlewares/isAdmin");
 const route = express.Router();
 
+
+// booking available for user
+route.post("/bookingAvailable", controller.bookingAvailable);
+
 // registerBooking
 route.post("/registerBooking", virifyToken, controller.registerBooking);
 
@@ -18,5 +22,7 @@ route.get("/:id", virifyToken, controller.getBookingById);
 
 // cancelBooking by user before 48 hours
 route.patch("/cancelBooking/:id", virifyToken, controller.cancelBooking);
+
+
 
 module.exports = route;

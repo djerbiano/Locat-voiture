@@ -28,6 +28,7 @@ const CarsSchema = mongoose.Schema({
     required: true,
     min: 2,
     max: 5,
+    default: 4,
   },
 
   transmission: {

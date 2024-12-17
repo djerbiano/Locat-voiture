@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Assistance from "./Assistance";
 import SansFraisCachés from "./SansFraisCachés";
 import VoituresNeuves from "./VoituresNeuves";
+import { useNavigate } from "react-router-dom";
 
 const MainContainer = styled.div`
   width: 100%;
@@ -174,19 +175,22 @@ const Content3 = styled.div`
   }
 `;
 
-function IndexMain() {
+function IndexMain({ setSearcherCar, setSearcherCarData }) {
+  const navigate = useNavigate();
   const [modalJustClose, setModalJustClose] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [otherAgency, setOtherAgency] = useState(false);
   const [formData, setFormData] = useState({
-    agenceDepart: "",
+    departAgence: "Agence-de-paris",
     autreAgence: false,
-    agenceRetour: "",
-    dateDepart: "",
-    dateRetour: "",
-    places: 1,
+    retourAgence: "Agence-de-paris",
+    startDate: "2025-12-01T02:28",
+    endDate: "2025-12-02T02:28",
+    place: 1,
   });
 
+
+  
   useEffect(() => {
     if (modalJustClose) {
       document.body.style.overflow = "hidden";
@@ -210,7 +214,9 @@ function IndexMain() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Formulaire soumis:", formData);
+    setSearcherCar(true);
+    setSearcherCarData(formData);
+    navigate("/voitures");
   };
   return (
     <MainContainer>
@@ -220,20 +226,20 @@ function IndexMain() {
 
           <Content>
             <Form onSubmit={handleSubmit}>
-              <label htmlFor="agenceDepart">Agence de départ</label>
+              <label htmlFor="departAgence">Agence de départ</label>
               <select
-                name="agenceDepart"
-                id="agenceDepart"
+                name="departAgence"
+                id="departAgence"
                 onChange={handleChange}
-                value={formData.agenceDepart}
+                value={formData.departAgence}
                 required
               >
                 <option value="">Sélectionnez une agence</option>
-                <option value="Agence de paris">Agence de paris</option>
-                <option value="Agence de nantes">Agence de nantes</option>
-                <option value="Agence de lyon">Agence de lyon</option>
-                <option value="Agence de marseille">Agence de marseille</option>
-                <option value="Agence de bordeaux">Agence de bordeaux</option>
+                <option value="Agence-de-paris">Agence-de-paris</option>
+                <option value="Agence-de-nantes">Agence-de-nantes</option>
+                <option value="Agence-de-lyon">Agence-de-lyon</option>
+                <option value="Agence-de-marseille">Agence-de-marseille</option>
+                <option value="Agence-de-bordeaux">Agence-de-bordeaux</option>
               </select>
               <AutreAgence>
                 <input
@@ -260,57 +266,57 @@ function IndexMain() {
                     borderRadius: "5px",
                   }}
                 >
-                  <label htmlFor="agenceRetour">Agence de retour</label>
+                  <label htmlFor="retourAgence">Agence de retour</label>
                   <select
-                    name="agenceRetour"
-                    id="agenceRetour"
+                    name="retourAgence"
+                    id="retourAgence"
                     onChange={handleChange}
-                    value={formData.agenceRetour}
+                    value={formData.retourAgence}
                     required={otherAgency}
                   >
                     <option value="">Sélectionnez une agence</option>
-                    <option value="Agence de paris">Agence de paris</option>
-                    <option value="Agence de nantes">Agence de nantes</option>
-                    <option value="Agence de lyon">Agence de lyon</option>
-                    <option value="Agence de marseille">
-                      Agence de marseille
+                    <option value="Agence-de-paris">Agence-de-paris</option>
+                    <option value="Agence-de-nantes">Agence-de-nantes</option>
+                    <option value="Agence-de-lyon">Agence-de-lyon</option>
+                    <option value="Agence-de-marseille">
+                      Agence-de-marseille
                     </option>
-                    <option value="Agence de bordeaux">
-                      Agence de bordeaux
+                    <option value="Agence-de-bordeaux">
+                      Agence-de-bordeaux
                     </option>
                   </select>
                 </div>
               )}
 
-              <label htmlFor="dateDepart">Date de depart</label>
+              <label htmlFor="startDate">Date de depart</label>
               <input
                 type="datetime-local"
-                name="dateDepart"
-                id="dateDepart"
+                name="startDate"
+                id="startDate"
                 onChange={handleChange}
-                value={formData.dateDepart}
+                value={formData.startDate}
                 required
               />
 
-              <label htmlFor="dateRetour">Date de retour</label>
+              <label htmlFor="endDate">Date de retour</label>
               <input
                 type="datetime-local"
-                name="dateRetour"
-                id="dateRetour"
+                name="endDate"
+                id="endDate"
                 onChange={handleChange}
-                value={formData.dateRetour}
+                value={formData.endDate}
                 required
               />
 
-              <label htmlFor="places">Nombre de places</label>
+              <label htmlFor="place">Nombre de place</label>
               <input
                 type="number"
-                name="places"
-                id="places"
+                name="place"
+                id="place"
                 min="1"
                 max="7"
                 onChange={handleChange}
-                value={formData.places}
+                value={formData.place}
               />
 
               <ButtonRecherche type="submit">Rechercher</ButtonRecherche>

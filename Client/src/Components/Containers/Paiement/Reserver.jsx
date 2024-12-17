@@ -4,6 +4,7 @@ import SingleVoiture from "../Headers/Voitures/SingleVoiture.jsx";
 import { useState } from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
+import DetailsPaiementCar from "./DetailsPaiementCar.jsx";
 
 const Container = styled.div`
   width: 100%;
@@ -114,7 +115,7 @@ const DateDepart = styled.div`
 const DateRetour = styled.div`
   width: 20%;
 `;
-const Places = styled.div`
+const Place = styled.div`
   width: 5%;
   display: flex;
   flex-direction: column;
@@ -161,7 +162,7 @@ const FormSecondLine = styled.div`
   }
 `;
 const CheckboxAutreAgence = styled.div``;
-const Promotion = styled.div``;
+/*const Promotion = styled.div``;*/
 const ButtonRecherche = styled.button`
   width: 150px;
   border-radius: 5px;
@@ -266,6 +267,7 @@ const ResultatVoituresTrouvees = styled.div`
   display: flex;
   flex-flow: wrap;
   justify-content: flex-start;
+  width: 100%;
   @media (max-width: 590px) {
     justify-content: end;
   }
@@ -288,20 +290,21 @@ const ResultatVoituresTrouvees = styled.div`
   }
 `;
 
-function Reserver() {
-  const [displayFilter, setDisplayFilter] = useState(true);
+function Reserver({ setLoading, setModalJustClose, setContent }) {
+  const [car, setCar] = useState([]);
+  const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySearch, setdisplaySearch] = useState(true);
   const [prixMin, setPrixMin] = useState(0);
   const [prixMax, setPrixMax] = useState(0);
   const [otherAgency, setOtherAgency] = useState(false);
   const [formData, setFormData] = useState({
-    agenceDepart: "",
+    departAgence: "",
     autreAgence: false,
-    agenceRetour: "",
-    dateDepart: "",
-    dateRetour: "",
-    places: 1,
-    promotion: false,
+    retourAgence: "",
+    startDate: "",
+    endDate: "",
+    place: 1,
+    /*promotion: false,*/
   });
 
   const handleChange = (e) => {
@@ -312,9 +315,44 @@ function Reserver() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // soumission du formulaire
+  const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    console.log("Formulaire soumis:", formData);
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_URL_SERVER}/bookings/bookingAvailable`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            departAgence: formData.departAgence,
+            retourAgence: formData.retourAgence
+              ? formData.retourAgence
+              : formData.departAgence,
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+            place: formData.place,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.cars.length > 0) {
+        setCar(data.cars);
+      } else {
+        setCar(data);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+      setLoading(false);
+      setModalJustClose(true);
+      setContent("Erreur lors de la récupération des voitures");
+    }
   };
   return (
     <Container $displaySearch={displaySearch}>
@@ -338,83 +376,83 @@ function Reserver() {
         <Form onSubmit={handleSubmit}>
           <FormFirstLine>
             <AgenceDepart>
-              <label htmlFor="agenceDepart">Départ</label>
+              <label htmlFor="departAgence">Départ</label>
               <select
-                name="agenceDepart"
-                id="agenceDepart"
+                name="departAgence"
+                id="departAgence"
                 onChange={handleChange}
-                value={formData.agenceDepart}
+                value={formData.departAgence}
                 required
               >
                 <option value="">Sélectionnez une agence</option>
-                <option value="Agence de paris">Agence de paris</option>
-                <option value="Agence de nantes">Agence de nantes</option>
-                <option value="Agence de lyon">Agence de lyon</option>
-                <option value="Agence de marseille">Agence de marseille</option>
-                <option value="Agence de bordeaux">Agence de bordeaux</option>
+                <option value="Agence-de-paris">Agence-de-paris</option>
+                <option value="Agence-de-nantes">Agence-de-nantes</option>
+                <option value="Agence-de-lyon">Agence-de-lyon</option>
+                <option value="Agence-de-marseille">Agence-de-marseille</option>
+                <option value="Agence-de-bordeaux">Agence-de-bordeaux</option>
               </select>
             </AgenceDepart>
 
             {otherAgency && (
               <AgenceRetour>
-                <label htmlFor="agenceRetour">Retour</label>
+                <label htmlFor="retourAgence">Retour</label>
                 <select
-                  name="agenceRetour"
-                  id="agenceRetour"
+                  name="retourAgence"
+                  id="retourAgence"
                   onChange={handleChange}
-                  value={formData.agenceRetour}
+                  value={formData.retourAgence}
                   required={otherAgency}
                 >
                   <option value="">Sélectionnez une agence</option>
-                  <option value="Agence de paris">Agence de paris</option>
-                  <option value="Agence de nantes">Agence de nantes</option>
-                  <option value="Agence de lyon">Agence de lyon</option>
-                  <option value="Agence de marseille">
-                    Agence de marseille
+                  <option value="Agence-de-paris">Agence-de-paris</option>
+                  <option value="Agence-de-nantes">Agence-de-nantes</option>
+                  <option value="Agence-de-lyon">Agence-de-lyon</option>
+                  <option value="Agence-de-marseille">
+                    Agence-de-marseille
                   </option>
-                  <option value="Agence de bordeaux">Agence de bordeaux</option>
+                  <option value="Agence-de-bordeaux">Agence-de-bordeaux</option>
                 </select>
               </AgenceRetour>
             )}
             <DateDepart>
-              <label htmlFor="dateDepart">Date de depart</label>
+              <label htmlFor="startDate">Date de depart</label>
               <input
-                type="date"
-                name="dateDepart"
-                id="dateDepart"
+                type="datetime-local"
+                name="startDate"
+                id="startDate"
                 onChange={handleChange}
-                value={formData.dateDepart}
+                value={formData.startDate}
                 required
               />
             </DateDepart>
             <DateRetour>
-              <label htmlFor="dateRetour">Date de retour</label>
+              <label htmlFor="endDate">Date de retour</label>
               <input
-                type="date"
-                name="dateRetour"
-                id="dateRetour"
+                type="datetime-local"
+                name="endDate"
+                id="endDate"
                 onChange={handleChange}
-                value={formData.dateRetour}
+                value={formData.endDate}
                 required
               />
             </DateRetour>
-            <Places>
-              <label htmlFor="places">Places</label>
+            <Place>
+              <label htmlFor="place">place</label>
               <input
                 type="number"
-                name="places"
-                id="places"
+                name="place"
+                id="place"
                 min="1"
                 max="7"
                 onChange={handleChange}
-                value={formData.places}
+                value={formData.place}
               />
-            </Places>
+            </Place>
           </FormFirstLine>
 
           <FormSecondLine>
             <div>
-              <Promotion>
+              {/*<Promotion>
                 <input
                   type="checkbox"
                   name="promotion"
@@ -426,7 +464,7 @@ function Reserver() {
                 <label htmlFor="promotion" style={{ marginRight: "10px" }}>
                   J’ai un code de réduction
                 </label>
-              </Promotion>
+              </Promotion>*/}
               <CheckboxAutreAgence>
                 <input
                   type="checkbox"
@@ -514,28 +552,35 @@ function Reserver() {
             onClick={() => setDisplayFilter(!displayFilter)}
           />
         </div>
-        <ResultatVoituresTrouvees>
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-          <SingleVoiture />
-        </ResultatVoituresTrouvees>
+        <div></div>
+
+        {car.length > 0 || car.message ? (
+          <ResultatVoituresTrouvees>
+            {car?.message ? (
+              <p
+                style={{
+                  textAlign: "center",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  backgroundColor: "transparent",
+                  fontSize: "2rem",
+                  width: "100%",
+                  color: "black",
+                }}
+              >
+                {car.message}
+              </p>
+            ) : (
+              car?.map((car) => <SingleVoiture key={car._id} car={car} />)
+            )}
+          </ResultatVoituresTrouvees>
+        ) : (
+          <ResultatVoituresTrouvees>
+            <DetailsPaiementCar setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />
+          </ResultatVoituresTrouvees>
+        )}
       </ContainerVoituresTrouvees>
     </Container>
   );

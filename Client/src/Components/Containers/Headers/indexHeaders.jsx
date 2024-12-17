@@ -139,7 +139,7 @@ const MenuItems = styled(Link)`
     color: red;
   }
 `;
-function IndexHeaders() {
+function IndexHeaders({setSearcherCar}) {
   const navigate = useNavigate();
   const [menuHamburgerView, setMenuHamburgerView] = useState(false);
   const [animationBurgerMenu, setAnimationBurgerMenu] = useState(false);
@@ -182,7 +182,7 @@ function IndexHeaders() {
     <>
       <HeaderContainer>
         <LinkItem to="/">Acceuil</LinkItem>
-        <LinkItem to="Voitures">Voitures</LinkItem>
+        <LinkItem to="Voitures" onClick={() => setSearcherCar(false)}>Voitures</LinkItem>
         <LinkItem to="Tarifs">Tarifs</LinkItem>
         <LinkItem to="Contact">Contact</LinkItem>
         <LinkItem to="MesReservation">Mes réservation</LinkItem>

@@ -5,6 +5,7 @@ const {
   Booking,
   validateBooking,
   validateBookingComments,
+  bookingAvailableForUser,
 } = require("../models/Bookings");
 const { handleErrors, verifiyIdMongoDb } = require("../utils/helpers");
 const sendMailBookingSave = require("../mails/reservationMails/sendMailBookingSave");
@@ -110,17 +111,18 @@ const controller = {
       if (!req.user.isAdmin && req.user.id !== booking.user.toString()) {
         return handleErrors(res, 403, {
           message: "Vous devez être le propriétaire de la réservation",
-        }); 
+        });
       }
 
       // verifier si la réservation est supprimable
       if (booking.status === "En-attente" || booking.status === "acceptée") {
         return handleErrors(res, 400, {
-          message: "Vous ne pouvez pas supprimer cette réservation qui est en cours",
+          message:
+            "Vous ne pouvez pas supprimer cette réservation qui est en cours",
         });
       }
 
-      if(!req.user.isAdmin && !booking.deleteWithUser){
+      if (!req.user.isAdmin && !booking.deleteWithUser) {
         return handleErrors(res, 400, {
           message: "Vous ne pouvez pas supprimer cette réservation",
         });
@@ -166,9 +168,9 @@ const controller = {
   // getAllBookings for user
   getAllBookingsForUser: async (req, res) => {
     try {
-      const bookings = await Booking.find({ user: req.user.id }).populate(
-        "voiture"
-      ).sort({startDate:1});
+      const bookings = await Booking.find({ user: req.user.id })
+        .populate("voiture")
+        .sort({ startDate: 1 });
 
       if (bookings.length < 1) {
         return res.status(200).json({
@@ -281,6 +283,81 @@ const controller = {
         });
       }
     } catch (error) {
+      return handleErrors(res, 400, {
+        message: error.message,
+      });
+    }
+  },
+
+  // booking available for user
+  bookingAvailable: async (req, res) => {
+    console.log(req.body);
+    try {
+      // validation de la data
+      const { error } = bookingAvailableForUser(req.body);
+      if (error) {
+        return handleErrors(res, 400, {
+          message: error.details[0].message,
+        });
+      }
+      const {
+        startDate: newBookingStart,
+        endDate: newBookingEnd,
+        place: nombreOfPlace,
+      } = req.body;
+
+      // trouver les voitures disponibles
+      const cars = await Car.find({
+        available: true,
+        place: { $gte: nombreOfPlace },
+        stockOfCar: { $gte: 1 },
+      })
+        .select(" -__v")
+        .populate("bookings");
+
+      if (!cars || cars.length === 0) {
+        return handleErrors(res, 404, {
+          message: "Aucune voiture disponible",
+        });
+      }
+
+      // Filtrer les voitures non disponibles
+      const carsAvailable = cars.filter((car) => {
+        let activeBookings = 0;
+
+        for (let booking of car.bookings) {
+          if (
+            ["En-attente", "acceptée"].includes(booking.status) &&
+            new Date(newBookingStart) <= new Date(booking.endDate) &&
+            new Date(newBookingEnd) >= new Date(booking.startDate)
+          ) {
+            activeBookings++;
+            if (activeBookings >= car.stockOfCar) {
+              // exclur la voiture du tableau
+              return false;
+            }
+          }
+        }
+        // ajouter la voiture au tableau
+        return true;
+      });
+      if (carsAvailable.length < 1) {
+        return res.status(200).json({
+          cars: carsAvailable,
+          message: "Aucune voiture disponible à cette date",
+        });
+      }
+
+      return res.status(200).json({
+        cars: carsAvailable.map((car) => {
+          const { bookings, ...carWithoutBookings } = car.toObject();
+          return carWithoutBookings;
+        }),
+      });
+
+     
+    } catch (error) {
+      console.log(error.message);
       return handleErrors(res, 400, {
         message: error.message,
       });
