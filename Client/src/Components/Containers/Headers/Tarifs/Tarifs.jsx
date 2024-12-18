@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useState, useEffect } from "react";
 import VoituresTarifs from "./VoituresTarifs";
 const Container = styled.div`
   padding: 10px;
@@ -55,42 +56,68 @@ const CarList = styled.div`
   }
 `;
 
-function Tarifs() {
+function Tarifs({ setLoading, setModalJustClose, setContent }) {
+  const [car, setCar] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+
+    const getCars = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_URL_SERVER}/cars/all`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+
+        if (data.cars?.length > 0) {
+          setCar(data.cars);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+        setLoading(false);
+        setModalJustClose(true);
+        setContent("Erreur lors de la récupération des voitures");
+      }
+    };
+
+    getCars();
+
+    // eslint-disable-next-line
+  }, []);
   return (
     <Container>
       <Section>
         <SectionTitle>Économique</SectionTitle>
         <CarList>
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
+          {car?.map((item) =>
+            item.category === "Économique" ? <VoituresTarifs key={item._id} car={item} /> : null
+          )}
         </CarList>
       </Section>
 
       <Section>
         <SectionTitle>Intermédiaire</SectionTitle>
         <CarList>
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
+        {car?.map((item) =>
+          item.category === "Intermédiaire" ? <VoituresTarifs key={item._id} car={item} /> : null
+        )}
         </CarList>
       </Section>
 
       <Section>
         <SectionTitle>Premium</SectionTitle>
         <CarList>
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
-          <VoituresTarifs />
+        {car?.map((item) =>
+          item.category === "Premium" ? <VoituresTarifs key={item._id} car={item} /> : null
+        )}
         </CarList>
       </Section>
     </Container>

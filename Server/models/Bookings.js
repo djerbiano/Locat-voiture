@@ -111,7 +111,7 @@ function validateBooking(obj) {
       .required(),
     endDate: joi.date().required().greater("now"),
     startDate: joi.date().required().greater("now").less(joi.ref("endDate")),
-    price: joi.number().positive().required().min(1).max(15500), // max 31day (500max per day)
+    price: joi.number().positive().required().min(1),
     status: joi
       .string()
       .valid("En-attente", "acceptée", "refusée", "annulée")

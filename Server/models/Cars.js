@@ -2,92 +2,97 @@ const mongoose = require("mongoose");
 const joi = require("joi");
 const { Booking } = require("./Bookings");
 
-const CarsSchema = mongoose.Schema({
-  marque: {
-    type: String,
-    required: true,
-  },
-  modele: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    required: true,
-  },
-
-  place: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 7,
-  },
-
-  doors: {
-    type: Number,
-    required: true,
-    min: 2,
-    max: 5,
-    default: 4,
-  },
-
-  transmission: {
-    type: String,
-    required: true,
-    enum: ["automatique", "manuelle"],
-  },
-  category: {
-    type: String,
-    required: true,
-    enum: ["Économique", "Intermédiaire", "Premium"],
-  },
-  fuel: {
-    type: String,
-    required: true,
-    enum: ["Essence", "Diesel", "Electrique"],
-  },
-  pictures: {
-    pic1: {
+const CarsSchema = mongoose.Schema(
+  {
+    marque: {
       type: String,
-      default: "avatarDefault.jpg",
       required: true,
     },
-    pic2: {
+    modele: {
       type: String,
-      default: "avatarDefault.jpg",
       required: true,
     },
-    pic3: {
+    color: {
       type: String,
-      default: "avatarDefault.jpg",
       required: true,
     },
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  pricePerDay: {
-    type: Number,
-    required: true,
-  },
-  stockOfCar: {
-    type: Number,
-    default: 1,
-    required: true,
-  },
-  available: {
-    type: Boolean,
-    required: true,
-  },
 
-  bookings: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Booking",
+    place: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 7,
     },
-  ],
-});
+
+    doors: {
+      type: Number,
+      required: true,
+      min: 2,
+      max: 5,
+      default: 4,
+    },
+
+    transmission: {
+      type: String,
+      required: true,
+      enum: ["automatique", "manuelle"],
+    },
+    category: {
+      type: String,
+      required: true,
+      enum: ["Économique", "Intermédiaire", "Premium"],
+    },
+    fuel: {
+      type: String,
+      required: true,
+      enum: ["Essence", "Diesel", "Electrique"],
+    },
+    pictures: {
+      pic1: {
+        type: String,
+        default: "avatarDefault.jpg",
+        required: true,
+      },
+      pic2: {
+        type: String,
+        default: "avatarDefault.jpg",
+        required: true,
+      },
+      pic3: {
+        type: String,
+        default: "avatarDefault.jpg",
+        required: true,
+      },
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    pricePerDay: {
+      type: Number,
+      required: true,
+    },
+    stockOfCar: {
+      type: Number,
+      default: 1,
+      required: true,
+    },
+    available: {
+      type: Boolean,
+      required: true,
+    },
+
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Booking",
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const Car = mongoose.model("Car", CarsSchema);
 

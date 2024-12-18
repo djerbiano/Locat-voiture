@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { MdOutlineMenuOpen } from "react-icons/md";
-import SingleVoiture from "../Headers/Voitures/SingleVoiture.jsx";
+import SingleVoitureReservation from "../Headers/Voitures/SingleVoitureReservation.jsx";
 import { useState } from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -290,7 +290,12 @@ const ResultatVoituresTrouvees = styled.div`
   }
 `;
 
-function Reserver({ setLoading, setModalJustClose, setContent }) {
+function Reserver({
+  setLoading,
+  setModalJustClose,
+  setContent,
+  searchCarData,
+}) {
   const [car, setCar] = useState([]);
   const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySearch, setdisplaySearch] = useState(true);
@@ -298,11 +303,11 @@ function Reserver({ setLoading, setModalJustClose, setContent }) {
   const [prixMax, setPrixMax] = useState(0);
   const [otherAgency, setOtherAgency] = useState(false);
   const [formData, setFormData] = useState({
-    departAgence: "",
+    departAgence: "Agence-de-paris",
     autreAgence: false,
-    retourAgence: "",
-    startDate: "",
-    endDate: "",
+    retourAgence: "Agence-de-paris",
+    startDate: "2025-12-01T02:28",
+    endDate: "2025-12-02T02:28",
     place: 1,
     /*promotion: false,*/
   });
@@ -552,7 +557,6 @@ function Reserver({ setLoading, setModalJustClose, setContent }) {
             onClick={() => setDisplayFilter(!displayFilter)}
           />
         </div>
-        <div></div>
 
         {car.length > 0 || car.message ? (
           <ResultatVoituresTrouvees>
@@ -573,12 +577,19 @@ function Reserver({ setLoading, setModalJustClose, setContent }) {
                 {car.message}
               </p>
             ) : (
-              car?.map((car) => <SingleVoiture key={car._id} car={car} />)
+              car?.map((car) => (
+                <SingleVoitureReservation key={car._id} car={car} />
+              ))
             )}
           </ResultatVoituresTrouvees>
         ) : (
           <ResultatVoituresTrouvees>
-            <DetailsPaiementCar setLoading={setLoading} setModalJustClose={setModalJustClose} setContent={setContent} />
+            <DetailsPaiementCar
+              setLoading={setLoading}
+              setModalJustClose={setModalJustClose}
+              setContent={setContent}
+              searchCarData={searchCarData}
+            />
           </ResultatVoituresTrouvees>
         )}
       </ContainerVoituresTrouvees>

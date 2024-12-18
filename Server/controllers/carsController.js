@@ -109,7 +109,7 @@ const controller = {
   // getAllCars for user
   getAllCars: async (req, res) => {
     try {
-      const cars = await Car.find({ available: true }).select("-bookings -__v");
+      const cars = await Car.find({ available: true }).select("-bookings -__v").sort({ createdAt: -1 });
 
       if (cars.length < 1) {
         return res.status(200).json({

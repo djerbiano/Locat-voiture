@@ -175,8 +175,14 @@ const Content3 = styled.div`
   }
 `;
 
-function IndexMain({ setSearcherCar, setSearcherCarData }) {
+function IndexMain({
+  setSearcherCar,
+  setSearchCarData,
+  setLoading,
+  setContent,
+}) {
   const navigate = useNavigate();
+  const [car, setCar] = useState([]);
   const [modalJustClose, setModalJustClose] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [otherAgency, setOtherAgency] = useState(false);
@@ -189,8 +195,44 @@ function IndexMain({ setSearcherCar, setSearcherCarData }) {
     place: 1,
   });
 
+  // get new 3 cars
 
-  
+  useEffect(() => {
+    setLoading(true);
+
+    const getCars = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_URL_SERVER}/cars/all`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+
+        if (data.cars.length > 0) {
+          setCar(data.cars);
+        } else {
+          setCar(data);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+        setLoading(false);
+        setModalJustClose(true);
+        setContent("Erreur lors de la récupération des voitures");
+      }
+    };
+
+    getCars();
+
+    // eslint-disable-next-line
+  }, []);
+
   useEffect(() => {
     if (modalJustClose) {
       document.body.style.overflow = "hidden";
@@ -215,7 +257,7 @@ function IndexMain({ setSearcherCar, setSearcherCarData }) {
     e.preventDefault();
 
     setSearcherCar(true);
-    setSearcherCarData(formData);
+    setSearchCarData(formData);
     navigate("/voitures");
   };
   return (
@@ -327,12 +369,12 @@ function IndexMain({ setSearcherCar, setSearcherCarData }) {
 
       <SecondGlobalContainer>
         <Container2>
-          <h1>Nos promotions de location</h1>
+          <h1>Nos dernières offres</h1>
 
           <Content2>
-            <NewVoiture2024 />
-            <NewVoiture2024 />
-            <NewVoiture2024 />
+            <NewVoiture2024 car={car?.[0]} />
+            <NewVoiture2024 car={car?.[1]} />
+            <NewVoiture2024 car={car?.[2]} />
           </Content2>
         </Container2>
       </SecondGlobalContainer>

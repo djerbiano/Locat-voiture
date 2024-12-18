@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Pic2 from "../../../../Assets/1.png";
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -12,11 +12,15 @@ const Vl = styled.div`
 const ImageContainer = styled.div`
   height: 100%;
   width: 100%;
-  background-image: url(${Pic2});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
   position: relative;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+
+    border-radius: 50px 0px 50px 0px;
+  }
 `;
 
 const Name = styled.div``;
@@ -64,7 +68,7 @@ const DetailsContainer = styled.div`
   border-radius: 20px;
 `;
 
-function VoituresTarifs() {
+function VoituresTarifs({ car }) {
   const [reserver, setReserver] = useState(false);
   return (
     <Vl
@@ -72,12 +76,18 @@ function VoituresTarifs() {
       onMouseLeave={() => setReserver(false)}
     >
       <ImageContainer>
+        <img
+          src={`${process.env.REACT_APP_URL_SERVER}/images/${car?.pictures.pic1}`}
+          alt=""
+        />
         <Reserver $reserver={reserver}>
-          <Link to="/Reserver"> Réserver </Link>{" "}
+          <Link to={`/Voitures/voiture/${car?._id}`}> Réserver </Link>{" "}
         </Reserver>
         <DetailsContainer>
-          <Name>Mercedes-AMG GT</Name>
-          <Prix>250 € / jour</Prix>
+          <Name>
+            {car?.marque} {car?.modele}
+          </Name>
+          <Prix>{car?.pricePerDay} € / jour</Prix>
         </DetailsContainer>
       </ImageContainer>
     </Vl>

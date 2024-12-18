@@ -23,6 +23,7 @@ import ModificationMotDePasse from "./Components/Containers/Headers/MaReservatio
 import Loader from "./Components/others/Loader.jsx";
 import JusteClose from "./Components/Modal/JusteClose.jsx";
 import Profile from "./Components/Containers/Headers/MaReservation/MyProfile/Profile.jsx";
+import DisplaySingleVoiture from "./Components/Containers/Headers/Voitures/DisplaySingleVoiture.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -37,8 +38,9 @@ function App() {
   const [modalJustClose, setModalJustClose] = useState(false);
   const [content, setContent] = useState("");
   // voiture chercher par le user (adapter la page voiture en fonction, si true, trouver les cars en fonction de la data saisie sinon afficher tous les cars)
-  const [searchCar, setSearcherCar] = useState(false);
-  const [searchCarData, setSearcherCarData] = useState({});
+  const [searchCar, setSearchCar] = useState(false);
+  const [searchCarData, setSearchCarData] = useState({});
+  const [searchWithiVoiturePage, setSearchWithiVoiturePage] = useState(false);
 
   useEffect(() => {
     if (loading || modalJustClose) {
@@ -76,15 +78,20 @@ function App() {
 
       <BrowserRouter>
         <AuthProvider>
-          <IndexHeaders setSearcherCar={setSearcherCar} />
+          <IndexHeaders
+            setSearcherCar={setSearchCar}
+            setSearchWithiVoiturePage={setSearchWithiVoiturePage}
+          />
           <Routes>
             <Route
               path="/"
               element={
                 <IndexMain
                   setLoading={setLoading}
-                  setSearcherCar={setSearcherCar}
-                  setSearcherCarData={setSearcherCarData}
+                  setSearcherCar={setSearchCar}
+                  setSearchCarData={setSearchCarData}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
                 />
               }
             />
@@ -97,13 +104,29 @@ function App() {
                   searchCarData={searchCarData}
                   setModalJustClose={setModalJustClose}
                   setContent={setContent}
-                  
+                  setSearchCar={setSearchCar}
+                  setSearchCarData={setSearchCarData}
+                  setSearchWithiVoiturePage={setSearchWithiVoiturePage}
+                  searchWithiVoiturePage={searchWithiVoiturePage}
                 />
               }
             />
+
+            <Route
+              path="/Voitures/voiture/:id"
+              element={
+                <DisplaySingleVoiture
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
+            />
+
             <Route
               path="/Tarifs"
-              element={<Tarifs setLoading={setLoading} />}
+              element={<Tarifs setLoading={setLoading}   setModalJustClose={setModalJustClose}
+              setContent={setContent}  />}
             />
             <Route
               path="/Contact"
@@ -167,14 +190,26 @@ function App() {
             />
             <Route
               path="/Reserver"
-              element={<Reserver setLoading={setLoading} setModalJustClose={setModalJustClose}
-              setContent={setContent} />}
+              element={
+                <Reserver
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                  searchCarData={searchCarData}
+                />
+              }
             />
             <Route
-            path="/Reserver/:id"
-            element={<Reserver setLoading={setLoading} setModalJustClose={setModalJustClose}
-            setContent={setContent} />}
-          />
+              path="/Reserver/:id"
+              element={
+                <Reserver
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                  searchCarData={searchCarData}
+                />
+              }
+            />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route
               path="/politique-de-confidentialite"

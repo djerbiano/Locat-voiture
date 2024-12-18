@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Pic2 from "../../../../Assets/1.png";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -19,11 +18,15 @@ const Vl = styled.div`
 const ImageContainer = styled.div`
   height: 100%;
   width: 100%;
-  background-image: url(${Pic2});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
   position: relative;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+
+    border-radius: 50px 0px 50px 0px;
+  }
 `;
 
 const Name = styled.div``;
@@ -78,8 +81,12 @@ function SingleVoiture({ car }) {
       onMouseLeave={() => setReserver(false)}
     >
       <ImageContainer>
+        <img
+          src={`${process.env.REACT_APP_URL_SERVER}/images/${car?.pictures.pic1}`}
+          alt=""
+        />
         <Reserver $reserver={reserver}>
-          <Link to={`/Reserver/${car?._id}`}>Réserver </Link>
+          <Link to={`/Voitures/voiture/${car?._id}`}>Découvrir </Link>
         </Reserver>
         <DetailsContainer>
           <Name>

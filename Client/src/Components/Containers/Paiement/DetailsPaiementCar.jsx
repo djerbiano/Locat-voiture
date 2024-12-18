@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Pic2 from "../../../../src/Assets/1.png";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
@@ -35,7 +34,8 @@ const ContainerCar = styled.div`
   flex-direction: column;
   align-items: center;
   color: black;
-  p, h3 {
+  p,
+  h3 {
     margin-bottom: 10px;
   }
   p,
@@ -77,9 +77,20 @@ const ContainerCar = styled.div`
   }
 `;
 
-function DetailsPaiementCar({ setLoading, setModalJustClose, setContent }) {
+function DetailsPaiementCar({
+  setLoading,
+  setModalJustClose,
+  setContent,
+  searchCarData,
+}) {
   const { id } = useParams();
   const [oneCar, setOneCar] = useState([]);
+
+  // calculate duration
+  const duration = Math.round(
+    (new Date(searchCarData?.endDate) - new Date(searchCarData?.startDate)) /
+      (1000 * 60 * 60 * 24)
+  );
   useEffect(() => {
     setLoading(true);
     const fetchCar = async () => {
@@ -138,7 +149,10 @@ function DetailsPaiementCar({ setLoading, setModalJustClose, setContent }) {
           {oneCar?.marque} {oneCar?.modele}
         </h2>
         <div className="containerImg">
-          <img src={Pic2} alt={oneCar?.marque} />
+          <img
+            src={`${process.env.REACT_APP_URL_SERVER}/images/${oneCar?.pictures?.pic1}`}
+            alt={oneCar?.marque}
+          />
         </div>
 
         <div className="containerConfig">
@@ -167,16 +181,16 @@ function DetailsPaiementCar({ setLoading, setModalJustClose, setContent }) {
           <h3>Détails de la réservation</h3>
 
           <h4>Départ:</h4>
-          <p>Aeroport de paris</p>
-          <p>vendredi 20/12/2024, 01:10</p>
+          <p>{searchCarData?.departAgence}</p>
+          <p>{searchCarData?.startDate}</p>
           <h4>Retour:</h4>
-          <p>Aeroport de Paris</p>
-          <p>vendredi 20/12/2024, 01:10</p>
+          <p>{searchCarData?.retourAgence}</p>
+          <p>{searchCarData?.endDate}</p>
           <h4>Durée:</h4>
-          <p>2 jours</p>
+          <p>{duration} jours</p>
           <h4>Détail du tarif :</h4>
-          <p>Tarif journalier: 250 $</p>
-          <p>Total: 500 $</p>
+          <p>Tarif journalier: {oneCar?.pricePerDay} $</p>
+          <p>Total: {oneCar?.pricePerDay * duration} $</p>
         </div>
       </ContainerCar>
     </Container>

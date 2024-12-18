@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
+import SingleVoitureReservation from "./SingleVoitureReservation.jsx";
 import SingleVoiture from "./SingleVoiture.jsx";
 import { useEffect, useState } from "react";
 const Container = styled.div`
@@ -210,66 +211,72 @@ const VoituresContainer = styled.div`
 function Voitures({
   setLoading,
   searchCar,
+  setSearchCar,
   setModalJustClose,
   setContent,
   searchCarData,
+  setSearchCarData,
+  setSearchWithiVoiturePage,
+  searchWithiVoiturePage,
 }) {
   const [car, setCar] = useState([]);
   const [closeReservation, setCloseReservation] = useState(true);
   const [formData, setFormData] = useState({
-    departAgence: "",
-    retourAgence: "",
-    startDate: "",
-    endDate: "",
+    departAgence: "Agence-de-paris",
+    retourAgence: "Agence-de-paris",
+    startDate: "2025-12-01T02:28",
+    endDate: "2025-12-02T02:28",
     place: 1,
   });
 
   // récupération des voiture si la recherche est effectuée sur la page d'accueil ou afficher toutes les voitures
   useEffect(() => {
-    setLoading(true);
-    let findCar = searchCar
-      ? `${process.env.REACT_APP_URL_SERVER}/bookings/bookingAvailable`
-      : `${process.env.REACT_APP_URL_SERVER}/cars/all`;
+    if (!searchWithiVoiturePage) {
+      setLoading(true);
+      let findCar = searchCar
+        ? `${process.env.REACT_APP_URL_SERVER}/bookings/bookingAvailable`
+        : `${process.env.REACT_APP_URL_SERVER}/cars/all`;
 
-    const getCars = async () => {
-      try {
-        const response = await fetch(findCar, {
-          method: searchCar ? "POST" : "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: searchCar
-            ? JSON.stringify({
-                departAgence: searchCarData.departAgence,
-                retourAgence: searchCarData.autreAgence
-                  ? searchCarData.retourAgence
-                  : searchCarData.departAgence,
-                startDate: searchCarData.startDate,
-                endDate: searchCarData.endDate,
-                place: searchCarData.place,
-              })
-            : null,
-        });
-        const data = await response.json();
+      const getCars = async () => {
+        try {
+          const response = await fetch(findCar, {
+            method: searchCar ? "POST" : "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: searchCar
+              ? JSON.stringify({
+                  departAgence: searchCarData.departAgence,
+                  retourAgence: searchCarData.autreAgence
+                    ? searchCarData.retourAgence
+                    : searchCarData.departAgence,
+                  startDate: searchCarData.startDate,
+                  endDate: searchCarData.endDate,
+                  place: searchCarData.place,
+                })
+              : null,
+          });
+          const data = await response.json();
 
-        if (data.cars.length > 0) {
-          setCar(data.cars);
-        } else {
-          setCar(data);
+          if (data.cars.length > 0) {
+            setCar(data.cars);
+          } else {
+            setCar(data);
+          }
+
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching cars:", error);
+          setLoading(false);
+          setModalJustClose(true);
+          setContent("Erreur lors de la récupération des voitures");
         }
+      };
 
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching cars:", error);
-        setLoading(false);
-        setModalJustClose(true);
-        setContent("Erreur lors de la récupération des voitures");
-      }
-    };
-
-    getCars();
+      getCars();
+    }
     // eslint-disable-next-line
-  }, [searchCar, searchCarData]);
+  }, [searchCar, searchCarData, searchWithiVoiturePage]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -281,9 +288,12 @@ function Voitures({
 
   // soumission du formulaire
   const handleSubmit = async (e) => {
-   
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
+    setCloseReservation(true);
+    setSearchWithiVoiturePage(true);
+    setSearchCarData(formData);
+    setSearchCar(true);
 
     try {
       const response = await fetch(
@@ -293,7 +303,15 @@ function Voitures({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            departAgence: formData.departAgence,
+            retourAgence: formData.autreAgence
+              ? formData.retourAgence
+              : formData.departAgence,
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+            place: formData.place,
+          }),
         }
       );
       const data = await response.json();
@@ -304,6 +322,7 @@ function Voitures({
       }
 
       setLoading(false);
+      setSearchWithiVoiturePage(false);
     } catch (error) {
       console.error("Error fetching cars:", error);
       setLoading(false);
@@ -402,7 +421,32 @@ function Voitures({
         </ReservationContainer>
       </Content>
       <VoituresContainer>
-        {car?.message ? (
+        {searchCar === true ? (
+          car?.message ? (
+            <p
+              style={{
+                textAlign: "center",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "transparent",
+                fontSize: "2rem",
+                width: "100%",
+              }}
+            >
+              {car.message}
+            </p>
+          ) : (
+            car?.map((car) => (
+              <SingleVoitureReservation
+                key={car._id}
+                car={car}
+                searchCarData={searchCarData}
+              />
+            ))
+          )
+        ) : car?.message ? (
           <p
             style={{
               textAlign: "center",
