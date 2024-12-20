@@ -318,17 +318,7 @@ function Reserver({
     /*promotion: false,*/
   });
 
-  const [dataSort, setDataSort] = useState({
-    trierPrix: "",
-    typeDeVoitures: "",
-    marque: "",
-    transmission: "",
-  });
-  const uniqueMarques = [...new Set(orig.map((carMarque) => carMarque.marque))];
-  const transmissionCars = [
-    ...new Set(orig.map((carTransmission) => carTransmission.transmission)),
-  ];
-  const typeCars = [...new Set(orig.map((typeCar) => typeCar.category))];
+  const [dataSort, setDataSort] = useState("");
 
   // gestion des inputs
   const handleChange = (e) => {
@@ -342,43 +332,71 @@ function Reserver({
   // gestion de tri
 
   const handleSort = (e) => {
-    const { name, value } = e.target;
-    setDataSort((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setDataSort(e.target.value);
     setDisplayFilter(false);
-    // console.log( dataSort.transmission);
+    console.log(dataSort);
   };
+
+
   // afficher resultat trier
   useEffect(() => {
     let filteredCars = [...orig];
 
-    const marques = uniqueMarques;
-    const transmission = transmissionCars;
+    const marques = ["Audi", "BMW", "Mercedes", "Renault", "Peugeot"];
+    const transmissions = ["automatique", "manuelle"];
 
     // Appliquer les tris
-    if (dataSort.trierPrix === "PrixDécroissant") {
+    if (dataSort === "PrixDécroissant") {
       filteredCars.sort((a, b) => b.pricePerDay - a.pricePerDay);
-    } else if (dataSort.trierPrix === "PrixCroissant") {
+    } else if (dataSort === "PrixCroissant") {
       filteredCars.sort((a, b) => a.pricePerDay - b.pricePerDay);
     }
 
     // Appliquer les filtres
-    if (marques.includes(dataSort.marque)) {
+    if (marques.includes(dataSort)) {
+      filteredCars = filteredCars.filter((car) => car.marque === dataSort);
+    } else if (transmissions.includes(dataSort)) {
       filteredCars = filteredCars.filter(
-        (car) => car.marque === dataSort.marque
-      );
-    }
-    if (transmission.includes(dataSort.transmission)) {
-      filteredCars = filteredCars.filter(
-        (car) => car.transmission === dataSort.transmission
+        (car) => car.transmission === dataSort
       );
     }
 
     setCar(filteredCars);
     //eslint-disable-next-line
-  }, [dataSort, orig]);
+  }, [dataSort]);
+
+  /*
+  
+    useEffect(() => {
+    let filteredCars = [...car];
+
+    const marques = ["Audi", "BMW", "Mercedes", "Renault", "Peugeot"];
+    const transmissions = ["automatique", "manuelle"];
+
+    // Appliquer les tris
+    if (dataSort === "PrixDécroissant") {
+      filteredCars = filteredCars.sort((a, b) => b.pricePerDay - a.pricePerDay);
+    } else if (dataSort === "PrixCroissant") {
+      filteredCars = filteredCars.sort((a, b) => a.pricePerDay - b.pricePerDay);
+    }
+    // Appliquer les filtres
+    if (marques.includes(dataSort)) {
+      filteredCars = filteredCars.filter((car) => car.marque === dataSort);
+    } else if (transmissions.includes(dataSort)) {
+      filteredCars = filteredCars.filter(
+        (car) => car.transmission === dataSort
+      );
+    }
+
+    // Mettre à jour les résultats uniquement si nécessaire
+    setCar(filteredCars);
+
+    //eslint-disable-next-line
+  }, [dataSort]);
+  
+  
+  
+  */
 
   // soumission du formulaire
   const handleSubmit = async (e) => {
@@ -415,12 +433,6 @@ function Reserver({
       }
 
       setLoading(false);
-      setDataSort({
-        trierPrix: "",
-        typeDeVoitures: "",
-        marque: "",
-        transmission: "",
-      });
     } catch (error) {
       console.error("Error fetching cars:", error);
       setLoading(false);
@@ -428,7 +440,6 @@ function Reserver({
       setContent("Erreur lors de la récupération des voitures");
     }
   };
-
   return (
     <Container $displaySearch={displaySearch}>
       <div className="openSearch">
@@ -567,12 +578,7 @@ function Reserver({
       <ContainerVoituresTrouvees>
         <FilterVoituresTrouvees>
           <div className={displayFilter ? "open" : "close"}>
-            <select
-              name="trierPrix"
-              id="trierPrix"
-              value={dataSort.trierPrix}
-              onChange={handleSort}
-            >
+            <select name="trierPrix" id="trierPrix" onChange={handleSort}>
               <option value="">Trier par</option>
               <option value="PrixCroissant">Prix croissant</option>
               <option value="PrixDécroissant">Prix décroissant</option>
@@ -580,39 +586,26 @@ function Reserver({
 
             <select name="typeDeVoitures" id="typeDeVoitures">
               <option value="">Type de voiture</option>
-              {typeCars.map((type) => (
-                <option value={type} key={type}>
-                  {type}
-                </option>
-              ))}
+              <option value="Berline">Berline</option>
+              <option value="Break">Break</option>
+              <option value="SUV">SUV</option>
+              <option value="Coupé">Coupé</option>
+              <option value="Monospace">Monospace</option>
             </select>
 
-            <select
-              name="marque"
-              id="marque"
-              value={dataSort.marque}
-              onChange={handleSort}
-            >
+            <select name="marque" id="marque" onChange={handleSort}>
               <option value="">Marque</option>
-              {uniqueMarques.map((marque) => (
-                <option value={marque} key={marque}>
-                  {marque}
-                </option>
-              ))}
+              <option value="Audi">Audi</option>
+              <option value="BMW">BMW</option>
+              <option value="Mercedes">Mercedes</option>
+              <option value="Renault">Renault</option>
+              <option value="Peugeot">Peugeot</option>
             </select>
 
-            <select
-              name="transmission"
-              id="transmission"
-              value={dataSort.transmission}
-              onChange={handleSort}
-            >
+            <select name="transmission" id="transmission" onChange={handleSort}>
               <option value="">Transmission</option>
-              {transmissionCars.map((transmission) => (
-                <option value={transmission} key={transmission}>
-                  {transmission}
-                </option>
-              ))}
+              <option value="manuelle">Manuelle</option>
+              <option value="automatique">Automatique</option>
               <option value="lesDeux">Les deux</option>
             </select>
 

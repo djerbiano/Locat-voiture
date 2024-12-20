@@ -82,7 +82,7 @@ function SingleVoitureReservation({ car, searchCarData }) {
     >
       <ImageContainer>
         <img
-          src={`${process.env.REACT_APP_URL_SERVER}/images/${car?.pictures.pic1}`}
+          src={`${process.env.REACT_APP_URL_SERVER}/images/${car?.pictures?.pic1}`}
           alt=""
         />
         <Reserver $reserver={reserver}>

@@ -86,35 +86,42 @@ function DetailsPaiementCar({
   const { id } = useParams();
   const [oneCar, setOneCar] = useState([]);
 
+
+
   // calculate duration
   const duration = Math.round(
     (new Date(searchCarData?.endDate) - new Date(searchCarData?.startDate)) /
       (1000 * 60 * 60 * 24)
   );
   useEffect(() => {
-    setLoading(true);
-    const fetchCar = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_URL_SERVER}/cars/${id}`
-        );
-        const data = await response.json();
-        if (data.car) {
-          setOneCar(data.car);
-        } else {
-          setOneCar(data);
+    if (id) {
+      setLoading(true);
+      const fetchCar = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_URL_SERVER}/cars/${id}`
+          );
+          const data = await response.json();
+          if (data.car) {
+            setOneCar(data.car);
+          } else {
+            setOneCar(data);
+          }
+        } catch (error) {
+          console.error("Error fetching cars:", error);
+          setLoading(false);
+          setModalJustClose(true);
+          setContent("Erreur lors de la récupération des voitures");
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching cars:", error);
-        setLoading(false);
-        setModalJustClose(true);
-        setContent("Erreur lors de la récupération des voitures");
-      }
-    };
-    fetchCar();
-    setLoading(false);
+      };
+      fetchCar();
+    }
+
     // eslint-disable-next-line
   }, [id]);
+
   return oneCar?.message ? (
     <p
       style={{
@@ -132,16 +139,6 @@ function DetailsPaiementCar({
       {oneCar.message}
     </p>
   ) : (
-    /*<Vl>
-      <ImageContainer>
-        <DetailsContainer>
-          <Name>
-            {oneCar?.marque} {oneCar?.modele}
-          </Name>
-          <Prix>{oneCar?.pricePerDay} € / jour</Prix>
-        </DetailsContainer>
-      </ImageContainer>
-    </Vl>*/
     <Container>
       <ContainerDetails></ContainerDetails>
       <ContainerCar>

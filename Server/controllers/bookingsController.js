@@ -316,8 +316,9 @@ const controller = {
         .populate("bookings");
 
       if (!cars || cars.length === 0) {
-        return handleErrors(res, 404, {
-          message: "Aucune voiture disponible",
+        return handleErrors(res, 200, {
+          cars: [],
+          message: `Aucune voiture de ${nombreOfPlace} places disponible pour cette date`,
         });
       }
 
@@ -354,8 +355,6 @@ const controller = {
           return carWithoutBookings;
         }),
       });
-
-     
     } catch (error) {
       console.log(error.message);
       return handleErrors(res, 400, {

@@ -111,6 +111,10 @@ const controller = {
     try {
       const cars = await Car.find({ available: true }).select("-bookings -__v").sort({ createdAt: -1 });
 
+      /* a supp */
+
+      // await Car.updateMany({"available": false}, {$set: {"available": true}});
+     
       if (cars.length < 1) {
         return res.status(200).json({
           cars,
