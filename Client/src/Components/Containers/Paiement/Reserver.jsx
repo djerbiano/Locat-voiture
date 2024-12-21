@@ -15,6 +15,8 @@ const Container = styled.div`
   border-radius: 10px;
   position: relative;
 
+  
+
   .openSearch {
     @media (min-width: 741px) {
       display: none;
@@ -186,10 +188,12 @@ const ContainerVoituresTrouvees = styled.div`
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 0 0 5px 5px;
   position: relative;
+ 
   .openFilterMenu {
     font-size: 50px;
     color: #333;
     height: 1px;
+    z-index: 2;
     > * {
       animation: move 2s ease infinite;
 
@@ -211,6 +215,7 @@ const ContainerVoituresTrouvees = styled.div`
     font-size: 50px;
     color: #333;
     height: 1px;
+    z-index: 2;
 
     > * {
       animation: move 2s ease infinite;
@@ -230,6 +235,7 @@ const ContainerVoituresTrouvees = styled.div`
   }
 `;
 const FilterVoituresTrouvees = styled.div`
+
   .open {
     display: flex;
     flex-direction: column;
@@ -269,6 +275,8 @@ const ResultatVoituresTrouvees = styled.div`
   flex-flow: wrap;
   justify-content: flex-start;
   width: 100%;
+
+
   @media (max-width: 590px) {
     justify-content: end;
   }
@@ -301,7 +309,7 @@ function Reserver({
   const navigate = useNavigate();
 
   const [car, setCar] = useState([]);
-  const [orig, setOrig] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
 
   const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySearch, setdisplaySearch] = useState(true);
@@ -324,11 +332,13 @@ function Reserver({
     marque: "",
     transmission: "",
   });
-  const uniqueMarques = [...new Set(orig.map((carMarque) => carMarque.marque))];
+
+  // récupération unique de data
+  const uniqueMarques = [...new Set(originalData.map((carMarque) => carMarque.marque))];
   const transmissionCars = [
-    ...new Set(orig.map((carTransmission) => carTransmission.transmission)),
+    ...new Set(originalData.map((carTransmission) => carTransmission.transmission)),
   ];
-  const typeCars = [...new Set(orig.map((typeCar) => typeCar.category))];
+  const typeCars = [...new Set(originalData.map((typeCar) => typeCar.category))];
 
   // gestion des inputs
   const handleChange = (e) => {
@@ -340,7 +350,6 @@ function Reserver({
   };
 
   // gestion de tri
-
   const handleSort = (e) => {
     const { name, value } = e.target;
     setDataSort((prevData) => ({
@@ -348,14 +357,15 @@ function Reserver({
       [name]: value,
     }));
     setDisplayFilter(false);
-    // console.log( dataSort.transmission);
   };
+
   // afficher resultat trier
   useEffect(() => {
-    let filteredCars = [...orig];
+    let filteredCars = [...originalData];
 
     const marques = uniqueMarques;
     const transmission = transmissionCars;
+    const category = typeCars;
 
     // Appliquer les tris
     if (dataSort.trierPrix === "PrixDécroissant") {
@@ -376,9 +386,15 @@ function Reserver({
       );
     }
 
+    if (category.includes(dataSort.typeDeVoitures)) {
+      filteredCars = filteredCars.filter(
+        (car) => car.category === dataSort.typeDeVoitures
+      );
+    }
+
     setCar(filteredCars);
     //eslint-disable-next-line
-  }, [dataSort, orig]);
+  }, [dataSort, originalData]);
 
   // soumission du formulaire
   const handleSubmit = async (e) => {
@@ -408,10 +424,10 @@ function Reserver({
       const data = await response.json();
       if (data.cars.length > 0) {
         setCar(data.cars);
-        setOrig(data.cars);
+        setOriginalData(data.cars);
       } else {
         setCar(data);
-        setOrig(data);
+        setOriginalData(data);
       }
 
       setLoading(false);
@@ -578,7 +594,12 @@ function Reserver({
               <option value="PrixDécroissant">Prix décroissant</option>
             </select>
 
-            <select name="typeDeVoitures" id="typeDeVoitures">
+            <select
+              name="typeDeVoitures"
+              id="typeDeVoitures"
+              value={dataSort.typeDeVoitures}
+              onChange={handleSort}
+            >
               <option value="">Type de voiture</option>
               {typeCars.map((type) => (
                 <option value={type} key={type}>
@@ -639,11 +660,11 @@ function Reserver({
             />
           </div>
         </FilterVoituresTrouvees>
-        <div className={displayFilter ? "openFilterMenu" : "closeFilterMenu"}>
-          <MdOutlineMenuOpen
-            style={{ cursor: "pointer" }}
-            onClick={() => setDisplayFilter(!displayFilter)}
-          />
+        <div
+          className={displayFilter ? "openFilterMenu" : "closeFilterMenu"}
+          onClick={() => setDisplayFilter(!displayFilter)}
+        >
+          <MdOutlineMenuOpen style={{ cursor: "pointer" }} />
         </div>
 
         {car && !id ? (

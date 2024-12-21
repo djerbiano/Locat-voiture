@@ -38,6 +38,8 @@ const Content = styled.div`
       top: 40px;
     }
   }
+
+
 `;
 
 const TitleReservation = styled.h2`
@@ -69,6 +71,7 @@ const ReservationDetails = styled.div`
   background-color: #f5f5f5;
   padding: 20px;
   border-radius: 10px;
+  position: relative;
   .date {
     display: flex;
 
@@ -95,6 +98,24 @@ const ReservationDetails = styled.div`
       background-color: #ddd;
       color: #333;
     }
+  }
+
+  .backNavigation{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    @media (max-width: 590px) {
+      top:-20px;
+      left:-20px;
+      height: 40px;
+      font-size: 15px;
+    }
+   
+
+
+   
+
   }
 `;
 
@@ -252,8 +273,10 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
             <GrLogout />
           </div>
           <TitleReservation>Ma réservation</TitleReservation>
+        
           <SectionReservation>
             <ReservationDetails>
+            <button className=" backNavigation" onClick={() => navigate(-1)}>Retour</button> 
               <p
                 style={{ textTransform: "capitalize" }}
               >{` ${sessionStorage.getItem(
