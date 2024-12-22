@@ -83,6 +83,10 @@ const ContainerCarDetails = styled.div`
       align-self: center;
     }
 
+    @media (max-width: 360px) {
+      width: 90%;
+    }
+
     &:hover {
       background-color: #84bd04;
     }
@@ -91,6 +95,7 @@ const ContainerCarDetails = styled.div`
 
 const Booking = styled.div`
   display: flex;
+  justify-content: space-evenly;
 
   @media (max-width: 800px) {
     flex-direction: column;
@@ -98,7 +103,7 @@ const Booking = styled.div`
     gap: 10px;
   }
   .containerImg {
-    width: 50%;
+    width: 30vw;
     @media (max-width: 800px) {
       width: 60vw;
     }
@@ -111,9 +116,9 @@ const Booking = styled.div`
   }
 
   .bookingDetails {
-    width: 50%;
+    min-width: 50%;
     @media (max-width: 800px) {
-      width: 100%;
+      min-width: 100%;
     }
     .containerConfig {
       width: 100%;
@@ -143,6 +148,8 @@ function DetailsPaiementCar({
   setModalJustClose,
   setContent,
   searchCarData,
+  setPayement,
+  setValidatePayement,
 }) {
   const { id } = useParams();
   const [oneCar, setOneCar] = useState([]);
@@ -151,7 +158,7 @@ function DetailsPaiementCar({
   const token = sessionStorage.getItem("token");
 
   // calculate duration
-  const duration = Math.round(
+  const duration = Math.ceil(
     (new Date(searchCarData?.endDate) - new Date(searchCarData?.startDate)) /
       (1000 * 60 * 60 * 24)
   );
@@ -220,6 +227,24 @@ function DetailsPaiementCar({
 
     // eslint-disable-next-line
   }, [id]);
+
+  //handlePaymentData transfert to reserver page and CreditCard
+  const handlePayment = () => {
+    const user = sessionStorage.getItem("userId");
+    setPayement(true);
+    setValidatePayement({
+      user,
+      voiture: id,
+      departAgence: searchCarData?.departAgence,
+      retourAgence: searchCarData?.retourAgence
+        ? searchCarData?.retourAgence
+        : searchCarData?.departAgence,
+      startDate: searchCarData?.startDate,
+      endDate: searchCarData?.endDate,
+      price: oneCar?.pricePerDay * duration,
+      status: "En-attente",
+    });
+  };
 
   return oneCar?.message ? (
     <p
@@ -290,7 +315,7 @@ function DetailsPaiementCar({
                 <h3>Détails de la réservation</h3>
 
                 <h4>Départ:</h4>
-                <p>{searchCarData?.departAgence.replace(/-/g, " ")}</p>
+                <p>{searchCarData?.departAgence?.replace(/-/g, " ")}</p>
 
                 <p>
                   {new Date(searchCarData?.startDate)
@@ -300,7 +325,11 @@ function DetailsPaiementCar({
                 </p>
 
                 <h4>Retour:</h4>
-                <p>{searchCarData?.retourAgence.replace(/-/g, " ")}</p>
+                <p>
+                  {searchCarData?.retourAgence
+                    ? searchCarData?.retourAgence?.replace(/-/g, " ")
+                    : searchCarData?.departAgence?.replace(/-/g, " ")}
+                </p>
                 <p>
                   {new Date(searchCarData?.endDate)
                     .toLocaleString()
@@ -316,7 +345,7 @@ function DetailsPaiementCar({
             </div>
           </Booking>
           {token ? (
-            <button>Payer</button>
+            <button onClick={handlePayment}>Payer</button>
           ) : (
             <button
               style={{ minWidth: "170px" }}

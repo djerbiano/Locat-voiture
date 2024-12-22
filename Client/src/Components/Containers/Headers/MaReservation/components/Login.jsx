@@ -55,6 +55,7 @@ const RegisterCompte = styled(Link)`
 `;
 
 function Login({ setLoading, setModalJustClose, setContent }) {
+
   const [forgotPassword, setForgotPassword] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -99,6 +100,11 @@ function Login({ setLoading, setModalJustClose, setContent }) {
       sessionStorage.setItem("address", data[1].address);
 
       window.location.reload();
+    
+   
+
+    
+      setLoading(false);
     } else {
       setModalJustClose(true);
       setContent(data.message);
@@ -173,12 +179,21 @@ function Login({ setLoading, setModalJustClose, setContent }) {
         </>
       ) : (
         <>
-        <p style={{  marginBottom: "20px", cursor: "pointer", textDecoration: "underline" }} onClick={() => window.location.reload()}>Retour</p>
-        
+          <p
+            style={{
+              marginBottom: "20px",
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+            onClick={() => window.location.reload()}
+          >
+            Retour
+          </p>
+
           <p style={{ fontSize: "1.5rem", marginBottom: "20px" }}>
             Rénitialisation de mot de passe:
           </p>
-          
+
           <form onSubmit={forgotPasswordd}>
             <label htmlFor="email">Email:</label>
             <input
@@ -193,7 +208,6 @@ function Login({ setLoading, setModalJustClose, setContent }) {
 
             <input type="submit" value="Envoyer" />
           </form>
-        
         </>
       )}
     </Container>

@@ -185,7 +185,7 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
   }, [idBooking]);
 
   // calculate duration
-  const duration = Math.round(
+  const duration = Math.ceil(
     (new Date(bookingData?.endDate) - new Date(bookingData?.startDate)) /
       (1000 * 60 * 60 * 24)
   );

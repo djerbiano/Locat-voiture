@@ -6,6 +6,7 @@ import SingleVoitureReservation from "../Headers/Voitures/SingleVoitureReservati
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
 import DetailsPaiementCar from "./DetailsPaiementCar.jsx";
+import CreditCard from "./CreditCard.jsx";
 
 const Container = styled.div`
   width: 100%;
@@ -14,8 +15,6 @@ const Container = styled.div`
   background-color: #ffffff7a;
   border-radius: 10px;
   position: relative;
-
-  
 
   .openSearch {
     @media (min-width: 741px) {
@@ -188,7 +187,7 @@ const ContainerVoituresTrouvees = styled.div`
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 0 0 5px 5px;
   position: relative;
- 
+
   .openFilterMenu {
     font-size: 50px;
     color: #333;
@@ -235,7 +234,6 @@ const ContainerVoituresTrouvees = styled.div`
   }
 `;
 const FilterVoituresTrouvees = styled.div`
-
   .open {
     display: flex;
     flex-direction: column;
@@ -276,7 +274,6 @@ const ResultatVoituresTrouvees = styled.div`
   justify-content: flex-start;
   width: 100%;
 
-
   @media (max-width: 590px) {
     justify-content: end;
   }
@@ -304,41 +301,55 @@ function Reserver({
   setModalJustClose,
   setContent,
   searchCarData,
+  setSearchCarData,
 }) {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const [payement, setPayement] = useState(false);
   const [car, setCar] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-
   const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySearch, setdisplaySearch] = useState(true);
   const [prixMin, setPrixMin] = useState(0);
   const [prixMax, setPrixMax] = useState(0);
   const [otherAgency, setOtherAgency] = useState(false);
   const [formData, setFormData] = useState({
-    departAgence: "Agence-de-paris",
+    departAgence: "",
     autreAgence: false,
-    retourAgence: "Agence-de-paris",
-    startDate: "2025-12-01T02:28",
-    endDate: "2025-12-02T02:28",
+    retourAgence: "",
+    startDate: "",
+    endDate: "",
     place: 1,
     /*promotion: false,*/
   });
-
   const [dataSort, setDataSort] = useState({
     trierPrix: "",
     typeDeVoitures: "",
     marque: "",
     transmission: "",
   });
-
+  const [validatePayement, setValidatePayement] = useState({
+    user: "  ",
+    voiture: " ",
+    departAgence: "",
+    retourAgence: "",
+    startDate: "",
+    endDate: "",
+    price: "",
+    status: "En-attente",
+  });
   // récupération unique de data
-  const uniqueMarques = [...new Set(originalData.map((carMarque) => carMarque.marque))];
-  const transmissionCars = [
-    ...new Set(originalData.map((carTransmission) => carTransmission.transmission)),
+  const uniqueMarques = [
+    ...new Set(originalData.map((carMarque) => carMarque.marque)),
   ];
-  const typeCars = [...new Set(originalData.map((typeCar) => typeCar.category))];
+  const transmissionCars = [
+    ...new Set(
+      originalData.map((carTransmission) => carTransmission.transmission)
+    ),
+  ];
+  const typeCars = [
+    ...new Set(originalData.map((typeCar) => typeCar.category)),
+  ];
 
   // gestion des inputs
   const handleChange = (e) => {
@@ -398,9 +409,11 @@ function Reserver({
 
   // soumission du formulaire
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSearchCarData(formData);
+
     navigate("/Reserver");
     setLoading(true);
-    e.preventDefault();
 
     try {
       const response = await fetch(
@@ -447,263 +460,285 @@ function Reserver({
 
   return (
     <Container $displaySearch={displaySearch}>
-      <div className="openSearch">
-        {displaySearch ? (
-          <IoMdCloseCircle onClick={() => setdisplaySearch(!displaySearch)} />
-        ) : (
-          <MdKeyboardDoubleArrowLeft
-            onClick={() => setdisplaySearch(!displaySearch)}
-            style={{
-              fill: "white",
-              fontSize: "30px",
-              backgroundColor: "#2e2f33",
-              borderRadius: "50%",
-            }}
-          />
-        )}
-      </div>
-
-      <FormContainer $displaySearch={displaySearch}>
-        <Form onSubmit={handleSubmit}>
-          <FormFirstLine>
-            <AgenceDepart>
-              <label htmlFor="departAgence">Départ</label>
-              <select
-                name="departAgence"
-                id="departAgence"
-                onChange={handleChange}
-                value={formData.departAgence}
-                required
-              >
-                <option value="">Sélectionnez une agence</option>
-                <option value="Agence-de-paris">Agence-de-paris</option>
-                <option value="Agence-de-nantes">Agence-de-nantes</option>
-                <option value="Agence-de-lyon">Agence-de-lyon</option>
-                <option value="Agence-de-marseille">Agence-de-marseille</option>
-                <option value="Agence-de-bordeaux">Agence-de-bordeaux</option>
-              </select>
-            </AgenceDepart>
-
-            {otherAgency && (
-              <AgenceRetour>
-                <label htmlFor="retourAgence">Retour</label>
-                <select
-                  name="retourAgence"
-                  id="retourAgence"
-                  onChange={handleChange}
-                  value={formData.retourAgence}
-                  required={otherAgency}
-                >
-                  <option value="">Sélectionnez une agence</option>
-                  <option value="Agence-de-paris">Agence-de-paris</option>
-                  <option value="Agence-de-nantes">Agence-de-nantes</option>
-                  <option value="Agence-de-lyon">Agence-de-lyon</option>
-                  <option value="Agence-de-marseille">
-                    Agence-de-marseille
-                  </option>
-                  <option value="Agence-de-bordeaux">Agence-de-bordeaux</option>
-                </select>
-              </AgenceRetour>
-            )}
-            <DateDepart>
-              <label htmlFor="startDate">Date de depart</label>
-              <input
-                type="datetime-local"
-                name="startDate"
-                id="startDate"
-                onChange={handleChange}
-                value={formData.startDate}
-                required
+      {payement ? (
+        <CreditCard
+          setPayement={setPayement}
+          setLoading={setLoading}
+          setModalJustClose={setModalJustClose}
+          setContent={setContent}
+          validatePayement={validatePayement}
+        />
+      ) : (
+        <>
+          <div className="openSearch">
+            {displaySearch ? (
+              <IoMdCloseCircle
+                onClick={() => setdisplaySearch(!displaySearch)}
               />
-            </DateDepart>
-            <DateRetour>
-              <label htmlFor="endDate">Date de retour</label>
-              <input
-                type="datetime-local"
-                name="endDate"
-                id="endDate"
-                onChange={handleChange}
-                value={formData.endDate}
-                required
-              />
-            </DateRetour>
-            <Place>
-              <label htmlFor="place">place</label>
-              <input
-                type="number"
-                name="place"
-                id="place"
-                min="1"
-                max="7"
-                onChange={handleChange}
-                value={formData.place}
-              />
-            </Place>
-          </FormFirstLine>
-
-          <FormSecondLine>
-            <div>
-              {/*<Promotion>
-                <input
-                  type="checkbox"
-                  name="promotion"
-                  id="promotion"
-                  style={{ marginRight: "10px" }}
-                  onChange={handleChange}
-                  checked={formData.promotion}
-                />
-                <label htmlFor="promotion" style={{ marginRight: "10px" }}>
-                  J’ai un code de réduction
-                </label>
-              </Promotion>*/}
-              <CheckboxAutreAgence>
-                <input
-                  type="checkbox"
-                  name="autreAgence"
-                  id="autreAgence"
-                  checked={formData.autreAgence}
-                  style={{ marginRight: "10px" }}
-                  onChange={(e) => {
-                    setOtherAgency(!otherAgency);
-                    handleChange(e);
-                  }}
-                />
-                <label htmlFor="autreAgence">
-                  Sélectionnez une autre agence de retour
-                </label>
-              </CheckboxAutreAgence>
-            </div>
-            <ButtonRecherche type="submit">Rechercher</ButtonRecherche>
-          </FormSecondLine>
-        </Form>
-      </FormContainer>
-
-      <hr />
-      <hr />
-      <ContainerVoituresTrouvees>
-        <FilterVoituresTrouvees>
-          <div className={displayFilter ? "open" : "close"}>
-            <select
-              name="trierPrix"
-              id="trierPrix"
-              value={dataSort.trierPrix}
-              onChange={handleSort}
-            >
-              <option value="">Trier par</option>
-              <option value="PrixCroissant">Prix croissant</option>
-              <option value="PrixDécroissant">Prix décroissant</option>
-            </select>
-
-            <select
-              name="typeDeVoitures"
-              id="typeDeVoitures"
-              value={dataSort.typeDeVoitures}
-              onChange={handleSort}
-            >
-              <option value="">Type de voiture</option>
-              {typeCars.map((type) => (
-                <option value={type} key={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name="marque"
-              id="marque"
-              value={dataSort.marque}
-              onChange={handleSort}
-            >
-              <option value="">Marque</option>
-              {uniqueMarques.map((marque) => (
-                <option value={marque} key={marque}>
-                  {marque}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name="transmission"
-              id="transmission"
-              value={dataSort.transmission}
-              onChange={handleSort}
-            >
-              <option value="">Transmission</option>
-              {transmissionCars.map((transmission) => (
-                <option value={transmission} key={transmission}>
-                  {transmission}
-                </option>
-              ))}
-              <option value="lesDeux">Les deux</option>
-            </select>
-
-            <label htmlFor="PrixMin"> Prix min {prixMin}</label>
-            <input
-              type="range"
-              name="PrixMin"
-              id="PrixMin"
-              min="50"
-              max="400"
-              step="10"
-              onChange={(e) => setPrixMin(e.target.value)}
-            />
-
-            <label htmlFor="PrixMax"> Prix max {prixMax}</label>
-            <input
-              type="range"
-              name="PrixMax"
-              id="PrixMax"
-              min="50"
-              max="400"
-              step="10"
-              onChange={(e) => setPrixMax(e.target.value)}
-            />
-          </div>
-        </FilterVoituresTrouvees>
-        <div
-          className={displayFilter ? "openFilterMenu" : "closeFilterMenu"}
-          onClick={() => setDisplayFilter(!displayFilter)}
-        >
-          <MdOutlineMenuOpen style={{ cursor: "pointer" }} />
-        </div>
-
-        {car && !id ? (
-          <ResultatVoituresTrouvees>
-            {car?.message ? (
-              <p
-                style={{
-                  textAlign: "center",
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "transparent",
-                  fontSize: "2rem",
-                  width: "100%",
-                  color: "black",
-                }}
-              >
-                {car.message}
-              </p>
             ) : (
-              car?.map((car) => (
-                <SingleVoitureReservation key={car._id} car={car} />
-              ))
-            )}
-          </ResultatVoituresTrouvees>
-        ) : (
-          id && (
-            <ResultatVoituresTrouvees>
-              <DetailsPaiementCar
-                setLoading={setLoading}
-                setModalJustClose={setModalJustClose}
-                setContent={setContent}
-                searchCarData={formData || searchCarData}
+              <MdKeyboardDoubleArrowLeft
+                onClick={() => setdisplaySearch(!displaySearch)}
+                style={{
+                  fill: "white",
+                  fontSize: "30px",
+                  backgroundColor: "#2e2f33",
+                  borderRadius: "50%",
+                }}
               />
-            </ResultatVoituresTrouvees>
-          )
-        )}
-      </ContainerVoituresTrouvees>
+            )}
+          </div>
+
+          <FormContainer $displaySearch={displaySearch}>
+            <Form onSubmit={handleSubmit}>
+              <FormFirstLine>
+                <AgenceDepart>
+                  <label htmlFor="departAgence">Départ</label>
+                  <select
+                    name="departAgence"
+                    id="departAgence"
+                    onChange={handleChange}
+                    value={formData.departAgence}
+                    required
+                  >
+                    <option value="">Sélectionnez une agence</option>
+                    <option value="Agence-de-paris">Agence-de-paris</option>
+                    <option value="Agence-de-nantes">Agence-de-nantes</option>
+                    <option value="Agence-de-lyon">Agence-de-lyon</option>
+                    <option value="Agence-de-marseille">
+                      Agence-de-marseille
+                    </option>
+                    <option value="Agence-de-bordeaux">
+                      Agence-de-bordeaux
+                    </option>
+                  </select>
+                </AgenceDepart>
+
+                {otherAgency && (
+                  <AgenceRetour>
+                    <label htmlFor="retourAgence">Retour</label>
+                    <select
+                      name="retourAgence"
+                      id="retourAgence"
+                      onChange={handleChange}
+                      value={formData.retourAgence}
+                      required={otherAgency}
+                    >
+                      <option value="">Sélectionnez une agence</option>
+                      <option value="Agence-de-paris">Agence-de-paris</option>
+                      <option value="Agence-de-nantes">Agence-de-nantes</option>
+                      <option value="Agence-de-lyon">Agence-de-lyon</option>
+                      <option value="Agence-de-marseille">
+                        Agence-de-marseille
+                      </option>
+                      <option value="Agence-de-bordeaux">
+                        Agence-de-bordeaux
+                      </option>
+                    </select>
+                  </AgenceRetour>
+                )}
+                <DateDepart>
+                  <label htmlFor="startDate">Date de depart</label>
+                  <input
+                    type="datetime-local"
+                    name="startDate"
+                    id="startDate"
+                    onChange={handleChange}
+                    value={formData.startDate}
+                    required
+                  />
+                </DateDepart>
+                <DateRetour>
+                  <label htmlFor="endDate">Date de retour</label>
+                  <input
+                    type="datetime-local"
+                    name="endDate"
+                    id="endDate"
+                    onChange={handleChange}
+                    value={formData.endDate}
+                    required
+                  />
+                </DateRetour>
+                <Place>
+                  <label htmlFor="place">place</label>
+                  <input
+                    type="number"
+                    name="place"
+                    id="place"
+                    min="1"
+                    max="7"
+                    onChange={handleChange}
+                    value={formData.place}
+                  />
+                </Place>
+              </FormFirstLine>
+
+              <FormSecondLine>
+                <div>
+                  {/*<Promotion>
+        <input
+          type="checkbox"
+          name="promotion"
+          id="promotion"
+          style={{ marginRight: "10px" }}
+          onChange={handleChange}
+          checked={formData.promotion}
+        />
+        <label htmlFor="promotion" style={{ marginRight: "10px" }}>
+          J’ai un code de réduction
+        </label>
+      </Promotion>*/}
+                  <CheckboxAutreAgence>
+                    <input
+                      type="checkbox"
+                      name="autreAgence"
+                      id="autreAgence"
+                      checked={formData.autreAgence}
+                      style={{ marginRight: "10px" }}
+                      onChange={(e) => {
+                        setOtherAgency(!otherAgency);
+                        handleChange(e);
+                      }}
+                    />
+                    <label htmlFor="autreAgence">
+                      Sélectionnez une autre agence de retour
+                    </label>
+                  </CheckboxAutreAgence>
+                </div>
+                <ButtonRecherche type="submit">Rechercher</ButtonRecherche>
+              </FormSecondLine>
+            </Form>
+          </FormContainer>
+
+          <hr />
+          <hr />
+          <ContainerVoituresTrouvees>
+            <FilterVoituresTrouvees>
+              <div className={displayFilter ? "open" : "close"}>
+                <select
+                  name="trierPrix"
+                  id="trierPrix"
+                  value={dataSort.trierPrix}
+                  onChange={handleSort}
+                >
+                  <option value="">Trier par</option>
+                  <option value="PrixCroissant">Prix croissant</option>
+                  <option value="PrixDécroissant">Prix décroissant</option>
+                </select>
+
+                <select
+                  name="typeDeVoitures"
+                  id="typeDeVoitures"
+                  value={dataSort.typeDeVoitures}
+                  onChange={handleSort}
+                >
+                  <option value="">Type de voiture</option>
+                  {typeCars.map((type) => (
+                    <option value={type} key={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  name="marque"
+                  id="marque"
+                  value={dataSort.marque}
+                  onChange={handleSort}
+                >
+                  <option value="">Marque</option>
+                  {uniqueMarques.map((marque) => (
+                    <option value={marque} key={marque}>
+                      {marque}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  name="transmission"
+                  id="transmission"
+                  value={dataSort.transmission}
+                  onChange={handleSort}
+                >
+                  <option value="">Transmission</option>
+                  {transmissionCars.map((transmission) => (
+                    <option value={transmission} key={transmission}>
+                      {transmission}
+                    </option>
+                  ))}
+                  <option value="lesDeux">Les deux</option>
+                </select>
+
+                <label htmlFor="PrixMin"> Prix min {prixMin}</label>
+                <input
+                  type="range"
+                  name="PrixMin"
+                  id="PrixMin"
+                  min="50"
+                  max="400"
+                  step="10"
+                  onChange={(e) => setPrixMin(e.target.value)}
+                />
+
+                <label htmlFor="PrixMax"> Prix max {prixMax}</label>
+                <input
+                  type="range"
+                  name="PrixMax"
+                  id="PrixMax"
+                  min="50"
+                  max="400"
+                  step="10"
+                  onChange={(e) => setPrixMax(e.target.value)}
+                />
+              </div>
+            </FilterVoituresTrouvees>
+            <div
+              className={displayFilter ? "openFilterMenu" : "closeFilterMenu"}
+              onClick={() => setDisplayFilter(!displayFilter)}
+            >
+              <MdOutlineMenuOpen style={{ cursor: "pointer" }} />
+            </div>
+
+            {car && !id ? (
+              <ResultatVoituresTrouvees>
+                {car?.message ? (
+                  <p
+                    style={{
+                      textAlign: "center",
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      backgroundColor: "transparent",
+                      fontSize: "2rem",
+                      width: "100%",
+                      color: "black",
+                    }}
+                  >
+                    {car.message}
+                  </p>
+                ) : (
+                  car?.map((car) => (
+                    <SingleVoitureReservation key={car._id} car={car} />
+                  ))
+                )}
+              </ResultatVoituresTrouvees>
+            ) : (
+              id && (
+                <ResultatVoituresTrouvees>
+                  <DetailsPaiementCar
+                    setLoading={setLoading}
+                    setModalJustClose={setModalJustClose}
+                    setContent={setContent}
+                    searchCarData={searchCarData}
+                    setPayement={setPayement}
+                    setValidatePayement={setValidatePayement}
+                  />
+                </ResultatVoituresTrouvees>
+              )
+            )}
+          </ContainerVoituresTrouvees>
+        </>
+      )}
     </Container>
   );
 }

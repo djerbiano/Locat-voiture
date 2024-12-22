@@ -112,7 +112,7 @@ const ReservationDetails = styled.div`
       font-size: 15px;
     }
    
-
+  
 
    
 

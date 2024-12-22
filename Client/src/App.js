@@ -125,8 +125,13 @@ function App() {
 
             <Route
               path="/Tarifs"
-              element={<Tarifs setLoading={setLoading}   setModalJustClose={setModalJustClose}
-              setContent={setContent}  />}
+              element={
+                <Tarifs
+                  setLoading={setLoading}
+                  setModalJustClose={setModalJustClose}
+                  setContent={setContent}
+                />
+              }
             />
             <Route
               path="/Contact"
@@ -196,6 +201,7 @@ function App() {
                   setModalJustClose={setModalJustClose}
                   setContent={setContent}
                   searchCarData={searchCarData}
+                  setSearchCarData={setSearchCarData}
                 />
               }
             />
@@ -207,6 +213,7 @@ function App() {
                   setModalJustClose={setModalJustClose}
                   setContent={setContent}
                   searchCarData={searchCarData}
+                  setSearchCarData={setSearchCarData}
                 />
               }
             />

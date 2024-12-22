@@ -187,11 +187,11 @@ function IndexMain({
   const [modalContent, setModalContent] = useState("");
   const [otherAgency, setOtherAgency] = useState(false);
   const [formData, setFormData] = useState({
-    departAgence: "Agence-de-paris",
+    departAgence: "",
     autreAgence: false,
-    retourAgence: "Agence-de-paris",
-    startDate: "2025-12-01T02:28",
-    endDate: "2025-12-02T02:28",
+    retourAgence: "",
+    startDate: "",
+    endDate: "",
     place: 1,
   });
 

@@ -222,10 +222,10 @@ function Voitures({
   const [car, setCar] = useState([]);
   const [closeReservation, setCloseReservation] = useState(true);
   const [formData, setFormData] = useState({
-    departAgence: "Agence-de-paris",
-    retourAgence: "Agence-de-paris",
-    startDate: "2025-12-01T02:28",
-    endDate: "2025-12-02T02:28",
+    departAgence: "",
+    retourAgence: "",
+    startDate: "",
+    endDate: "",
     place: 1,
   });
 
