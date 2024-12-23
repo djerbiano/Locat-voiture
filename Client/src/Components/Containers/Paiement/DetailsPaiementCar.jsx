@@ -163,6 +163,14 @@ function DetailsPaiementCar({
       (1000 * 60 * 60 * 24)
   );
 
+  useEffect(() => {
+    if (!searchCarData?.departAgence) {
+      return navigate("/Reserver");
+    }
+
+    // eslint-disable-next-line
+  }, [id]);
+
   // get personnel details
   useEffect(() => {
     setLoading(true);

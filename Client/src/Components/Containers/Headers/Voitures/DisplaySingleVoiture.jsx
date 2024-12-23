@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { GiCarDoor } from "react-icons/gi";
@@ -17,6 +17,11 @@ const Container = styled.div`
   align-items: center;
   gap: 20px;
   color: black;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Car = styled.div`
@@ -27,7 +32,9 @@ const Car = styled.div`
   justify-content: space-evenly;
   align-items: center;
   margin-bottom: 20px;
-
+  @media (max-width: 700px) {
+    width: 100%;
+  }
   img {
     width: 100%;
     aspect-ratio: 1;
@@ -41,6 +48,9 @@ const Car = styled.div`
     align-items: center;
     justify-content: center;
     gap: 20px;
+    @media (max-width: 440px) {
+      flex-wrap: wrap;
+    }
 
     svg {
       width: 20px;
@@ -59,13 +69,36 @@ const DetailsCar = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  
   background-color: #ffffff7a;
   border-radius: 10px;
+
+  @media (max-width: 900px) {
+    width: 80%; 
+  }
+  @media (max-width: 700px) {
+    width: 100%;
+    padding: 10px;
+  }
+
+  button {
+    margin-top: 20px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px;
+    background-color: #c8152c;
+    color: white;
+    align-self: center;
+    font-size: 1.2rem;
+    &:hover {
+      background-color: #ddd;
+      color: black;
+    }
+  }
 `;
 function DisplaySingleVoiture({ setLoading, setModalJustClose, setContent }) {
   const { id } = useParams();
   const [oneCar, setOneCar] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -95,7 +128,10 @@ function DisplaySingleVoiture({ setLoading, setModalJustClose, setContent }) {
     <Container>
       <Car>
         <div className="containerImg">
-          <img src={`${process.env.REACT_APP_URL_SERVER}/images/${oneCar?.pictures?.pic1}`} alt={oneCar?.marque} />
+          <img
+            src={`${process.env.REACT_APP_URL_SERVER}/images/${oneCar?.pictures?.pic1}`}
+            alt={oneCar?.marque}
+          />
         </div>
         <div className="containerConfig">
           <div className="personnes">
@@ -127,6 +163,7 @@ function DisplaySingleVoiture({ setLoading, setModalJustClose, setContent }) {
         <div className="description">
           <p>{oneCar?.description}</p>
         </div>
+        <button type="button" onClick={() => navigate("/Reserver")}> Réserver</button>
       </DetailsCar>
     </Container>
   );

@@ -81,7 +81,7 @@ function VoituresTarifs({ car }) {
           alt=""
         />
         <Reserver $reserver={reserver}>
-          <Link to={`/Voitures/voiture/${car?._id}`}> Réserver </Link>{" "}
+          <Link to={`/Voitures/voiture/${car?._id}`}> Découvrir </Link>{" "}
         </Reserver>
         <DetailsContainer>
           <Name>

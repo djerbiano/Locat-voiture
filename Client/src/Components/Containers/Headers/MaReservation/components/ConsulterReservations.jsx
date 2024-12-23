@@ -38,8 +38,6 @@ const Content = styled.div`
       top: 40px;
     }
   }
-
-
 `;
 
 const TitleReservation = styled.h2`
@@ -99,24 +97,6 @@ const ReservationDetails = styled.div`
       color: #333;
     }
   }
-
-  .backNavigation{
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    @media (max-width: 590px) {
-      top:-20px;
-      left:-20px;
-      height: 40px;
-      font-size: 15px;
-    }
-   
-  
-
-   
-
-  }
 `;
 
 const TitleReservationPassees = styled.h2`
@@ -141,7 +121,7 @@ const SingleReservationPassees = styled.div`
   width: 100%;
   min-height: 100px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   background-color: #f5f5f5;
   border-bottom: 2px solid #ccc;
@@ -149,6 +129,8 @@ const SingleReservationPassees = styled.div`
 
   .lieux {
     display: flex;
+    align-items: center;
+    justify-content: center;
     svg {
       margin: 0 10px;
     }
@@ -166,7 +148,8 @@ const SingleReservationPassees = styled.div`
 
   .date {
     display: flex;
-
+    justify-content: center;
+    align-items: center;
     svg {
       margin: 0 10px;
     }
@@ -252,8 +235,9 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
         console.error("Error fetching bookings:", error);
         setLoading(false);
         setModalJustClose(true);
-        setContent("Une erreur est survenue lors du téléchargement des réservations");
-
+        setContent(
+          "Une erreur est survenue lors du téléchargement des réservations"
+        );
       }
     };
 
@@ -273,10 +257,9 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
             <GrLogout />
           </div>
           <TitleReservation>Ma réservation</TitleReservation>
-        
+
           <SectionReservation>
             <ReservationDetails>
-            <button className=" backNavigation" onClick={() => navigate(-1)}>Retour</button> 
               <p
                 style={{ textTransform: "capitalize" }}
               >{` ${sessionStorage.getItem(

@@ -62,7 +62,7 @@ const Button = styled.button`
     color: black;
   }
 `;
-function Contact() {
+function Contact({ setLoading, setModalJustClose, setContent }) {
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
@@ -77,17 +77,49 @@ function Contact() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    console.log("Formulaire soumis:", formData);
-    setFormData({ email: "", phone: "", message: "" });
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_URL_SERVER}/contact/sendMessage`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setModalJustClose(true);
+        setContent(data.message);
+        setLoading(false);
+      } else {
+        setFormData({ email: "", phone: "", message: "" });
+        setModalJustClose(true);
+        setContent(data.message);
+        setLoading(false);
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error sending contact message:", error);
+      setLoading(false);
+      setModalJustClose(true);
+      setContent("Une erreur est survenue lors de l'envoi du message");
+    }
   };
 
   return (
     <Container>
       <Content>
         <Title>Contactez-nous</Title>
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <Input
             type="email"
             name="email"
@@ -111,7 +143,9 @@ function Contact() {
             onChange={handleChange}
             required
           />
-          <Button type="submit">Envoyer</Button>
+          <Button type="button" onClick={handleSubmit}>
+            Envoyer
+          </Button>
         </Form>
       </Content>
     </Container>

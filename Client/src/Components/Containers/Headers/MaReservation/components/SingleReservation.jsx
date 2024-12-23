@@ -148,7 +148,6 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
   const { idBooking } = useParams();
   const [bookingData, setBookingData] = useState({});
   const [modalYesOrNo, setModalYesOrNo] = useState(false);
- 
 
   // get booking
   useEffect(() => {
@@ -175,7 +174,6 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
         setLoading(false);
         setModalJustClose(true);
         setContent("Erreur lors de la récupération de la réservation");
-
       }
     };
 
@@ -256,7 +254,7 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
                   <h3>{bookingData.retourAgence}</h3>
                 </Lieux>
                 <h4>Numéro de réservation</h4>
-                <p>{bookingData._id}</p>
+                <p style={{ wordBreak: "break-all" }}>{bookingData._id}</p>
                 <h4>Date et heure de départ</h4>
                 <p>
                   {new Date(bookingData.startDate)
