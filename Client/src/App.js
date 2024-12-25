@@ -24,6 +24,7 @@ import Loader from "./Components/others/Loader.jsx";
 import JusteClose from "./Components/Modal/JusteClose.jsx";
 import Profile from "./Components/Containers/Headers/MaReservation/MyProfile/Profile.jsx";
 import DisplaySingleVoiture from "./Components/Containers/Headers/Voitures/DisplaySingleVoiture.jsx";
+import IndexAdmin from "./Components/Admin/IndexAdmin.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -217,6 +218,15 @@ function App() {
                 />
               }
             />
+
+            {/* Admin */}
+            <Route path="/admin" element={<IndexAdmin />} />
+            <Route path="/admin/locations" element={<IndexAdmin />} />
+            <Route path="/admin/voitures" element={<IndexAdmin />} />
+            <Route path="/admin/clients" element={<IndexAdmin />} />
+            <Route path="/admin/mesages" element={<IndexAdmin />} />
+            {/* Admin */}
+
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route
               path="/politique-de-confidentialite"

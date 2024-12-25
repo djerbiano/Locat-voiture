@@ -98,9 +98,9 @@ function Login({ setLoading, setModalJustClose, setContent }) {
       sessionStorage.setItem("lastName", data[1].lastName);
       sessionStorage.setItem("phone", data[1].phone);
       sessionStorage.setItem("address", data[1].address);
+      sessionStorage.setItem("isAdmin", data[1].isAdmin);
 
       window.location.reload();
-    
    
 
     

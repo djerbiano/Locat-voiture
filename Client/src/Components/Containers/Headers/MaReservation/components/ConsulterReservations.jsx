@@ -97,6 +97,16 @@ const ReservationDetails = styled.div`
       color: #333;
     }
   }
+
+  .dashboard {
+    background-color: rgb(13, 224, 41);
+    color: black;
+
+    &:hover {
+      background-color: rgba(5, 129, 22, 0.7);
+      color: #333;
+    }
+  }
 `;
 
 const TitleReservationPassees = styled.h2`
@@ -203,6 +213,7 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
+  const userIsAdmin = sessionStorage.getItem("isAdmin");
 
   // get all booking
   useEffect(() => {
@@ -293,6 +304,12 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
               <button onClick={() => navigate("/Profile")}>
                 Actualisez vos données
               </button>
+
+              {userIsAdmin === "true" && (
+                <button className="dashboard" onClick={() => navigate("/admin")}>
+                  Dashboard admin
+                </button>
+              )}
             </ReservationDetails>
           </SectionReservation>
 
