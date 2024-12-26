@@ -25,6 +25,8 @@ import JusteClose from "./Components/Modal/JusteClose.jsx";
 import Profile from "./Components/Containers/Headers/MaReservation/MyProfile/Profile.jsx";
 import DisplaySingleVoiture from "./Components/Containers/Headers/Voitures/DisplaySingleVoiture.jsx";
 import IndexAdmin from "./Components/Admin/IndexAdmin.jsx";
+import SingleLocation from "./Components/Admin/ComponentsAdmin/Locations/SingleLocation.jsx"; 
+import SingleVoiture from "./Components/Admin/ComponentsAdmin/Voitures/SingleVoiture.jsx"; 
 
 const AppContainer = styled.div`
   display: flex;
@@ -222,7 +224,9 @@ function App() {
             {/* Admin */}
             <Route path="/admin" element={<IndexAdmin />} />
             <Route path="/admin/locations" element={<IndexAdmin />} />
+            <Route path="/admin/locations/SingleLocation/:idLocation" element={<SingleLocation  setModalJustClose={setModalJustClose} setContent={setContent} />} /> 
             <Route path="/admin/voitures" element={<IndexAdmin />} />
+            <Route path="/admin/voitures/SingleVoiture/:idVoiture" element={<SingleVoiture  setModalJustClose={setModalJustClose} setContent={setContent} />} /> 
             <Route path="/admin/clients" element={<IndexAdmin />} />
             <Route path="/admin/mesages" element={<IndexAdmin />} />
             {/* Admin */}

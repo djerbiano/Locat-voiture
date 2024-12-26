@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { IoReload } from "react-icons/io5";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RiUserSettingsLine } from "react-icons/ri";
 
 const Container = styled.div`
@@ -47,19 +48,7 @@ const Search = styled.div`
     width: 30%;
   }
 
-  button {
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #c8152c;
-    color: white;
-    align-self: flex-start;
 
-    &:hover {
-      cursor: pointer;
-      background-color: #e32a42;
-    }
-  }
 `;
 const BookingContainer = styled.div`
   width: 100%;
@@ -88,6 +77,7 @@ const BookingContainer = styled.div`
   }
 `;
 function LocationsAdmin() {
+  const navigate = useNavigate();
   const [originalData, setOriginalData] = useState([]);
   const [reservation, setReservation] = useState([]);
   const [filter, setFilter] = useState({
@@ -197,7 +187,7 @@ function LocationsAdmin() {
                 <tr key={booking?._id}>
                   <td>{booking?.user?.email}</td>
 
-                  <td>{booking?.departAgence.replace(/-/g, " ")}</td>
+                  <td>{booking?.departAgence?.replace(/-/g, " ")}</td>
 
                   <td>
                     {new Date(booking?.startDate)
@@ -208,7 +198,7 @@ function LocationsAdmin() {
                       .replace(":", "H")}
                   </td>
 
-                  <td>{booking?.retourAgence.replace(/-/g, " ")}</td>
+                  <td>{booking?.retourAgence?.replace(/-/g, " ")}</td>
 
                   <td>
                     {new Date(booking?.endDate)
@@ -227,7 +217,7 @@ function LocationsAdmin() {
                       fontSize: "1.3rem",
                     }}
                   >
-                    <RiUserSettingsLine style={{ cursor: "pointer" }} />
+                    <RiUserSettingsLine style={{ cursor: "pointer" }} onClick={() => navigate(`/admin/locations/SingleLocation/${booking?._id}`)} />
                   </td>
                 </tr>
               ))

@@ -56,7 +56,7 @@ const controller = {
           path: "user",
           select: "-password -tokenRestPassword -isAdmin -avatar -booking",
         })
-        .populate("voiture");
+        .populate("voiture").sort({ startDate: 1 });
       if (bookings.length < 1) {
         return handleErrors(res, 404, {
           message: "Aucune réservation trouvée",

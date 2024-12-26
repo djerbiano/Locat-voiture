@@ -9,6 +9,7 @@ const authRoute = require("./routes/authRoute");
 const carsRoute = require("./routes/carsRoute");
 const bookingsRoute = require("./routes/bookings");
 const bookingAdminRoute = require("./routes/bookingAdmin");
+const userAdminRoute = require("./routes/userAdmin");
 const contactRoute = require("./routes/contact");
 
 const port = process.env.PORT || 3002;
@@ -41,6 +42,7 @@ server.use("/api", verifSessionStorage);
 server.use("/cars", carsRoute);
 server.use("/bookings", bookingsRoute);
 server.use("/admin/bookings", bookingAdminRoute);
+server.use("/admin/users", userAdminRoute);
 server.use("/contact", contactRoute);
 
 server.all("*", (req, res) => {

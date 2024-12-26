@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { IoReload } from "react-icons/io5";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RiUserSettingsLine } from "react-icons/ri";
 
 const Container = styled.div`
@@ -37,7 +38,7 @@ const Sort = styled.div`
   gap: 10px;
 
   select {
-    width:150px;
+    width: 150px;
   }
 `;
 const SortPrice = styled.div`
@@ -70,19 +71,7 @@ const Search = styled.div`
     width: 30%;
   }
 
-  button {
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #c8152c;
-    color: white;
-    align-self: flex-start;
 
-    &:hover {
-      cursor: pointer;
-      background-color: #e32a42;
-    }
-  }
 `;
 const CarContainer = styled.div`
   width: 100%;
@@ -112,6 +101,7 @@ const CarContainer = styled.div`
 `;
 
 function VoituresAdmin() {
+  const navigate = useNavigate();
   const [originalData, setOriginalData] = useState([]);
   const [car, setCar] = useState([]);
   const [filter, setFilter] = useState({
@@ -191,6 +181,8 @@ function VoituresAdmin() {
       filtredData = filtredData.filter((item) => item.available === false);
     }
 
+    // prix
+  
     if (filter.prixMin >= 0) {
       filtredData = filtredData.filter(
         (item) => item.pricePerDay >= filter.prixMin
@@ -198,6 +190,7 @@ function VoituresAdmin() {
     }
 
     if (filter.prixMax > filter.prixMin) {
+    
       filtredData = filtredData.filter(
         (item) => item.pricePerDay <= filter.prixMax
       );
@@ -268,6 +261,8 @@ function VoituresAdmin() {
           />
         </div>
       </SortPrice>
+  
+
       <Search>
         <input
           type="text"
@@ -316,7 +311,7 @@ function VoituresAdmin() {
                       fontSize: "1.3rem",
                     }}
                   >
-                    <RiUserSettingsLine style={{ cursor: "pointer" }} />
+                    <RiUserSettingsLine style={{ cursor: "pointer" }} onClick={() => navigate(`/admin/voitures/SingleVoiture/${car?._id}`)} />
                   </td>
                 </tr>
               ))

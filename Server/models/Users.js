@@ -45,7 +45,7 @@ const UsersSchema = mongoose.Schema(
     booking: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Bookings",
+        ref: "Booking",
       },
     ],
     tokenRestPassword: {

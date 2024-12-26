@@ -136,7 +136,7 @@ const controller = {
   // getAllCars for admin with bookings
   getAllCarsForAdmin: async (req, res) => {
     try {
-      const cars = await Car.find({}).populate({path: "bookings" });
+      const cars = await Car.find({}).populate({path: "bookings" }).sort({ marque: 1 });
 
       if (cars.length < 1) {
         return res.status(200).json({
