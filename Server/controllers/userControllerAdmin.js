@@ -55,6 +55,14 @@ const controller = {
       if (!verifiyIdMongoDb(req.params.idUser)) {
         return handleErrors(res, 400, { message: "ID invalide" });
       }
+
+      const user = await User.findById(req.params.idUser).select("-password");
+      if (!user) {
+        return handleErrors(res, 404, {
+          message: "Utilisateur introuvable",
+        });
+      }
+      res.status(200).json(user);
     } catch (error) {
       return handleErrors(res, 400, {
         message: error.message,

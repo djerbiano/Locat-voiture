@@ -27,6 +27,7 @@ import DisplaySingleVoiture from "./Components/Containers/Headers/Voitures/Displ
 import IndexAdmin from "./Components/Admin/IndexAdmin.jsx";
 import SingleLocation from "./Components/Admin/ComponentsAdmin/Locations/SingleLocation.jsx"; 
 import SingleVoiture from "./Components/Admin/ComponentsAdmin/Voitures/SingleVoiture.jsx"; 
+import OneClient from "./Components/Admin/ComponentsAdmin/Clients/OneClient.jsx";
 
 const AppContainer = styled.div`
   display: flex;
@@ -228,6 +229,7 @@ function App() {
             <Route path="/admin/voitures" element={<IndexAdmin />} />
             <Route path="/admin/voitures/SingleVoiture/:idVoiture" element={<SingleVoiture  setModalJustClose={setModalJustClose} setContent={setContent} />} /> 
             <Route path="/admin/clients" element={<IndexAdmin />} />
+            <Route path="/admin/clients/SingleClient/:idClient" element={<OneClient setModalJustClose={setModalJustClose} setContent={setContent} />} />
             <Route path="/admin/mesages" element={<IndexAdmin />} />
             {/* Admin */}
 

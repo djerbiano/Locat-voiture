@@ -70,8 +70,6 @@ const Search = styled.div`
     border: 1px solid black;
     width: 30%;
   }
-
-
 `;
 const CarContainer = styled.div`
   width: 100%;
@@ -104,14 +102,15 @@ function VoituresAdmin() {
   const navigate = useNavigate();
   const [originalData, setOriginalData] = useState([]);
   const [car, setCar] = useState([]);
+  const [invalidPrice, setInvalidPrice] = useState(false);
   const [filter, setFilter] = useState({
     category: "",
     marque: "",
     transmission: "",
     fuel: "",
     available: null,
-    prixMin: 0,
-    prixMax: 0,
+    prixMin: 1,
+    prixMax: 1000,
   });
   //handler search
   const handleSubmit = (e) => {
@@ -182,17 +181,20 @@ function VoituresAdmin() {
     }
 
     // prix
-  
+    if (filter.prixMax <= filter.prixMin) {
+      setInvalidPrice(true);
+    } else {
+      setInvalidPrice(false);
+    }
     if (filter.prixMin >= 0) {
       filtredData = filtredData.filter(
         (item) => item.pricePerDay >= filter.prixMin
       );
     }
 
-    if (filter.prixMax > filter.prixMin) {
-    
+    if (filter.prixMax > 0) {
       filtredData = filtredData.filter(
-        (item) => item.pricePerDay <= filter.prixMax
+        (item) => item.pricePerDay <= Math.max(filter.prixMax, filter.prixMin)
       );
     }
 
@@ -246,6 +248,7 @@ function VoituresAdmin() {
             name="prixMin"
             id="prixMin"
             placeholder="Prix min"
+            value={filter.prixMin}
             onChange={handleSubmit}
           />
         </div>
@@ -257,12 +260,16 @@ function VoituresAdmin() {
             name="prixMax"
             id="prixMax"
             placeholder="Prix max"
+            value={filter.prixMax}
             onChange={handleSubmit}
           />
         </div>
       </SortPrice>
-  
-
+      {invalidPrice && (
+        <p style={{ color: "red" }}>
+          Le prix max doit etre supérieur au prix min
+        </p>
+      )}
       <Search>
         <input
           type="text"
@@ -311,7 +318,12 @@ function VoituresAdmin() {
                       fontSize: "1.3rem",
                     }}
                   >
-                    <RiUserSettingsLine style={{ cursor: "pointer" }} onClick={() => navigate(`/admin/voitures/SingleVoiture/${car?._id}`)} />
+                    <RiUserSettingsLine
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        navigate(`/admin/voitures/SingleVoiture/${car?._id}`)
+                      }
+                    />
                   </td>
                 </tr>
               ))

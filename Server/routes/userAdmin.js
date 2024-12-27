@@ -14,6 +14,6 @@ route.get("/allUsers", virifyToken, isAdmin, controller.getAllUsers);
 route.delete("/deleteUser/:id", virifyToken, isAdmin, controller.deleteUser);
 
 // Get user by id
-route.get("/:id", virifyToken, isAdmin, controller.getUserById);
+route.get("/oneUser/:idUser", virifyToken, isAdmin, controller.getUserById);
 
 module.exports = route;

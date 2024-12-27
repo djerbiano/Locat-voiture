@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { IoReload } from "react-icons/io5";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RiUserSettingsLine } from "react-icons/ri";
 
 const Container = styled.div`
@@ -83,6 +84,7 @@ const ClientContainer = styled.div`
   }
 `;
 function ClientsAdmin() {
+  const navigate = useNavigate();
   const [originalData, setOriginalData] = useState([]);
   const [user, setUser] = useState([]);
   const [filter, setFilter] = useState({
@@ -205,7 +207,12 @@ function ClientsAdmin() {
                       fontSize: "1.3rem",
                     }}
                   >
-                    <RiUserSettingsLine style={{ cursor: "pointer" }} />
+                    <RiUserSettingsLine
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        navigate(`/admin/clients/SingleClient/${oneUser?._id}`)
+                      }
+                    />
                   </td>
                 </tr>
               ))

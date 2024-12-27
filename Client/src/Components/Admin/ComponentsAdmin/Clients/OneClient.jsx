@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import UpdateCar from "./UpdateCar";
+import UpdateClient from "./UpdateClient";
 
 const Container = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const ButtonRetour = styled.button`
     background-color: #a50a1e;
   }
 `;
-const Voiture = styled.div`
+const Client = styled.div`
   padding: 10px;
   width: 100%;
   height: 100%;
@@ -44,7 +44,7 @@ const Voiture = styled.div`
   p {
     text-transform: capitalize;
   }
-  div {
+  .content {
     padding: 10px;
     width: 100%;
     min-height: 600px;
@@ -55,15 +55,6 @@ const Voiture = styled.div`
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-
-    img {
-      position: absolute;
-      bottom: 30%;
-      right: 0;
-      width: 70%;
-      height: 70%;
-      object-fit: contain;
-    }
 
     .updateButton {
       position: absolute;
@@ -83,16 +74,34 @@ const Voiture = styled.div`
       }
     }
   }
+
+  .numReservation {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 10px 0px;
+    p {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      &:hover {
+        color: #c8152c;
+        scale: 1.05;
+        text-decoration: underline;
+      }
+    }
+  }
 `;
 
-function SingleVoiture({ setModalJustClose, setContent }) {
-  const { idVoiture } = useParams();
+function OneClient({ setModalJustClose, setContent }) {
+  const { idClient } = useParams();
   const navigate = useNavigate();
-  const [car, setCar] = useState([]);
+  const [client, setClient] = useState([]);
   const [updateModal, setUpdateModal] = useState(false);
   const isAdmin = sessionStorage.getItem("isAdmin");
 
-  //get one car
+  //get one
   useEffect(() => {
     const fetchData = async () => {
       const token = sessionStorage.getItem("token");
@@ -102,7 +111,7 @@ function SingleVoiture({ setModalJustClose, setContent }) {
       }
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_URL_SERVER}/cars/admin/${idVoiture}`,
+          `${process.env.REACT_APP_URL_SERVER}/admin/users/oneUser/${idClient}`,
           {
             method: "GET",
             headers: {
@@ -113,7 +122,7 @@ function SingleVoiture({ setModalJustClose, setContent }) {
         );
         const data = await response.json();
         if (response.ok) {
-          setCar(data.car);
+          setClient(data);
         } else {
           setModalJustClose(true);
           setContent(data.message);
@@ -125,55 +134,58 @@ function SingleVoiture({ setModalJustClose, setContent }) {
     };
     fetchData();
     //eslint-disable-next-line
-  }, [idVoiture, isAdmin]);
+  }, [idClient, isAdmin]);
 
-  if (!isAdmin || isAdmin === "false") {
-    return null;
-  }
   return updateModal === true ? (
-    <UpdateCar car={car} setUpdateModal={setUpdateModal} setModalJustClose={setModalJustClose} setContent={setContent} />
+    <UpdateClient
+      client={client}
+      setUpdateModal={setUpdateModal}
+      setModalJustClose={setModalJustClose}
+      setContent={setContent}
+    />
   ) : (
     <Container>
       <ButtonRetour type="button" onClick={() => navigate(-1)}>
         Retour
       </ButtonRetour>
-
-      <Voiture>
-        <div>
-          <h3>Véhicule:</h3>
+      <Client>
+        <div className="content">
+          <h3>Client</h3>
           <br />
-          <p>Véhicule ID: {car?._id}</p>
-          <p>Louable: {car?.available ? "oui" : "non"}</p>
-          <p>Stock: {car?.stockOfCar}</p>
-          <p>Marque: {car?.marque}</p>
-          <p>Modèle: {car?.modele}</p>
-          <p>Couleur: {car?.color}</p>
-          <p>Places: {car?.place}</p>
-          <p>Portes: {car?.doors}</p>
-          <p>Transmission: {car?.transmission}</p>
-          <p>Catégorie: {car?.category}</p>
-          <p>Carburant: {car?.fuel}</p>
-          <p>Prix par jour: {car?.pricePerDay} €</p>
-          <br />
-          <p>Description : {car?.description}</p>
-
-          <img
-            src={`${process.env.REACT_APP_URL_SERVER}/images/${
-              car?.pictures?.pic1 || "avatarDefault.jpg"
-            }`}
-            alt={car?.pictures?.pic1}
-          />
-          <button
-            type="button"
-            className="updateButton"
-            onClick={() => setUpdateModal(true)}
-          >
+          <p>Client ID: {client?._id}</p>
+          <p>Nom: {client?.name}</p>
+          <p>Prénom: {client?.lastName}</p>
+          <p>Email: {client?.email}</p>
+          <p>Téléphone: {client?.phone}</p>
+          <p>Adresse: {client?.address}</p>
+          <p>Admin: {client?.isAdmin ? "Oui" : "Non"}</p>
+          <p>
+            Inscrit le: {new Date(client?.createdAt).toLocaleString("fr-FR")}
+          </p>
+          <p>TokenRestPassword: {client?.tokenRestPassword}</p>
+          <p>Nombre de réservaton: {client?.booking?.length}</p>
+          <p>Numéros des resservation:</p>
+          <div className="numReservation">
+            {client?.booking?.map((b) => {
+              return (
+                <p
+                  key={b}
+                  onClick={() =>
+                    navigate(`/admin/locations/SingleLocation/${b}`)
+                  }
+                >
+                  {b}
+                </p>
+              );
+            })}
+          </div>
+          <button className="updateButton" type="button" onClick={() => setUpdateModal(true)}>
             Modifier
           </button>
         </div>
-      </Voiture>
+      </Client>
     </Container>
   );
 }
 
-export default SingleVoiture;
+export default OneClient;

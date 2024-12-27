@@ -129,9 +129,9 @@ function validateCar(obj) {
 // update car
 function updateCar(obj) {
   const schema = joi.object({
-    marque: joi.string(),
-    modele: joi.string(),
-    color: joi.string(),
+    marque: joi.string().min(2),
+    modele: joi.string().min(2),
+    color: joi.string().min(2),
     place: joi.number().min(1).max(7),
     doors: joi.number().min(2).max(5),
     transmission: joi.string().valid("automatique", "manuelle"),
@@ -142,8 +142,8 @@ function updateCar(obj) {
       pic2: joi.string(),
       pic3: joi.string(),
     }),
-    description: joi.string(),
-    pricePerDay: joi.number(),
+    description: joi.string().min(10),
+    pricePerDay: joi.number().min(1),
     stockOfCar: joi.number(),
     available: joi.boolean(),
   });

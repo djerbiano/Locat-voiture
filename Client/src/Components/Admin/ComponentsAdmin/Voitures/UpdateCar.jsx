@@ -1,5 +1,6 @@
-import { useState } from "react";
 import styled from "styled-components";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -29,35 +30,109 @@ const ButtonRetour = styled.button`
 `;
 
 const Form = styled.div`
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  padding: 20px;
   gap: 20px;
 
-  input,
-  select {
-    width: 200px;
-    padding: 5px;
+  p {
+    font-size: 0.9rem;
+    font-weight: bold;
     margin-bottom: 10px;
   }
+  .containterInput {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    @media (max-width: 650px) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-  p {
-    font-size: 0.8rem;
-    font-weight: bold;
+    @media (max-width: 502px) {
+      *  {
+        width: 100% !important;
+      }
+    }
+  }
+  .form-input-text {
+    width: 200px;
+    padding: 15px;
+    border: 1px solid black;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    input {
+      cursor: auto;
+    }
+  }
+
+  .form-input-number {
+    width: 200px;
+    padding: 15px;
+    border: 1px solid black;
+    border-radius: 10px;
+  }
+
+  .form-input-select {
+    width: 200px;
+    padding: 15px;
+    border: 1px solid black;
+    border-radius: 10px;
+  }
+
+  > :last-child {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      padding: 15px;
+      border: 1px solid black;
+      border-radius: 10px;
+      resize: none;
+      max-height: 200px;
+      font-size: 1rem;
+    }
   }
 `;
 
-function UpdateCar({ setUpdateModal }) {
-  // eslint-disable-next-line
+const ButtonValider = styled.button`
+  width: 150px;
+  height: 50px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: #058d16;
+  color: white;
+  cursor: pointer;
+  font-size: 1.5rem;
+  align-self: center;
+  &:hover {
+    background-color: rgb(3, 108, 17);
+  }
+`;
+
+function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
+  const { idVoiture } = useParams();
+
   const [formData, setFormData] = useState({});
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [e.target.name]: e.target.value,
+      [name]: name === "available" ? value === "true" : value,
     }));
   };
-  //console.log(formData)
-  //update booking status
-  /* const updateBookingStatus = async () => {
+
+  //update car
+  const updateCar = async () => {
     const token = sessionStorage.getItem("token");
     try {
       const response = await fetch(
@@ -68,20 +143,18 @@ function UpdateCar({ setUpdateModal }) {
             "Content-Type": "application/json",
             token,
           },
-          body: JSON.stringify({ status: updateStatus }),
+          body: JSON.stringify(formData),
         }
       );
       const data = await response.json();
 
       if (response.ok) {
         setModalJustClose(true);
-        setContent(
-          `Le nouveau statu de la réservation est : ${data.updatedBooking.status}`
-        );
+        setContent(data.message);
 
         setTimeout(() => {
           window.location.reload();
-        }, 3000);
+        }, 2500);
       } else {
         setModalJustClose(true);
         setContent(data.message);
@@ -91,129 +164,158 @@ function UpdateCar({ setUpdateModal }) {
       setModalJustClose(true);
       setContent(error.message);
     }
-  };*/
+  };
   return (
     <Container>
       <ButtonRetour type="button" onClick={() => setUpdateModal(false)}>
         Retour
       </ButtonRetour>
       <Form>
-        <div>
-          <label htmlFor="marque">Marque:</label>
-          <input
-            type="text"
-            name="marque"
-            id="marque"
-            onChange={handleChange}
-          />
-          <p>*Valeur actuelle : test</p>
-        </div>
-        <div>
-          <label htmlFor="modele">Modèle:</label>
-          <input
-            type="text"
-            name="modele"
-            id="modele"
-            onChange={handleChange}
-          />
-          <p>*Valeur actuelle : test</p>
-        </div>
+        <div className="containterInput">
+          <div className="form-input-text">
+            <div>
+              <label htmlFor="marque">Marque:</label>
+              <input
+                type="text"
+                name="marque"
+                id="marque"
+                onChange={handleChange}
+              />
 
-        <div>
-          <label htmlFor="color">Couleur:</label>
-          <input type="text" name="color" id="color" onChange={handleChange} />
-          <p>*Valeur actuelle : test</p>
-        </div>
-        <div>
-          <label htmlFor="place">NB Place:</label>
-          <input
-            type="number"
-            name="place"
-            id="place"
-            onChange={handleChange}
-          />
-          <p>*Valeur actuelle : test</p>
-        </div>
+              <p>*{car?.marque}</p>
+            </div>
+            <div>
+              <label htmlFor="modele">Modèle:</label>
+              <input
+                type="text"
+                name="modele"
+                id="modele"
+                onChange={handleChange}
+              />
+              <p>*{car?.modele}</p>
+            </div>
 
-        <div>
-          <label htmlFor="doors">Portes:</label>
-          <input
-            type="number"
-            name="doors"
-            id="doors"
-            onChange={handleChange}
-          />
-          <p>*Valeur actuelle : test</p>
-        </div>
-        <div>
-          <label htmlFor="pricePerDay">Prix par jour:</label>
-          <input
-            type="number"
-            name="pricePerDay"
-            id="pricePerDay"
-            min="1"
-            onChange={handleChange}
-          />
-        </div>
+            <div>
+              <label htmlFor="color">Couleur:</label>
+              <input
+                type="text"
+                name="color"
+                id="color"
+                onChange={handleChange}
+              />
+              <p>*{car?.color}</p>
+            </div>
+          </div>
 
-        <div>
-          <label htmlFor="stockOfCar">Stock:</label>
-          <input
-            type="number"
-            name="stockOfCar"
-            id="stockOfCar"
-            min="0"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <select name="transmission" id="transmission" onChange={handleChange}>
-            <option value="">Transmission</option>
-            <option value="manuelle">Manuelle</option>
-            <option value="automatique">Automatique</option>
-          </select>
-          <p>*Valeur actuelle : test</p>
-        </div>
+          <div className="form-input-number">
+            <div>
+              <label htmlFor="place">NB Place:</label>
+              <input
+                type="number"
+                name="place"
+                id="place"
+                min="1"
+                onChange={handleChange}
+              />
+              <p>*{car?.place}</p>
+            </div>
 
-        <div>
-          <select name="category" id="category" onChange={handleChange}>
-            <option value="">Catégories</option>
-            <option value="Économique">Économique</option>
-            <option value="Intermédiaire">Intermédiaire</option>
-            <option value="Premium">Premium</option>
-          </select>
-          <p>*Valeur actuelle : test</p>
-        </div>
+            <div>
+              <label htmlFor="doors">Portes:</label>
+              <input
+                type="number"
+                name="doors"
+                id="doors"
+                min="2"
+                onChange={handleChange}
+              />
+              <p>*{car?.doors}</p>
+            </div>
+            <div>
+              <label htmlFor="pricePerDay">Prix par jour:</label>
+              <input
+                type="number"
+                name="pricePerDay"
+                id="pricePerDay"
+                min="1"
+                onChange={handleChange}
+              />
+              <p>*{car?.pricePerDay} €</p>
+            </div>
 
-        <div>
-          <select name="fuel" id="fuel" onChange={handleChange}>
-            <option value="">Carburant</option>
-            <option value="Essence">Essence</option>
-            <option value="Diesel">Diesel</option>
-            <option value="Electrique">Electrique</option>
-          </select>
-          <p>*Valeur actuelle : test</p>
+            <div>
+              <label htmlFor="stockOfCar">Stock:</label>
+              <input
+                type="number"
+                name="stockOfCar"
+                id="stockOfCar"
+                min="0"
+                onChange={handleChange}
+              />
+              <p>*{car?.stockOfCar}</p>
+            </div>
+          </div>
+
+          <div className="form-input-select">
+            <div>
+              <select
+                name="transmission"
+                id="transmission"
+                onChange={handleChange}
+              >
+                <option value="">Transmission</option>
+                <option value="manuelle">Manuelle</option>
+                <option value="automatique">Automatique</option>
+              </select>
+              <p>*{car?.transmission}</p>
+            </div>
+
+            <div>
+              <select name="category" id="category" onChange={handleChange}>
+                <option value="">Catégories</option>
+                <option value="Économique">Économique</option>
+                <option value="Intermédiaire">Intermédiaire</option>
+                <option value="Premium">Premium</option>
+              </select>
+              <p>*{car?.category}</p>
+            </div>
+
+            <div>
+              <select name="fuel" id="fuel" onChange={handleChange}>
+                <option value="">Carburant</option>
+                <option value="Essence">Essence</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electrique">Electrique</option>
+              </select>
+              <p>*{car?.fuel}</p>
+            </div>
+            <div>
+              <select name="available" id="available" onChange={handleChange}>
+                <option value="">Louable</option>
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+              </select>
+              <p>*{car?.available ? "oui" : "non"}</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <select name="available" id="available" onChange={handleChange}>
-            <option value="">Louable</option>
-            <option value="true">Oui</option>
-            <option value="false">Non</option>
-          </select>
-          <p>*Valeur actuelle : test</p>
-        </div>
+        <p>*Valeur actuelle</p>
         <div>
           <label htmlFor="description">Description:</label>
           <textarea
             name="description"
             id="description"
-            cols="20"
-            rows="5"
+            cols="40"
+            rows="10"
             onChange={handleChange}
             placeholder="Description"
           />
+          <p>*{car?.description}</p>
         </div>
       </Form>
+      <ButtonValider type="button" onClick={updateCar}>
+        Valider
+      </ButtonValider>
     </Container>
   );
 }

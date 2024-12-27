@@ -4,6 +4,7 @@ A faire:
 - possibilité de modifier une seule photo
 - cancelBooking (bookingController.js) = decalage d'une heure à prendre en compte pour l'annulation 48heure
 - supprimer les booking si user delete compte
+-possibilité de modifier et ajouter les photos
 
 A vérif:
 
