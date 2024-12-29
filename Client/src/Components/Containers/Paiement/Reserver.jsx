@@ -312,8 +312,6 @@ function Reserver({
   const [originalData, setOriginalData] = useState([]);
   const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySearch, setdisplaySearch] = useState(true);
-  const [prixMin, setPrixMin] = useState(0);
-  const [prixMax, setPrixMax] = useState(0);
   const [otherAgency, setOtherAgency] = useState(false);
   const [formData, setFormData] = useState({
     departAgence: "",
@@ -672,27 +670,7 @@ function Reserver({
                   <option value="lesDeux">Les deux</option>
                 </select>
 
-                <label htmlFor="PrixMin"> Prix min {prixMin}</label>
-                <input
-                  type="range"
-                  name="PrixMin"
-                  id="PrixMin"
-                  min="50"
-                  max="400"
-                  step="10"
-                  onChange={(e) => setPrixMin(e.target.value)}
-                />
-
-                <label htmlFor="PrixMax"> Prix max {prixMax}</label>
-                <input
-                  type="range"
-                  name="PrixMax"
-                  id="PrixMax"
-                  min="50"
-                  max="400"
-                  step="10"
-                  onChange={(e) => setPrixMax(e.target.value)}
-                />
+             
               </div>
             </FilterVoituresTrouvees>
             <div

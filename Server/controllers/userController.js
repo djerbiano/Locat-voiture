@@ -87,7 +87,9 @@ const controller = {
         });
       }
 
-      const user = await User.findById(req.user.id).select("-password -__v -booking -isAdmin -tokenRestPassword");
+      const user = await User.findById(req.user.id).select(
+        "-password -__v -booking -isAdmin -tokenRestPassword"
+      );
       if (!user) {
         return handleErrors(res, 404, {
           message: "Utilisateur introuvable",
@@ -250,7 +252,8 @@ const controller = {
       await User.updateOne({ email: req.params.email }, updateFields);
 
       return handleErrors(res, 200, {
-        message: "Le profil a bien été mis à jour",
+        message:
+          "Le profil a bien été mis à jour. Veuillez vous reconnecter pour obtenir les nouvelles modifications",
       });
     } catch (error) {
       return handleErrors(res, 400, {

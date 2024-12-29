@@ -250,7 +250,6 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
         const data = await response.json();
 
         handleErrorInvalidToken(data.message);
-
         if (data.bookings?.length > 0) {
           setBookings(data.bookings);
         } else {

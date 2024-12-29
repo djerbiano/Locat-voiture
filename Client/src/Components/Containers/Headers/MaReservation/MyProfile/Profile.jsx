@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../../../../Context/AuthContext.js";
 import { handleErrorInvalidToken } from "../../../../../utils/helper.js";
 import { BiShowAlt } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 10px;
@@ -14,6 +15,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
+  position: relative;
 
   @media (max-width: 630px) {
     flex-direction: column;
@@ -21,6 +23,22 @@ const Container = styled.div`
   }
 `;
 
+const ButtonRetour = styled.button`
+  position: absolute;
+  top:10px;
+  left: 10px;
+  width: 100px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: #c8152c;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  &:hover {
+    background-color: #a50a1e;
+  }
+`;
 const PictureContainer = styled.div`
   max-width: 40%;
   padding: 20px;
@@ -137,6 +155,7 @@ const InfoContainer = styled.div`
 
 function Profile({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [profile, setProfile] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -234,6 +253,8 @@ function Profile({ setLoading, setModalJustClose, setContent }) {
         email: "",
         password: "",
       });
+      navigate("/MesReservation")
+    
     } catch (error) {
       console.error("Error updating profile:", error);
       setLoading(false);
@@ -246,7 +267,8 @@ function Profile({ setLoading, setModalJustClose, setContent }) {
     <>
       {isAuthenticated === "true" && (
         <Container>
-          <PictureContainer>
+        <ButtonRetour onClick={ () => navigate(-1)}>Retour</ButtonRetour>
+        <PictureContainer>
             <div className="icon">
               <FaUserEdit />
             </div>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useContext } from "react";
 import { AuthContext } from "../../../../../Context/AuthContext.js";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import YesOrNo from "../../../../Modal/YesOrNo";
 import { handleErrorInvalidToken } from "../../../../../utils/helper.js";
@@ -18,6 +18,24 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
+`;
+
+const ButtonRetour = styled.button`
+  position: absolute;
+  top:10px;
+  left: 10px;
+  width: 100px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: #c8152c;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  &:hover {
+    background-color: #a50a1e;
+  }
 `;
 
 const Content = styled.div`
@@ -149,6 +167,7 @@ const Lieux = styled.div`
 function SingleReservation({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
   const { idBooking } = useParams();
+  const navigate = useNavigate();
   const [bookingData, setBookingData] = useState({});
   const [modalYesOrNo, setModalYesOrNo] = useState(false);
 
@@ -212,6 +231,7 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
       setLoading(false);
       setModalJustClose(true);
       setContent(data.message);
+      navigate("/MesReservation");
     } catch (error) {
       console.error("Error deleting booking:", error);
       setLoading(false);
@@ -224,6 +244,7 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
     <>
       {isAuthenticated === "true" && (
         <Container>
+        <ButtonRetour onClick={ () => navigate(-1)}>Retour</ButtonRetour>
           {modalYesOrNo && (
             <YesOrNo
               setModalYesOrNo={setModalYesOrNo}
@@ -236,44 +257,45 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
                 <ContainerPhoto>
                   <img
                     src={`${process.env.REACT_APP_URL_SERVER}/images/${bookingData.voiture.pictures.pic1}`}
-                    alt={bookingData.voiture.marque}
+                    alt={bookingData?.voiture?.marque}
                   />
                 </ContainerPhoto>
 
                 <VoitureInfos>
                   <p>
-                    {bookingData.voiture.marque} {bookingData.voiture.modele}
+                    {bookingData?.voiture?.marque} {bookingData?.voiture?.modele}
                   </p>
                   <div>
-                    <p>{bookingData.voiture.pricePerDay} € / jour</p>
+                    <p>{bookingData?.voiture?.pricePerDay} € / jour</p>
                   </div>
                 </VoitureInfos>
+                <p>Réservation: {bookingData?.status}</p>
               </VoitureContainer>
 
               <ReservationContainer>
                 <Lieux>
-                  <h3>{bookingData.departAgence}</h3>
+                  <h3>{bookingData?.departAgence}</h3>
                   <FaArrowRightArrowLeft />
-                  <h3>{bookingData.retourAgence}</h3>
+                  <h3>{bookingData?.retourAgence}</h3>
                 </Lieux>
                 <h4>Numéro de réservation</h4>
-                <p style={{ wordBreak: "break-all" }}>{bookingData._id}</p>
+                <p style={{ wordBreak: "break-all" }}>{bookingData?._id}</p>
                 <h4>Date et heure de départ</h4>
                 <p>
-                  {new Date(bookingData.startDate)
+                  {new Date(bookingData?.startDate)
                     .toLocaleString("fr-FR")
                     .slice(0, 16)}
                 </p>
                 <h4>Date et heure de retour</h4>
                 <p>
-                  {new Date(bookingData.endDate)
+                  {new Date(bookingData?.endDate)
                     .toLocaleString("fr-FR")
                     .slice(0, 16)}
                 </p>
                 <h4>Durée de location</h4>
                 <p>{duration} jours</p>
                 <h4>Prix total</h4>
-                <p>{bookingData.price} €</p>
+                <p>{bookingData?.price} €</p>
                 <div>
                   <button onClick={() => setModalYesOrNo(true)}>
                     Supprimer la réservation
