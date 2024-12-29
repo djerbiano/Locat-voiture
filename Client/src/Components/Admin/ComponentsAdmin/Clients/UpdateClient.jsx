@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import YesOrNoAdmin from "../../../Modal/YesOrNoAdmin";
 
 const Container = styled.div`
   display: flex;
@@ -44,6 +45,7 @@ const Form = styled.div`
     display: flex;
     justify-content: space-around;
     gap: 10px;
+
     @media (max-width: 650px) {
       flex-wrap: wrap;
       justify-content: center;
@@ -74,6 +76,28 @@ const Form = styled.div`
   }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const ButtonDelete = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: #c8152c;
+  color: white;
+  cursor: pointer;
+  font-size: 1.3rem;
+  align-self: center;
+  &:hover {
+    background-color: #a50a1e;
+  }
+`;
+
 const ButtonValider = styled.button`
   width: 150px;
   height: 50px;
@@ -84,7 +108,6 @@ const ButtonValider = styled.button`
   color: white;
   cursor: pointer;
   font-size: 1.5rem;
-  align-self: center;
   &:hover {
     background-color: rgb(3, 108, 17);
   }
@@ -96,7 +119,9 @@ function UpdateClient({
   setContent,
 }) {
   const { idClient } = useParams();
-
+  const navigate = useNavigate();
+  const [modalYesOrNoAdmin, setModalYesOrNoAdmin] = useState(false);
+  const [modalYesOrNoAdminContent, setModalYesOrNoAdminContent] = useState("");
   const [formData, setFormData] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,7 +136,7 @@ function UpdateClient({
     const token = sessionStorage.getItem("token");
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_URL_SERVER}/null/${idClient}`,
+        `${process.env.REACT_APP_URL_SERVER}/admin/users/updateUser/${idClient}`,
         {
           method: "PATCH",
           headers: {
@@ -127,9 +152,9 @@ function UpdateClient({
         setModalJustClose(true);
         setContent(data.message);
 
-        /*  setTimeout(() => {
+        setTimeout(() => {
           window.location.reload();
-        }, 2500);*/
+        }, 2500);
       } else {
         setModalJustClose(true);
         setContent(data.message);
@@ -140,7 +165,46 @@ function UpdateClient({
       setContent(error.message);
     }
   };
-  return (
+
+  //delete client
+  const deleteClient = async () => {
+    const token = sessionStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_URL_SERVER}/admin/users/deleteUser/${idClient}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            token,
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setModalJustClose(true);
+        setContent(data.message);
+        setUpdateModal(false);
+        navigate("/admin/clients");
+    
+      } else {
+        setModalJustClose(true);
+        setContent(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      setModalJustClose(true);
+      setContent(error.message);
+    }
+  };
+  return modalYesOrNoAdmin ? (
+    <YesOrNoAdmin
+      setModalYesOrNoAdmin={setModalYesOrNoAdmin}
+      functionExcute={deleteClient}
+      textContent={modalYesOrNoAdminContent}
+    />
+  ) : (
     <Container>
       <ButtonRetour type="button" onClick={() => setUpdateModal(false)}>
         Retour
@@ -211,13 +275,28 @@ function UpdateClient({
               </select>
               <p>*{client?.isAdmin ? "oui" : "non"}</p>
             </div>
+
+            <div></div>
           </div>
         </div>
         <p>*Valeur actuelle</p>
       </Form>
-      <ButtonValider type="button" onClick={updateClient}>
-        Valider
-      </ButtonValider>
+      <ButtonContainer>
+        <ButtonValider type="button" onClick={updateClient}>
+          Valider
+        </ButtonValider>
+        <ButtonDelete
+          type="button"
+          onClick={() => {
+            setModalYesOrNoAdmin(true);
+            setModalYesOrNoAdminContent(
+              "Êtes-vous sûr de vouloir supprimer ce compte ?"
+            );
+          }}
+        >
+          Supprimer le compte
+        </ButtonDelete>
+      </ButtonContainer>
     </Container>
   );
 }

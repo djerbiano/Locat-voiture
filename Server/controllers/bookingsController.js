@@ -114,12 +114,14 @@ const controller = {
         });
       }
 
-      // verifier si la réservation est supprimable
-      if (booking.status === "En-attente" || booking.status === "acceptée") {
-        return handleErrors(res, 400, {
-          message:
-            "Vous ne pouvez pas supprimer cette réservation qui est en cours",
-        });
+      // verifier si la réservation est supprimable par le user. si admin, delete directement
+      if (!req.user.isAdmin) {
+        if (booking.status === "En-attente" || booking.status === "acceptée") {
+          return handleErrors(res, 400, {
+            message:
+              "Vous ne pouvez pas supprimer cette réservation qui est en cours",
+          });
+        }
       }
 
       if (!req.user.isAdmin && !booking.deleteWithUser) {

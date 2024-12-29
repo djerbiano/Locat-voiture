@@ -55,7 +55,6 @@ const RegisterCompte = styled(Link)`
 `;
 
 function Login({ setLoading, setModalJustClose, setContent }) {
-
   const [forgotPassword, setForgotPassword] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -101,10 +100,6 @@ function Login({ setLoading, setModalJustClose, setContent }) {
       sessionStorage.setItem("isAdmin", data[1].isAdmin);
 
       window.location.reload();
-   
-
-    
-      setLoading(false);
     } else {
       setModalJustClose(true);
       setContent(data.message);

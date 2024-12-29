@@ -5,6 +5,11 @@ A faire:
 - cancelBooking (bookingController.js) = decalage d'une heure à prendre en compte pour l'annulation 48heure
 - supprimer les booking si user delete compte
 -possibilité de modifier et ajouter les photos
+- supprimer la réservation par admin
+- supprimer et add car par admin
+- supprimer user with user or admin
+- ajouter loader fetch data coté admin
+
 
 A vérif:
 

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import YesOrNoAdmin from "../../../Modal/YesOrNoAdmin";
 
 const Container = styled.div`
   display: flex;
@@ -75,7 +76,7 @@ const Setting = styled.div`
   flex-direction: column;
 `;
 
-const Select = styled.div`
+const SelectWithButton = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -90,6 +91,38 @@ const Select = styled.div`
     border-radius: 5px;
     border: 1px solid black;
   }
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+`;
+
+const ButtonUpdate = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: #058d16;
+  color: white;
+  cursor: pointer;
+  font-size: 1.3rem;
+  &:hover {
+    background-color: rgb(3, 108, 17);
+  }
+`;
+const ButtonDelete = styled.button`
+  min-height: 50px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: #c8152c;
+  color: white;
+  cursor: pointer;
+  font-size: 1.3rem;
+  &:hover {
+    background-color: #a50a1e;
+  }
 `;
 
 function SingleLocation({ setModalJustClose, setContent }) {
@@ -98,6 +131,9 @@ function SingleLocation({ setModalJustClose, setContent }) {
   const [reservation, setReservation] = useState([]);
   const [updateStatus, setUpdateStatus] = useState("");
   const isAdmin = sessionStorage.getItem("isAdmin");
+  const token = sessionStorage.getItem("token");
+  const [modalYesOrNoAdmin, setModalYesOrNoAdmin] = useState(false);
+  const [modalYesOrNoAdminContent, setModalYesOrNoAdminContent] = useState("");
 
   const handleChange = (e) => {
     setUpdateStatus(e.target.value);
@@ -106,7 +142,6 @@ function SingleLocation({ setModalJustClose, setContent }) {
   //get one booking
   useEffect(() => {
     const fetchData = async () => {
-      const token = sessionStorage.getItem("token");
       if (!isAdmin || isAdmin === "false") {
         navigate("/");
         return null;
@@ -146,7 +181,6 @@ function SingleLocation({ setModalJustClose, setContent }) {
 
   //update booking status
   const updateBookingStatus = async () => {
-    const token = sessionStorage.getItem("token");
     try {
       const response = await fetch(
         `${process.env.REACT_APP_URL_SERVER}/admin/bookings/updateBooking/${idLocation}`,
@@ -180,11 +214,47 @@ function SingleLocation({ setModalJustClose, setContent }) {
       setContent(error.message);
     }
   };
+  //delete booking
+  const deleteBooking = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_URL_SERVER}/bookings/deleteBooking/${idLocation}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            token,
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setModalJustClose(true);
+        setContent(data.message);
+        navigate("/admin/locations");
+      } else {
+        setModalJustClose(true);
+        setContent(data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+
+      setModalJustClose(true);
+      setContent("Erreur lors de la suppression de la réservation");
+    }
+  };
 
   if (!isAdmin || isAdmin === "false") {
     return null;
   }
-  return (
+  return modalYesOrNoAdmin ? (
+    <YesOrNoAdmin
+      setModalYesOrNoAdmin={setModalYesOrNoAdmin}
+      functionExcute={deleteBooking}
+      textContent={modalYesOrNoAdminContent}
+    />
+  ) : (
     <Container>
       <ButtonRetour type="button" onClick={() => navigate(-1)}>
         Retour
@@ -248,7 +318,7 @@ function SingleLocation({ setModalJustClose, setContent }) {
         <Setting>
           <h2>Changer le statut</h2>
 
-          <Select>
+          <SelectWithButton>
             <label htmlFor="status">Statut:</label>
             <select id="status" name="status" onChange={handleChange}>
               <option value="">Modifier</option>
@@ -258,13 +328,26 @@ function SingleLocation({ setModalJustClose, setContent }) {
               <option value="annulée">Annulé</option>
               <option value="terminée">Terminée</option>
             </select>
-            <ButtonRetour type="button" onClick={updateBookingStatus}>
-              Modifier
-            </ButtonRetour>
+            <div>
+              <ButtonUpdate type="button" onClick={updateBookingStatus}>
+                Modifier
+              </ButtonUpdate>
+              <ButtonDelete
+                type="button"
+                onClick={() => {
+                  setModalYesOrNoAdmin(true);
+                  setModalYesOrNoAdminContent(
+                    "Êtes-vous sûr de vouloir supprimer cette réservation ?"
+                  );
+                }}
+              >
+                Supprimer la réservation
+              </ButtonDelete>
+            </div>
             <p style={{ fontSize: "0.8rem" }}>
               *status actuel {reservation?.status}
             </p>
-          </Select>
+          </SelectWithButton>
         </Setting>
       </div>
     </Container>
