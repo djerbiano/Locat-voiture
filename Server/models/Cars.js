@@ -112,11 +112,10 @@ function validateCar(obj) {
     fuel: joi.string().required().valid("Essence", "Diesel", "Electrique"),
     pictures: joi
       .object({
-        pic1: joi.string().required(),
-        pic2: joi.string().required(),
-        pic3: joi.string().required(),
-      })
-      .required(),
+        pic1: joi.string(),
+        pic2: joi.string(),
+        pic3: joi.string(),
+      }), 
     description: joi.string().required(),
     pricePerDay: joi.number().required(),
     stockOfCar: joi.number().required(),

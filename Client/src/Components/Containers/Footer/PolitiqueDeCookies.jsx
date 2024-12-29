@@ -38,6 +38,7 @@ const List = styled.ul`
 const ListItem = styled.li`
   margin-bottom: 5px;
 `;
+
 function PolitiqueDeCookies() {
   return (
     <Container>

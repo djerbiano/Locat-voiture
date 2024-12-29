@@ -145,6 +145,7 @@ function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage }) {
   const [animationBurgerMenu, setAnimationBurgerMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // scrolling to top 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -160,6 +161,7 @@ function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage }) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  
   const handleMenuToggle = () => {
     setMenuHamburgerView(!menuHamburgerView);
     setAnimationBurgerMenu(!animationBurgerMenu);

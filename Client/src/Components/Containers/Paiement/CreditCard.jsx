@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -56,6 +58,7 @@ const Content = styled.div`
     }
   }
 `;
+
 const ButtonForm = styled.div`
   width: 100%;
   display: flex;
@@ -89,6 +92,7 @@ const ButtonForm = styled.div`
     }
   }
 `;
+
 function CreditCard({
   setPayement,
   setLoading,
@@ -96,6 +100,9 @@ function CreditCard({
   setContent,
   validatePayement,
 }) {
+  const navigate = useNavigate();
+
+
   const handlePayment = async (event) => {
     setLoading(true);
     event.preventDefault();
@@ -112,15 +119,17 @@ function CreditCard({
         }
       );
       const data = await response.json();
-      setModalJustClose(true);
-      setContent(data.message);
-      setLoading(false);
 
-      if (response.status === 200) {
-        setPayement(false)
-        setTimeout(() => {
-          window.location.replace("/MesReservation");
-        }, 3000);
+      if (!response.ok) {
+        setModalJustClose(true);
+        setContent(data.message);
+        setLoading(false);
+      } else {
+        setPayement(false);
+        setModalJustClose(true);
+        setContent(data.message);
+        setLoading(false);
+        navigate("/MesReservation");
       }
     } catch (error) {
       console.error("Error register booking:", error);
@@ -129,6 +138,7 @@ function CreditCard({
       setContent("Erreur lors du paiement");
     }
   };
+  
   return (
     <Container>
       <Content>

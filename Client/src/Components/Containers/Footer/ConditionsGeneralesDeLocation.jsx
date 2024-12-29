@@ -35,6 +35,7 @@ const List = styled.ul`
   font-size: 1rem;
   list-style-type: none;
 `;
+
 function ConditionsGeneralesDeLocation() {
   return (
     <Container>

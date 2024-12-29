@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import VoituresTarifs from "./VoituresTarifs";
+
 const Container = styled.div`
   padding: 10px;
   width: 100%;
@@ -59,6 +60,8 @@ const CarList = styled.div`
 function Tarifs({ setLoading, setModalJustClose, setContent }) {
   const [car, setCar] = useState([]);
 
+
+  // get all cars
   useEffect(() => {
     setLoading(true);
 
@@ -92,6 +95,7 @@ function Tarifs({ setLoading, setModalJustClose, setContent }) {
 
     // eslint-disable-next-line
   }, []);
+  
   return (
     <Container>
       <Section>

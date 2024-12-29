@@ -47,11 +47,13 @@ const Container = styled.div`
 `;
 
 function HeadersAdmin() {
+  
   const Logout = () => {
     localStorage.clear();
     sessionStorage.clear();
     window.location.href = "/";
   };
+
   return (
     <Container>
       <Link to="/admin">

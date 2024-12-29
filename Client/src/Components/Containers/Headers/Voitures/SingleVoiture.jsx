@@ -30,6 +30,7 @@ const ImageContainer = styled.div`
 `;
 
 const Name = styled.div``;
+
 const Prix = styled.div``;
 
 const Reserver = styled.div`

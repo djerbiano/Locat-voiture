@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 10px;
@@ -63,6 +64,7 @@ const Button = styled.button`
   }
 `;
 function Contact({ setLoading, setModalJustClose, setContent }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
@@ -76,7 +78,7 @@ function Contact({ setLoading, setModalJustClose, setContent }) {
       [name]: value,
     }));
   };
-
+// send message from contact page
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -103,9 +105,7 @@ function Contact({ setLoading, setModalJustClose, setContent }) {
         setModalJustClose(true);
         setContent(data.message);
         setLoading(false);
-        setTimeout(() => {
-          window.location.replace("/");
-        }, 3000);
+        navigate("/");
       }
     } catch (error) {
       console.error("Error sending contact message:", error);

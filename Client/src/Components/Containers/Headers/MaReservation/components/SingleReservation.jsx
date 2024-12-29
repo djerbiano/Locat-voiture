@@ -43,12 +43,14 @@ const Content = styled.div`
     align-items: center;
   }
 `;
+
 const VoitureContainer = styled.div`
   width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
+
 const ContainerPhoto = styled.div`
   width: 200px;
 
@@ -143,6 +145,7 @@ const Lieux = styled.div`
     }
   }
 `;
+
 function SingleReservation({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
   const { idBooking } = useParams();

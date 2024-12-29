@@ -7,6 +7,7 @@ const Container = styled.div`
   background-color: #ffffff7a;
   border-radius: 10px;
 `;
+
 const Title = styled.h1`
   font-size: 2rem;
   margin-bottom: 20px;
@@ -34,6 +35,7 @@ const List = styled.ul`
   font-size: 1rem;
   list-style-type: none;
 `;
+
 function ConditionsGeneralesDutilisation() {
   return (
     <Container>

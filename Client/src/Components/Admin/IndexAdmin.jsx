@@ -22,6 +22,7 @@ const Container = styled.div`
     justify-content: flex-start;
   }
 `;
+
 const Header = styled.div`
   padding: 10px;
   width: 10%;
@@ -34,6 +35,7 @@ const Header = styled.div`
     width: 100%;
   }
 `;
+
 const Main = styled.div`
   padding: 10px;
   color: black;
@@ -48,14 +50,15 @@ const Main = styled.div`
     min-height: 60vh;
   }
 `;
+
 function Index() {
   const navigate = useNavigate();
   const [component, setComponent] = useState(null);
   const location = useLocation();
   const isAdmin = sessionStorage.getItem("isAdmin");
 
+  // get admin
   useEffect(() => {
-    // get admin
     const checkAdmin = () => {
       try {
         if (!isAdmin || isAdmin === "false") {
@@ -95,6 +98,7 @@ function Index() {
 
     checkAdmin();
   }, [location.pathname, navigate, isAdmin]);
+  
   if (!isAdmin || isAdmin === "false") {
     return null;
   }

@@ -151,10 +151,7 @@ function UpdateClient({
       if (response.ok) {
         setModalJustClose(true);
         setContent(data.message);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 2500);
+        navigate("/admin/clients");
       } else {
         setModalJustClose(true);
         setContent(data.message);
@@ -198,6 +195,8 @@ function UpdateClient({
       setContent(error.message);
     }
   };
+  
+  //modal delete
   return modalYesOrNoAdmin ? (
     <YesOrNoAdmin
       setModalYesOrNoAdmin={setModalYesOrNoAdmin}

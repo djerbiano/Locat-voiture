@@ -4,6 +4,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import SingleVoitureReservation from "./SingleVoitureReservation.jsx";
 import SingleVoiture from "./SingleVoiture.jsx";
 import { useEffect, useState } from "react";
+
 const Container = styled.div`
   padding: 10px;
   width: 100%;
@@ -12,6 +13,7 @@ const Container = styled.div`
   border-radius: 10px;
   position: relative;
 `;
+
 const CloseButton = styled.div`
   position: absolute;
   top: 0px;
@@ -330,6 +332,7 @@ function Voitures({
       setContent("Erreur lors de la récupération des voitures");
     }
   };
+  
   return (
     <Container>
       <CloseButton

@@ -5,6 +5,7 @@ import Chart from "chart.js/auto";
 const Container = styled.div`
   min-width: 100%;
 `;
+
 const data = [
   { month: "Janvier", count: 10000 },
   { month: "Fevrier", count: 12000 },

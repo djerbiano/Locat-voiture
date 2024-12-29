@@ -25,6 +25,7 @@ const Container = styled.div`
 function LocationEnCours() {
   const navigate = useNavigate();
   const [reservation, setReservation] = useState([]);
+  
   //get all booking
   useEffect(() => {
     const fetchData = async () => {

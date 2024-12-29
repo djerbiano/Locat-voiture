@@ -164,7 +164,9 @@ const FormSecondLine = styled.div`
   }
 `;
 const CheckboxAutreAgence = styled.div``;
+
 /*const Promotion = styled.div``;*/
+
 const ButtonRecherche = styled.button`
   width: 150px;
   border-radius: 5px;
@@ -322,12 +324,14 @@ function Reserver({
     place: 1,
     /*promotion: false,*/
   });
+  
   const [dataSort, setDataSort] = useState({
     trierPrix: "",
     typeDeVoitures: "",
     marque: "",
     transmission: "",
   });
+
   const [validatePayement, setValidatePayement] = useState({
     user: "  ",
     voiture: " ",

@@ -100,6 +100,7 @@ function DisplaySingleVoiture({ setLoading, setModalJustClose, setContent }) {
   const [oneCar, setOneCar] = useState([]);
   const navigate = useNavigate();
 
+  //get one car
   useEffect(() => {
     setLoading(true);
     const fetchCar = async () => {
@@ -124,6 +125,7 @@ function DisplaySingleVoiture({ setLoading, setModalJustClose, setContent }) {
     setLoading(false);
     // eslint-disable-next-line
   }, [id]);
+  
   return (
     <Container>
       <Car>

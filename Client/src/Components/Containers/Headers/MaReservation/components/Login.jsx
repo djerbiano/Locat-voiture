@@ -68,6 +68,7 @@ function Login({ setLoading, setModalJustClose, setContent }) {
       [name]: value,
     }));
   };
+  
   // login
   const login = async (e) => {
     setLoading(true);

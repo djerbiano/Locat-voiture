@@ -36,6 +36,7 @@ const Frais = styled.div`
     transition: all 0.2s ease;
   }
 `;
+
 function SansFraisCachés({ setModalContent, setModalJustClose }) {
   const modalContent =
     "Louez en toute confiance avec notre politique de transparence totale : aucun frais caché ne viendra alourdir votre facture. " +

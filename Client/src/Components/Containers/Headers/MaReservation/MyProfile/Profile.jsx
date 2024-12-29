@@ -3,7 +3,6 @@ import { FaUserEdit } from "react-icons/fa";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../../../../Context/AuthContext.js";
 import { handleErrorInvalidToken } from "../../../../../utils/helper.js";
-
 import { BiShowAlt } from "react-icons/bi";
 
 const Container = styled.div`
@@ -185,6 +184,7 @@ function Profile({ setLoading, setModalJustClose, setContent }) {
     getUser();
     //eslint-disable-next-line
   }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -192,6 +192,7 @@ function Profile({ setLoading, setModalJustClose, setContent }) {
       [name]: value,
     });
   };
+  
   //update profile
   const updateProfile = async (e) => {
     e.preventDefault();

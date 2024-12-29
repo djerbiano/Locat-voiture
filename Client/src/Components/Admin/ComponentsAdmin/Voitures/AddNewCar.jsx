@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import YesOrNoAdmin from "../../../Modal/YesOrNoAdmin";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -103,15 +102,32 @@ const Form = styled.div`
       font-size: 1rem;
     }
   }
+
+  .imageContainer {
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    input {
+      display: none;
+    }
+
+    label {
+      background-color: #058d16;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+
+      &:hover {
+        background-color: rgb(3, 108, 17);
+      }
+    }
+  }
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-`;
-
-const ButtonValider = styled.button`
+const ButtonAjouter = styled.button`
   width: 150px;
   height: 50px;
   border-radius: 5px;
@@ -127,50 +143,45 @@ const ButtonValider = styled.button`
   }
 `;
 
-const ButtonDelete = styled.button`
-  min-height: 50px;
-  border-radius: 5px;
-  border: none;
-  padding: 5px;
-  background-color: #c8152c;
-  color: white;
-  cursor: pointer;
-  font-size: 1.3rem;
-  align-self: center;
-  &:hover {
-    background-color: #a50a1e;
-  }
-`;
-
-function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
-  const { idVoiture } = useParams();
+function AddNewCar({ setLoading, setModalJustClose, setContent }) {
   const navigate = useNavigate();
-  const [modalYesOrNoAdmin, setModalYesOrNoAdmin] = useState(false);
-  const [modalYesOrNoAdminContent, setModalYesOrNoAdminContent] = useState("");
   const [formData, setFormData] = useState({});
-  const token = sessionStorage.getItem("token");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: name === "available" ? value === "true" : value,
-    }));
+    if (e.target.files) {
+      const firstFile = e.target.files[0];
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: name === "available" ? value === "true" : value,
+        image: firstFile,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: name === "available" ? value === "true" : value,
+      }));
+    }
   };
 
-  //update car
-  const updateCar = async () => {
-    
+  const AddCar = async (e) => {
+    const token = sessionStorage.getItem("token");
+    e.preventDefault();
+    setLoading(true);
     try {
+      const formDataToSend = new FormData();
+
+      for (const key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
       const response = await fetch(
-        `${process.env.REACT_APP_URL_SERVER}/cars/update/${idVoiture}`,
+        `${process.env.REACT_APP_URL_SERVER}/cars/register`,
         {
-          method: "PATCH",
+          method: "POST",
           headers: {
-            "Content-Type": "application/json",
             token,
           },
-          body: JSON.stringify(formData),
+          body: formDataToSend,
         }
       );
       const data = await response.json();
@@ -178,59 +189,24 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
       if (response.ok) {
         setModalJustClose(true);
         setContent(data.message);
+        setLoading(false);
         navigate("/admin/voitures");
       } else {
         setModalJustClose(true);
         setContent(data.message);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
       setModalJustClose(true);
       setContent(error.message);
+      setLoading(false);
     }
   };
 
-  //delete car
-  const deleteCar = async () => {
-   
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_URL_SERVER}/cars/delete/${idVoiture}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            token,
-          },
-        }
-      );
-      const data = await response.json();
-
-      if (response.ok) {
-        setModalJustClose(true);
-        setContent(data.message);
-        navigate("/admin/voitures");
-      } else {
-        setModalJustClose(true);
-        setContent(data.message);
-      }
-    } catch (error) {
-      console.error("Error deleting booking:", error);
-
-      setModalJustClose(true);
-      setContent("Erreur lors de la suppression de la réservation");
-    }
-  };
-
-  return modalYesOrNoAdmin ? (
-    <YesOrNoAdmin
-      setModalYesOrNoAdmin={setModalYesOrNoAdmin}
-      functionExcute={deleteCar}
-      textContent={modalYesOrNoAdminContent}
-    />
-  ) : (
+  return (
     <Container>
-      <ButtonRetour type="button" onClick={() => setUpdateModal(false)}>
+      <ButtonRetour type="button" onClick={() => navigate(-1)}>
         Retour
       </ButtonRetour>
       <Form>
@@ -244,8 +220,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 id="marque"
                 onChange={handleChange}
               />
-
-              <p>*{car?.marque}</p>
             </div>
             <div>
               <label htmlFor="modele">Modèle:</label>
@@ -255,7 +229,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 id="modele"
                 onChange={handleChange}
               />
-              <p>*{car?.modele}</p>
             </div>
 
             <div>
@@ -266,7 +239,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 id="color"
                 onChange={handleChange}
               />
-              <p>*{car?.color}</p>
             </div>
           </div>
 
@@ -280,7 +252,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 min="1"
                 onChange={handleChange}
               />
-              <p>*{car?.place}</p>
             </div>
 
             <div>
@@ -292,7 +263,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 min="2"
                 onChange={handleChange}
               />
-              <p>*{car?.doors}</p>
             </div>
             <div>
               <label htmlFor="pricePerDay">Prix par jour:</label>
@@ -303,7 +273,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 min="1"
                 onChange={handleChange}
               />
-              <p>*{car?.pricePerDay} €</p>
             </div>
 
             <div>
@@ -315,7 +284,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 min="0"
                 onChange={handleChange}
               />
-              <p>*{car?.stockOfCar}</p>
             </div>
           </div>
 
@@ -330,7 +298,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 <option value="manuelle">Manuelle</option>
                 <option value="automatique">Automatique</option>
               </select>
-              <p>*{car?.transmission}</p>
             </div>
 
             <div>
@@ -340,7 +307,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 <option value="Intermédiaire">Intermédiaire</option>
                 <option value="Premium">Premium</option>
               </select>
-              <p>*{car?.category}</p>
             </div>
 
             <div>
@@ -350,7 +316,6 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 <option value="Diesel">Diesel</option>
                 <option value="Electrique">Electrique</option>
               </select>
-              <p>*{car?.fuel}</p>
             </div>
             <div>
               <select name="available" id="available" onChange={handleChange}>
@@ -358,11 +323,19 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
                 <option value="true">Oui</option>
                 <option value="false">Non</option>
               </select>
-              <p>*{car?.available ? "oui" : "non"}</p>
+            </div>
+            <div className="imageContainer">
+              <label htmlFor="image">Image :</label>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                onChange={handleChange}
+              />
             </div>
           </div>
         </div>
-        <p>*Valeur actuelle</p>
+
         <div>
           <label htmlFor="description">Description:</label>
           <textarea
@@ -373,27 +346,13 @@ function UpdateCar({ setUpdateModal, car, setModalJustClose, setContent }) {
             onChange={handleChange}
             placeholder="Description"
           />
-          <p>*{car?.description}</p>
         </div>
       </Form>
-      <ButtonContainer>
-        <ButtonValider type="button" onClick={updateCar}>
-          Valider
-        </ButtonValider>
-        <ButtonDelete
-          type="button"
-          onClick={() => {
-            setModalYesOrNoAdmin(true);
-            setModalYesOrNoAdminContent(
-              "Êtes-vous sûr de vouloir supprimer cette voiture ?"
-            );
-          }}
-        >
-          Supprimer la voiture
-        </ButtonDelete>
-      </ButtonContainer>
+      <ButtonAjouter type="button" onClick={AddCar}>
+        Ajouter
+      </ButtonAjouter>
     </Container>
   );
 }
 
-export default UpdateCar;
+export default AddNewCar;

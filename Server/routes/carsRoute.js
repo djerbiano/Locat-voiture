@@ -1,11 +1,12 @@
 const express = require("express");
+const multerSinglePicture = require("../middlewares/multer");
 const controller = require("../controllers/carsController");
 const virifyToken = require("../middlewares/virifyToken");
 const isAdmin = require("../middlewares/isAdmin");
 const route = express.Router();
 
 // Add car
-route.post("/register", virifyToken, isAdmin, controller.registerCar);
+route.post("/register", virifyToken, isAdmin, multerSinglePicture, controller.registerCar);
 
 // Update car
 route.patch("/update/:id", virifyToken, isAdmin, controller.updateCar);

@@ -23,6 +23,7 @@ const Statistiques = styled.div`
   padding: 10px;
   border-radius: 10px;
 `;
+
 function DashboardAdmin() {
   return (
     <Container>

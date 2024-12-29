@@ -20,6 +20,7 @@ const Container = styled.div`
     margin: 20px 0px;
   }
 `;
+
 const ButtonRetour = styled.button`
   width: 100px;
   border-radius: 5px;
@@ -33,6 +34,7 @@ const ButtonRetour = styled.button`
     background-color: #a50a1e;
   }
 `;
+
 const Reservation = styled.div`
   padding: 10px;
   width: 100%;
@@ -201,9 +203,7 @@ function SingleLocation({ setModalJustClose, setContent }) {
           `Le nouveau statu de la réservation est : ${data.updatedBooking.status}`
         );
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        navigate("/admin/locations");
       } else {
         setModalJustClose(true);
         setContent(data.message);
@@ -214,6 +214,7 @@ function SingleLocation({ setModalJustClose, setContent }) {
       setContent(error.message);
     }
   };
+  
   //delete booking
   const deleteBooking = async () => {
     try {
@@ -248,6 +249,7 @@ function SingleLocation({ setModalJustClose, setContent }) {
   if (!isAdmin || isAdmin === "false") {
     return null;
   }
+
   return modalYesOrNoAdmin ? (
     <YesOrNoAdmin
       setModalYesOrNoAdmin={setModalYesOrNoAdmin}

@@ -130,6 +130,7 @@ function SingleVoiture({ setModalJustClose, setContent }) {
   if (!isAdmin || isAdmin === "false") {
     return null;
   }
+  
   return updateModal === true ? (
     <UpdateCar car={car} setUpdateModal={setUpdateModal} setModalJustClose={setModalJustClose} setContent={setContent} />
   ) : (

@@ -37,6 +37,7 @@ const VoituressNeuves = styled.div`
     transition: all 0.2s ease;
   }
 `;
+
 function VoituresNeuves({ setModalContent, setModalJustClose }) {
   const modalContent =
     "Roulez avec style et confort grâce à notre flotte de voitures neuves. " +

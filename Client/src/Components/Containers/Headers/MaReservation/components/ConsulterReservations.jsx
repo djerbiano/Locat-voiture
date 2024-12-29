@@ -113,6 +113,7 @@ const TitleReservationPassees = styled.h2`
   color: #333;
   margin: 20px;
 `;
+
 const SectionReservationPassees = styled.div`
   width: 100%;
   min-height: 300px;
@@ -127,6 +128,7 @@ const SectionReservationPassees = styled.div`
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
+
 const SingleReservationPassees = styled.div`
   width: 100%;
   min-height: 100px;
@@ -136,6 +138,7 @@ const SingleReservationPassees = styled.div`
   background-color: #f5f5f5;
   border-bottom: 2px solid #ccc;
   border-radius: 10px;
+  position: relative;
 
   .lieux {
     display: flex;
@@ -163,7 +166,15 @@ const SingleReservationPassees = styled.div`
     svg {
       margin: 0 10px;
     }
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(65%, -50%);
     @media (max-width: 1000px) {
+      transform: translate(40%, -50%);
+    }
+    @media (max-width: 850px) {
+      transform: translate(0, -50%);
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -196,6 +207,10 @@ const SingleReservationPassees = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+
+    .date {
+      transform: translate(50%, -40%);
+    }
 
     div {
       margin-bottom: 20px;
@@ -255,7 +270,8 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
     fetchBookings();
     //eslint-disable-next-line
   }, []);
-  // reservation coming soon
+
+  // booking coming soon
   const upcomingBookings =
     bookings.length > 0 &&
     bookings.filter((booking) => booking.status === "acceptée");
@@ -306,7 +322,10 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
               </button>
 
               {userIsAdmin === "true" && (
-                <button className="dashboard" onClick={() => navigate("/admin")}>
+                <button
+                  className="dashboard"
+                  onClick={() => navigate("/admin")}
+                >
                   Dashboard admin
                 </button>
               )}

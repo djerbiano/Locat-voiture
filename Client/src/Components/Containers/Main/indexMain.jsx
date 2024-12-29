@@ -56,6 +56,7 @@ const Container = styled.div`
 `;
 
 const Content = styled.div``;
+
 const Form = styled.form`
   color: black;
   padding: 20px;
@@ -196,7 +197,6 @@ function IndexMain({
   });
 
   // get new 3 cars
-
   useEffect(() => {
     setLoading(true);
 
@@ -233,6 +233,7 @@ function IndexMain({
     // eslint-disable-next-line
   }, []);
 
+  // handle modal close
   useEffect(() => {
     if (modalJustClose) {
       document.body.style.overflow = "hidden";
@@ -260,6 +261,7 @@ function IndexMain({
     setSearchCarData(formData);
     navigate("/voitures");
   };
+  
   return (
     <MainContainer>
       <FirstGlobalContainer>

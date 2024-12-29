@@ -1,22 +1,35 @@
 const mongoose = require("mongoose");
 const { Car, validateCar, updateCar } = require("../models/Cars");
 const { User } = require("../models/Users");
-const {Booking} = require("../models/Bookings");
-const { handleErrors } = require("../utils/helpers");
+const { Booking } = require("../models/Bookings");
+const { handleErrors, deleteImage } = require("../utils/helpers");
 
 const controller = {
   // registerCar
   registerCar: async (req, res) => {
     try {
       // validation de la data
+      if (!req.file) {
+        return handleErrors(res, 400, {
+          message: "L'image est obligatoire",
+        });
+      }
       const { error } = validateCar(req.body);
       if (error) {
+        // supprimer l'image si error detecté
+        deleteImage(req.file.filename);
         return handleErrors(res, 400, {
           message: error.details[0].message,
         });
       }
 
-      const car = new Car(req.body);
+      const car = new Car({
+        ...req.body,
+        pictures: {
+          pic1: req.file.filename,
+        },
+      });
+
       await car.save();
 
       return res.status(200).json({
@@ -24,6 +37,9 @@ const controller = {
       });
     } catch (error) {
       console.log(error.message);
+      if (req.file) {
+        deleteImage(req.file.filename);
+      }
       return handleErrors(res, 400, {
         message: error.message,
       });
@@ -96,6 +112,9 @@ const controller = {
         });
       }
 
+      // supprimer l'image
+      deleteImage(car.pictures.pic1);
+
       return res.status(200).json({
         message: "Voiture supprimée",
       });
@@ -109,12 +128,14 @@ const controller = {
   // getAllCars for user
   getAllCars: async (req, res) => {
     try {
-      const cars = await Car.find({ available: true }).select("-bookings -__v").sort({ createdAt: -1 });
+      const cars = await Car.find({ available: true })
+        .select("-bookings -__v")
+        .sort({ createdAt: -1 });
 
       /* a supp */
 
       // await Car.updateMany({"available": false}, {$set: {"available": true}});
-     
+
       if (cars.length < 1) {
         return res.status(200).json({
           cars,
@@ -136,7 +157,9 @@ const controller = {
   // getAllCars for admin with bookings
   getAllCarsForAdmin: async (req, res) => {
     try {
-      const cars = await Car.find({}).populate({path: "bookings" }).sort({ marque: 1 });
+      const cars = await Car.find({})
+        .populate({ path: "bookings" })
+        .sort({ marque: 1 });
 
       if (cars.length < 1) {
         return res.status(200).json({
@@ -196,7 +219,9 @@ const controller = {
       }
 
       // Vérifier si la voiture existe
-      const car = await Car.findById(req.params.id).populate({path: "bookings" });
+      const car = await Car.findById(req.params.id).populate({
+        path: "bookings",
+      });
 
       if (!car) {
         return handleErrors(res, 404, {
@@ -213,8 +238,6 @@ const controller = {
       });
     }
   },
-
- 
 };
 
 module.exports = controller;

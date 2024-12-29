@@ -31,6 +31,7 @@ const ImageContainer = styled.div`
 `;
 
 const Name = styled.div``;
+
 const Prix = styled.div``;
 
 const Reserver = styled.div`
@@ -88,6 +89,7 @@ const New2024 = styled.div`
 `;
 function NewVoiture2024({car}) {
   const [reserver, setReserver] = useState(false);
+  
   return (
     <Vl
       onMouseEnter={() => setReserver(true)}

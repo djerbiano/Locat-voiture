@@ -12,6 +12,7 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
+  position: relative;
 `;
 const Title = styled.div`
   display: flex;
@@ -32,6 +33,24 @@ const Title = styled.div`
   }
 `;
 
+const ButtonAddNewCar = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #3e8e41;
+  }
+`;
+
 const Sort = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -41,6 +60,7 @@ const Sort = styled.div`
     width: 150px;
   }
 `;
+
 const SortPrice = styled.div`
   display: flex;
   gap: 20px;
@@ -56,6 +76,7 @@ const SortPrice = styled.div`
     width: 100px;
   }
 `;
+
 const Search = styled.div`
   width: 100%;
   height: 50px;
@@ -71,6 +92,7 @@ const Search = styled.div`
     width: 30%;
   }
 `;
+
 const CarContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -112,6 +134,7 @@ function VoituresAdmin() {
     prixMin: 1,
     prixMax: 1000,
   });
+
   //handler search
   const handleSubmit = (e) => {
     setFilter((prevData) => ({
@@ -213,6 +236,12 @@ function VoituresAdmin() {
         <h2>Voitures</h2>
         <IoReload />
       </Title>
+      <ButtonAddNewCar
+        type="button"
+        onClick={() => navigate("/admin/voitures/AddNewCar")}
+      >
+        Ajouter
+      </ButtonAddNewCar>
       <Sort>
         <select name="category" id="category" onChange={handleSubmit}>
           <option value="">Catégorie</option>

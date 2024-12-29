@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -70,6 +69,7 @@ const DetailsContainer = styled.div`
 
 function VoituresTarifs({ car }) {
   const [reserver, setReserver] = useState(false);
+  
   return (
     <Vl
       onMouseEnter={() => setReserver(true)}

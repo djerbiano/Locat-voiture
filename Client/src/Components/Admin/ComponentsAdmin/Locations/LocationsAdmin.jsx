@@ -33,6 +33,7 @@ const Title = styled.div`
 `;
 
 const Category = styled.div``;
+
 const Search = styled.div`
   width: 100%;
   height: 50px;

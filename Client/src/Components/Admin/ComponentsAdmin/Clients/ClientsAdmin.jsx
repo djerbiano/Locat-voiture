@@ -91,6 +91,7 @@ function ClientsAdmin() {
     isAdmin: "",
     email: "",
   });
+  
   //handler search
   const handleSubmit = (e) => {
     setFilter((prevData) => ({

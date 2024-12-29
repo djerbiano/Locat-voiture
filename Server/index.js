@@ -10,7 +10,7 @@ const carsRoute = require("./routes/carsRoute");
 const bookingsRoute = require("./routes/bookings");
 const bookingAdminRoute = require("./routes/bookingAdmin");
 const userAdminRoute = require("./routes/userAdmin");
-const contactRoute = require("./routes/contact");
+const contactRoute = require("./routes/contact"); 
 
 const port = process.env.PORT || 3002;
 const server = express();

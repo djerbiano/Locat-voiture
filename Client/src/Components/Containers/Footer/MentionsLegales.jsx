@@ -28,6 +28,7 @@ const SectionTitle = styled.h2`
 const Paragraph = styled.p`
   font-size: 1rem;
 `;
+
 function MentionsLegales() {
   return (
     <Container>
