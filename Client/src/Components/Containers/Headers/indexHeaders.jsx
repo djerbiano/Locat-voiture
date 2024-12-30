@@ -52,7 +52,8 @@ const HamburgerMenu = styled.div`
   );
   display: none;
   @media (max-width: 750px) {
-    display: block;
+    display: ${(props) => (props.$loading ? "none" : "block")};
+   //display: block;
   }
 
   .hamburger {
@@ -139,7 +140,7 @@ const MenuItems = styled(Link)`
     color: red;
   }
 `;
-function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage }) {
+function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage, loading }) {
   const navigate = useNavigate();
   const [menuHamburgerView, setMenuHamburgerView] = useState(false);
   const [animationBurgerMenu, setAnimationBurgerMenu] = useState(false);
@@ -198,7 +199,7 @@ function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage }) {
         <LinkItem to="MesReservation">Mes réservation</LinkItem>
       </HeaderContainer>
 
-      <HamburgerMenu $menuHamburgerView={menuHamburgerView}>
+      <HamburgerMenu $menuHamburgerView={menuHamburgerView} $loading={loading}>
         <div className="hamburger">
           <div onClick={() => navigate("/")}>
             <img src={Logo} alt="logo" />

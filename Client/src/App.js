@@ -39,7 +39,7 @@ const AppContainer = styled.div`
 `;
 
 function App() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); 
   const [modalJustClose, setModalJustClose] = useState(false);
   const [content, setContent] = useState("");
   // voiture chercher par le user (adapter la page voiture en fonction, si true, trouver les cars en fonction de la data saisie sinon afficher tous les cars)
@@ -86,6 +86,7 @@ function App() {
           <IndexHeaders
             setSearcherCar={setSearchCar}
             setSearchWithiVoiturePage={setSearchWithiVoiturePage}
+            loading={loading}
           />
           <Routes>
             <Route

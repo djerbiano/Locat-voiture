@@ -15,7 +15,7 @@ const Spinner = styled.div`
   border-color: #c6c7dd;
   border-right-color: #c8152c;
   animation: spinner 1.5s infinite linear;
-
+  z-index: 2000;
   @keyframes spinner {
     to {
       transform: rotate(360deg);
