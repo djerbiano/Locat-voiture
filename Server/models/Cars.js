@@ -50,17 +50,17 @@ const CarsSchema = mongoose.Schema(
     pictures: {
       pic1: {
         type: String,
-        default: "avatarDefault.jpg",
+        default: "avatarDefault.gif",
         required: true,
       },
       pic2: {
         type: String,
-        default: "avatarDefault.jpg",
+        default: "avatarDefault.gif",
         required: true,
       },
       pic3: {
         type: String,
-        default: "avatarDefault.jpg",
+        default: "avatarDefault.gif",
         required: true,
       },
     },
