@@ -279,7 +279,7 @@ function SingleLocation({ setModalJustClose, setContent }) {
 
             <img
               src={`${process.env.REACT_APP_URL_SERVER}/images/${
-                reservation?.voiture?.pictures?.pic1 || "avatarDefault.jpg"
+                reservation?.voiture?.pictures?.pic1 || "avatarDefault.gif"
               }`}
               alt={reservation?.voiture?.pictures?.pic1}
             />

@@ -160,7 +160,7 @@ function SingleVoiture({ setModalJustClose, setContent }) {
 
           <img
             src={`${process.env.REACT_APP_URL_SERVER}/images/${
-              car?.pictures?.pic1 || "avatarDefault.jpg"
+              car?.pictures?.pic1 || "avatarDefault.gif"
             }`}
             alt={car?.pictures?.pic1}
           />
