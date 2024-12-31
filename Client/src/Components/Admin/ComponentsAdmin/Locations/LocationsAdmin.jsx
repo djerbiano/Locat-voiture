@@ -192,7 +192,7 @@ function LocationsAdmin() {
 
                   <td>
                     {new Date(booking?.startDate)
-                      .toLocaleString("fr-FR")
+                      .toJSON()
                       .slice(0, 16)
                       .replace(/T/, " ")
                       .replace(/-/g, "/")
@@ -203,7 +203,7 @@ function LocationsAdmin() {
 
                   <td>
                     {new Date(booking?.endDate)
-                      .toLocaleString("fr-FR")
+                      .toJSON()
                       .slice(0, 16)
                       .replace(/T/, " ")
                       .replace(/-/g, "/")

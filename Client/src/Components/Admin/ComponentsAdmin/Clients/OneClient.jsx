@@ -160,7 +160,7 @@ function OneClient({ setModalJustClose, setContent }) {
           <p>Adresse: {client?.address}</p>
           <p>Admin: {client?.isAdmin ? "Oui" : "Non"}</p>
           <p>
-            Inscrit le: {new Date(client?.createdAt).toLocaleString("fr-FR")}
+            Inscrit le: {client?.createdAt ? new Date(client?.createdAt).toJSON().slice(0, 16) : "Calcule en cours"}
           </p>
           <p>TokenRestPassword: {client?.tokenRestPassword}</p>
           <p>Nombre de réservaton: {client?.booking?.length}</p>

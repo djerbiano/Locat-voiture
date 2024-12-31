@@ -214,7 +214,7 @@ function SingleLocation({ setModalJustClose, setContent }) {
       setContent(error.message);
     }
   };
-  
+
   //delete booking
   const deleteBooking = async () => {
     try {
@@ -289,16 +289,34 @@ function SingleLocation({ setModalJustClose, setContent }) {
             <h3>Réservation:</h3>
             <p>Réservation ID: {reservation?._id}</p>
             <p>
-              Date de réservation:{" "}
-              {new Date(reservation?.dateOfReservation).toLocaleString("fr-FR")}
+              Date de réservation:
+              {reservation?.dateOfReservation
+                ? new Date(reservation?.dateOfReservation)
+                    .toJSON()
+                    .slice(0, 16)
+                    .replace("T", " ")
+                    .replace(/-/g, "/")
+                : "Calcule en cours"}
             </p>
             <p>
-              Départ: {reservation?.departAgence}{" "}
-              {new Date(reservation?.startDate).toLocaleString("fr-FR")}
+              Départ: {reservation?.departAgence}
+              {reservation?.startDate
+                ? new Date(reservation?.startDate)
+                    .toJSON()
+                    .slice(0, 16)
+                    .replace("T", " ")
+                    .replace(/-/g, "/")
+                : "Calcule en cours"}
             </p>
             <p>
-              Retour: {reservation?.retourAgence}{" "}
-              {new Date(reservation?.endDate).toLocaleString("fr-FR")}
+              Retour: {reservation?.retourAgence}
+              {reservation?.endDate
+                ? new Date(reservation?.endDate)
+                    .toJSON()
+                    .slice(0, 16)
+                    .replace("T", " ")
+                    .replace(/-/g, "/")
+                : "Calcule en cours"}
             </p>
             <p>Status: {reservation?.status}</p>
             <p>Durée: {duration ? duration : "Calcule en cours"} jours</p>
@@ -310,7 +328,7 @@ function SingleLocation({ setModalJustClose, setContent }) {
             <p>Client ID: {reservation?.user?._id}</p>
             <p>Email: {reservation?.user?.email}</p>
             <p>
-              Nom et prénom: {reservation?.user?.lastName}{" "}
+              Nom et prénom: {reservation?.user?.lastName}
               {reservation?.user?.name}
             </p>
             <p>Téléphone: {reservation?.user?.phone}</p>

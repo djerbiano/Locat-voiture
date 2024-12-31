@@ -23,7 +23,7 @@ const Container = styled.div`
 
 const ButtonRetour = styled.button`
   position: absolute;
-  top:10px;
+  top: 10px;
   left: 10px;
   width: 100px;
   border-radius: 5px;
@@ -244,7 +244,7 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
     <>
       {isAuthenticated === "true" && (
         <Container>
-        <ButtonRetour onClick={ () => navigate(-1)}>Retour</ButtonRetour>
+          <ButtonRetour onClick={() => navigate(-1)}>Retour</ButtonRetour>
           {modalYesOrNo && (
             <YesOrNo
               setModalYesOrNo={setModalYesOrNo}
@@ -263,7 +263,8 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
 
                 <VoitureInfos>
                   <p>
-                    {bookingData?.voiture?.marque} {bookingData?.voiture?.modele}
+                    {bookingData?.voiture?.marque}{" "}
+                    {bookingData?.voiture?.modele}
                   </p>
                   <div>
                     <p>{bookingData?.voiture?.pricePerDay} € / jour</p>
@@ -283,14 +284,18 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
                 <h4>Date et heure de départ</h4>
                 <p>
                   {new Date(bookingData?.startDate)
-                    .toLocaleString("fr-FR")
-                    .slice(0, 16)}
+                    .toJSON()
+                    .slice(0, 16)
+                    .replace("T", " ")
+                    .replace(/-/g, "/")}
                 </p>
                 <h4>Date et heure de retour</h4>
                 <p>
                   {new Date(bookingData?.endDate)
-                    .toLocaleString("fr-FR")
-                    .slice(0, 16)}
+                    .toJSON()
+                    .slice(0, 16)
+                    .replace("T", " ")
+                    .replace(/-/g, "/")}
                 </p>
                 <h4>Durée de location</h4>
                 <p>{duration} jours</p>
