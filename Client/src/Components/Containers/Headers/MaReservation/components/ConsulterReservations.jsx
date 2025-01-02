@@ -268,13 +268,13 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
 
     fetchBookings();
     //eslint-disable-next-line
-  }, []);
+  }, [isAuthenticated]);
 
   // booking coming soon
   const upcomingBookings =
     bookings.length > 0 &&
     bookings.filter((booking) => booking.status === "acceptée");
-    
+
   if (!isAuthenticated || isAuthenticated === "false") {
     return null;
   }
