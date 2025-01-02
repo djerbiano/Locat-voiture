@@ -173,6 +173,10 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
 
   // get booking
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if(!token) {
+      return (window.location.href = "/");
+    }
     setLoading(true);
     const getBooking = async () => {
       try {
@@ -182,7 +186,7 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              token: sessionStorage.getItem("token"),
+              token,
             },
           }
         );

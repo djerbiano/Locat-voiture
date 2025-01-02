@@ -191,6 +191,11 @@ function Profile({ setLoading, setModalJustClose, setContent }) {
         if (response.ok) {
           setProfile(data);
           setLoading(false);
+        } else {
+          setModalJustClose(true);
+          setContent(data.message);
+          setLoading(false);
+          navigate("/");
         }
       } catch (error) {
         console.error("Error fetching user:", error);
