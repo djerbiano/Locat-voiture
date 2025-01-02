@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../../../../Context/AuthContext.js";
 import { handleErrorInvalidToken } from "../../../../../utils/helper.js";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { GrLogout } from "react-icons/gr";
 
 const Content = styled.div`
@@ -228,6 +228,7 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
   const { isAuthenticated } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const userIsAdmin = sessionStorage.getItem("isAdmin");
 
   // get all booking
@@ -235,6 +236,10 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
     setLoading(true);
 
     const fetchBookings = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        return (window.location.href = "/");
+      }
       try {
         const response = await fetch(
           `${process.env.REACT_APP_URL_SERVER}/bookings/allBookings`,
@@ -242,7 +247,7 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              token: sessionStorage.getItem("token"),
+              token,
             },
           }
         );
@@ -268,7 +273,7 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
 
     fetchBookings();
     //eslint-disable-next-line
-  }, [isAuthenticated]);
+  }, [isAuthenticated, location.pathname]);
 
   // booking coming soon
   const upcomingBookings =
