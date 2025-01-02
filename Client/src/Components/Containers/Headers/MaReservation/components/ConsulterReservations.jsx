@@ -221,7 +221,7 @@ const SingleReservationPassees = styled.div`
 const handleStorageChange = () => {
   localStorage.clear();
   sessionStorage.clear();
-  window.location.href = "/";
+  window.location.reload();
 };
 
 function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
