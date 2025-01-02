@@ -240,6 +240,9 @@ function SingleReservation({ setLoading, setModalJustClose, setContent }) {
     }
   };
 
+  if (!isAuthenticated || isAuthenticated === "false") {
+    return null;
+  }
   return (
     <>
       {isAuthenticated === "true" && (

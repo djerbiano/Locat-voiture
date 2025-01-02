@@ -262,7 +262,9 @@ function Profile({ setLoading, setModalJustClose, setContent }) {
       setContent("Erreur lors de la mise à jour du profil");
     }
   };
-
+  if (!isAuthenticated || isAuthenticated === "false") {
+    return null;
+  }
   return (
     <>
       {isAuthenticated === "true" && (

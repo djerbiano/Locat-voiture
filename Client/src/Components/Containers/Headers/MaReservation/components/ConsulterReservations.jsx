@@ -274,6 +274,10 @@ function ConsulterReservations({ setLoading, setModalJustClose, setContent }) {
   const upcomingBookings =
     bookings.length > 0 &&
     bookings.filter((booking) => booking.status === "acceptée");
+    
+  if (!isAuthenticated || isAuthenticated === "false") {
+    return null;
+  }
 
   return (
     <>
