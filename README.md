@@ -1,6 +1,6 @@
 # 🚗 Projet de location de voitures (ancien projet autodidacte)
 
-[![Deployed](https://img.shields.io/badge/Site%20en%20ligne-Disponible-32CD32?style=for-the-badge)]([https://ton-lien.vercel.app](https://locat-voiture.netlify.app/))
+[![Deployed](https://img.shields.io/badge/Site%20en%20ligne-Disponible-32CD32?style=for-the-badge)](https://ton-lien.vercel.app](https://locat-voiture.netlify.app/)
 
 👉 [Live Demo](https://locat-voiture.netlify.app/)
 
