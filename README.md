@@ -47,3 +47,4 @@ Cependant, il reste visitable pour voir mon évolution et ma motivation à appre
 - 🧼 Validation des données avec Joi
 - 🗓️ Tâches planifiées avec node-cron
 - 💡 Interface en Styled Components
+
