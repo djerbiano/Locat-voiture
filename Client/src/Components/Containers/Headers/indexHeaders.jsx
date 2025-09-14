@@ -184,7 +184,7 @@ function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage, loading }) {
   return (
     <>
       <HeaderContainer>
-        <LinkItem to="/">Acceuil</LinkItem>
+        <LinkItem to="/">Accueil</LinkItem>
         <LinkItem
           to="Voitures"
           onClick={() => {
