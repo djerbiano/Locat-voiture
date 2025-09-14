@@ -196,7 +196,7 @@ function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage, loading }) {
         </LinkItem>
         <LinkItem to="Tarifs">Tarifs</LinkItem>
         <LinkItem to="Contact">Contact</LinkItem>
-        <LinkItem to="MesReservation">Mes réservation</LinkItem>
+        <LinkItem to="MesReservation">Mes réservations</LinkItem>
       </HeaderContainer>
 
       <HamburgerMenu $menuHamburgerView={menuHamburgerView} $loading={loading}>
@@ -266,7 +266,7 @@ function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage, loading }) {
               setAnimationBurgerMenu(!animationBurgerMenu);
             }}
           >
-            Mes réservation
+            Mes réservations
           </MenuItems>
         </div>
       </HamburgerMenu>
