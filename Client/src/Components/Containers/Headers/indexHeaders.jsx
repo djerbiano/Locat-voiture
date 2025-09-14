@@ -230,7 +230,7 @@ function IndexHeaders({ setSearcherCar, setSearchWithiVoiturePage, loading }) {
               setAnimationBurgerMenu(!animationBurgerMenu);
             }}
           >
-            Acceuil
+            Accueil
           </MenuItems>
           <MenuItems
             to="Voitures"
